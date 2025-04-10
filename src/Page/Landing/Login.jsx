@@ -9,7 +9,7 @@ import LoginInputs from "../../Components/Inputs/Studentnputs/LoginInputs";
 import Injira from "../../assets/Injira.png";
 const Login = () => {
   return (
-    <div className=" pb-4 pt-12 px-4 ">
+    <div className=" pt-24 ">
       <div className=" grid md:grid-cols-2 grid-cols-1 rounded-r-md rounded-b-none md:border border-blue-700">
         <div className="flex justify-end  md:h-[60vh] ">
           <img src={Injira} alt="" />
