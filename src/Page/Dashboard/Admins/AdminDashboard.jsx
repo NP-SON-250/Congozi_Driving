@@ -64,7 +64,7 @@ const AdminDashboard = () => {
           </div>
 
           {/* Request Table */}
-          <div className="flex flex-col justify-center items-center md:py-4 py-6 px-4 ">
+          <div className="flex flex-col justify-center items-center md:py-4 pb-24 px-4 ">
             <h2 className="text-center md:text-xl text-blue-900 font-bold">
               Current Requests Made
             </h2>
