@@ -27,7 +27,6 @@ const StudentHome = () => {
         </div>
         <img src={Image} alt="" className="w-[140px] md:ml-[400px] ml-28" />
       </div>
-      <LandingFooter />
     </>
   );
 };

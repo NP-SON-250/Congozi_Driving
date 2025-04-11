@@ -49,10 +49,10 @@ const ManualTracking = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center md:px-5 gap-1 bg-white">
+    <div className="flex flex-col justify-center items-center md:px-5 gap-1 bg-white md:pb-0 pb-32  ">
       <WelcomeDear />
 
-      <div className="flex flex-col gap-2 w-full border border-gray-400 rounded-md mt-2">
+      <div className="flex flex-col gap-2 w-full border border-gray-400 rounded-md md:mt-2 mt-16">
         <div className="flex justify-center items-center gap-3 border border-gray-400 text-center w-full bg-blue-100 py-0 rounded-md">
           <MdOutlineContentPasteSearch size={24} className="text-blue-900" />
           <h1 className="text-center md:text-3xl text-base text-blue-900">
@@ -79,7 +79,7 @@ const ManualTracking = () => {
                 />
                 <button
                   onClick={handleSearch}
-                  className="absolute md:right-[263px] right-6 bg-blue-500 cursor-pointer rounded-r-full p-2 text-white"
+                  className="absolute md:right-[263px] right-4 bg-blue-500 cursor-pointer rounded-r-full p-[10px] text-white"
                 >
                   Search
                 </button>

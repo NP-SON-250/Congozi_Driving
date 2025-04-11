@@ -122,7 +122,7 @@ const StudentMarket = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex absolute md:gap-[860px] gap-[250px] right-0 md:bottom-[15vh] bottom-[25vh]">
+        <div className="flex justify-around md:gap-[900px] gap-[250px] md:pb-0 pb-10">
           <button
             className={`px-4 py-2 text-blue-900 rounded ${
               currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""

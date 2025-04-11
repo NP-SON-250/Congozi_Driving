@@ -65,9 +65,9 @@ const StudentWaiting = () => {
       {isExamStarted ? (
         <AutoTracking examNumber={accessCode} />
       ) : (
-        <div className="flex flex-col justify-center items-start md:px-5 gap-1 bg-white">
+        <div className="flex flex-col justify-around items-center md:px-5 gap-1 bg-white">
           <WelcomeDear />
-          <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-1">
+          <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
             <input
               type="text"
               placeholder="---Select Exam Type---"
@@ -106,7 +106,7 @@ const StudentWaiting = () => {
           {filteredExams.length === 0 ? (
             <p className="text-center py-4 text-red-500">No data found</p>
           ) : (
-            <div className="grid md:grid-cols-3 w-full gap-4 md:gap-3 py-0 ">
+            <div className="grid md:grid-cols-3 w-full gap-4 md:gap-3 py-1">
               {currentExams.map((exam, index) => {
                 const isLearn = exam.type.toLowerCase().includes("learn");
                 const buttonColor = isLearn ? "bg-yellow-500" : "bg-green-500";
@@ -125,7 +125,8 @@ const StudentWaiting = () => {
           )}
 
           {totalPages > 1 && (
-            <div className="flex absolute md:gap-[860px] gap-[250px] right-8 md:bottom-[12vh] bottom-[30vh]">
+            <div className="flex justify-around md:gap-[900px] gap-[280px] md:pb-0 pb-10">
+              <div>
               <button
                 className={`text-blue-900 ${
                   currentPage === 0 ? "opacity-50" : ""
@@ -135,6 +136,8 @@ const StudentWaiting = () => {
               >
                 <FaArrowAltCircleLeft size={24} />
               </button>
+              </div>
+              <div>
               <button
                 className={`text-blue-900 ${
                   currentPage === totalPages - 1 ? "opacity-50" : ""
@@ -146,6 +149,7 @@ const StudentWaiting = () => {
               >
                 <FaArrowAltCircleRight size={24} />
               </button>
+              </div>
             </div>
           )}
         </div>

@@ -58,7 +58,7 @@ const StudentExams = () => {
         <h1>My Examinations</h1>
       </div>
 
-      <div className="overflow-x-auto mt-0">
+      <div className="overflow-x-auto mt-0 md:pt-0 pt-20">
         <div className="min-w-full inline-block align-middle">
           <table className="min-w-full table-auto">
             <thead>
@@ -112,7 +112,7 @@ const StudentExams = () => {
         </div>
       </div>
 
-      <div className="flex justify-center mt-4 gap-2">
+      <div className="flex justify-center mt-4 gap-2 md:pb-0 pb-28">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
             key={index + 1}
