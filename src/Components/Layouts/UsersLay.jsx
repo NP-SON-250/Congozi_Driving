@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import Topbar from "../Sidebar/Topbar";
+import { useState } from "react";
 
 const UsersLay = ({ role }) => {
   const location = useLocation();
@@ -28,6 +29,10 @@ const UsersLay = ({ role }) => {
     "/schools/account": "My Account",
   };
 
+  const [applyHeight, setApplyHeight] = useState(false);
+
+  // Get current year for footer
+  const getCurrentYear = () => new Date().getFullYear();
   const currentSection = sectionMap[location.pathname] || "Dashboard";
 
   return (
@@ -41,6 +46,15 @@ const UsersLay = ({ role }) => {
       </div>
       <div className="pt-20 lg:pl-[300px] md:pb-[60px] pb-[14vh]">
         <Outlet />
+        {/* Footer */}
+        <div className="fixed md:bottom-0 bottom-28 md:left-0 md:right-0 w-full">
+          <div className="flex justify-center bg-Unpaid">
+            <p className="p-4 text-blue-900 md:text-2xl text-sm font-bold text-center uppercase">
+              &copy; {getCurrentYear()} Congozi Expert Technical Unity{" "}
+              <span className="normal-case">Limited</span>
+            </p>
+          </div>
+        </div>
       </div>
     </>
   );

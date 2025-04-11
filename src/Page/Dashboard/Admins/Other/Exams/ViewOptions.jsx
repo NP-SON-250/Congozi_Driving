@@ -1,12 +1,34 @@
 import React, { useState } from "react";
 import { IoReturnUpBack } from "react-icons/io5";
 import { MdMoreHoriz } from "react-icons/md";
+import EditOptionPopup from "./EditOptionPopup";
+import DeleteOptionPopup from "./DeleteOptionPopup";
 
 const ViewOptions = ({ question, onBack, onEdit, onDelete }) => {
   const [selectedMenu, setSelectedMenu] = useState(null);
+  const [optionToEdit, setOptionToEdit] = useState(null);
+  const [editedOptionText, setEditedOptionText] = useState("");
+  const [editedIsCorrect, setEditedIsCorrect] = useState(false);
+  const [optionToDelete, setOptionToDelete] = useState(null);
 
   const toggleMenu = (index) => {
     setSelectedMenu(selectedMenu === index ? null : index);
+  };
+
+  const handleSaveEditedOption = () => {
+    console.log("Updated Option:", {
+      original: optionToEdit,
+      updated: {
+        text: editedOptionText,
+        isCorrect: editedIsCorrect,
+      },
+    });
+    setOptionToEdit(null);
+  };
+
+  const handleDeleteOption = () => {
+    console.log("Deleting option:", optionToDelete);
+    setOptionToDelete(null);
   };
 
   return (
@@ -30,7 +52,9 @@ const ViewOptions = ({ question, onBack, onEdit, onDelete }) => {
             <tr>
               <th className="px-6 py-1 whitespace-nowrap">Option</th>
               <th className="px-6 py-1 whitespace-nowrap">Correct</th>
-              <th className="px-6 py-1 whitespace-nowrap text-right">Actions</th>
+              <th className="px-6 py-1 whitespace-nowrap text-right">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -54,8 +78,9 @@ const ViewOptions = ({ question, onBack, onEdit, onDelete }) => {
                         <li
                           className="hover:bg-gray-100 px-4 py-2 cursor-pointer"
                           onClick={() => {
-                            onEdit(index);
-                            setSelectedMenu(null);
+                            setOptionToEdit(option);
+                            setEditedOptionText(option.text);
+                            setEditedIsCorrect(option.isCorrect);
                           }}
                         >
                           Edit
@@ -63,7 +88,7 @@ const ViewOptions = ({ question, onBack, onEdit, onDelete }) => {
                         <li
                           className="hover:bg-gray-100 text-red-500 px-4 py-2 cursor-pointer"
                           onClick={() => {
-                            onDelete(index);
+                            setOptionToDelete(option);
                             setSelectedMenu(null);
                           }}
                         >
@@ -78,6 +103,23 @@ const ViewOptions = ({ question, onBack, onEdit, onDelete }) => {
           </tbody>
         </table>
       </div>
+      {optionToEdit && (
+        <EditOptionPopup
+          optionText={editedOptionText}
+          isCorrect={editedIsCorrect}
+          setOptionText={setEditedOptionText}
+          setIsCorrect={setEditedIsCorrect}
+          onSave={handleSaveEditedOption}
+          onCancel={() => setOptionToEdit(null)}
+        />
+      )}
+
+      {optionToDelete && (
+        <DeleteOptionPopup
+          onConfirm={handleDeleteOption}
+          onCancel={() => setOptionToDelete(null)}
+        />
+      )}
     </div>
   );
 };

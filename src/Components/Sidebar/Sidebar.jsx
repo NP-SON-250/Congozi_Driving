@@ -142,7 +142,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
   return (
     <div className="container relative">
       {/* Desktop Sidebar */}
-      <div className="w-[300px] h-[80vh] px-4 overflow-y-auto shadow fixed bottom-[56px] left-0 md:block hidden z-[999]">
+      <div className="w-[300px] h-[78vh] px-4 py-4 overflow-y-auto shadow fixed bottom-[75px] left-0 md:block hidden z-[999]">
         <ul>
           {items.map((item, index) => (
             <li key={index} className="py-[10px]">
