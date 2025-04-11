@@ -3,6 +3,8 @@ import { IoReturnUpBack } from "react-icons/io5";
 import { MdMoreHoriz } from "react-icons/md";
 import ViewOptions from "./ViewOptions";
 import EditQuestionPopup from "./EditQuestionPopup";
+import AddOptionPopup from "./AddOptionPopup";
+import DeleteQuestionPopup from "./DeleteQuestionPopup";
 const ViewQuestions = ({ exam, onBack }) => {
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,6 +16,9 @@ const ViewQuestions = ({ exam, onBack }) => {
   const [editedMarks, setEditedMarks] = useState("");
   const [editedPhrase, setEditedPhrase] = useState("");
   const [editedImage, setEditedImage] = useState("");
+
+  const [questionToAddOption, setQuestionToAddOption] = useState(null);
+  const [questionToDelete, setQuestionToDelete] = useState(null);
 
   const totalPages = Math.ceil(exam.questions.length / questionsPerPage);
 
@@ -27,19 +32,16 @@ const ViewQuestions = ({ exam, onBack }) => {
     }
   };
 
-  // Get the questions for the current page
   const startIndex = (currentPage - 1) * questionsPerPage;
   const currentQuestions = exam.questions.slice(
     startIndex,
     startIndex + questionsPerPage
   );
 
-  // Handle when the user clicks "View Options"
   const handleViewOptions = (question) => {
     setViewOptionsQuestion(question);
   };
 
-  // Handle back to questions list
   const handleBackToQuestions = () => {
     setViewOptionsQuestion(null);
   };
@@ -60,6 +62,17 @@ const ViewQuestions = ({ exam, onBack }) => {
       image: editedImage,
     });
     setShowEditPopup(false);
+  };
+
+  // ✅ Save options for a specific question
+  const handleSaveOptions = (questionId, newOptions) => {
+    console.log("Saved Options for Question:", questionId, newOptions);
+    setQuestionToAddOption(null);
+  };
+
+  const handleDeleteQuestion = () => {
+    console.log("Deleting Question:", questionToDelete);
+    setQuestionToDelete(null);
   };
 
   return (
@@ -129,10 +142,17 @@ const ViewQuestions = ({ exam, onBack }) => {
                             >
                               Edit
                             </li>
-                            <li className="hover:bg-gray-100 text-red-500 px-4 py-1 cursor-pointer">
+                            <li
+                              className="hover:bg-gray-100 text-red-500 px-4 py-1 cursor-pointer"
+                              onClick={() => setQuestionToDelete(question)}
+                            >
                               Delete
                             </li>
-                            <li className="hover:bg-gray-100 px-4 py-1 cursor-pointer">
+
+                            <li
+                              className="hover:bg-gray-100 px-4 py-1 cursor-pointer"
+                              onClick={() => setQuestionToAddOption(question)} // ✅ Open popup
+                            >
                               Add Options
                             </li>
                             {question.options.length > 0 && (
@@ -195,6 +215,22 @@ const ViewQuestions = ({ exam, onBack }) => {
           setEditedImage={setEditedImage}
           setShowEditPopup={setShowEditPopup}
           handleSaveEdit={handleSaveQuestionEdit}
+        />
+      )}
+
+      {/* ✅ Add Option Popup */}
+      {questionToAddOption && (
+        <AddOptionPopup
+          question={questionToAddOption}
+          onClose={() => setQuestionToAddOption(null)}
+          onSave={handleSaveOptions}
+        />
+      )}
+
+      {questionToDelete && (
+        <DeleteQuestionPopup
+          onConfirm={handleDeleteQuestion}
+          onCancel={() => setQuestionToDelete(null)}
         />
       )}
     </div>

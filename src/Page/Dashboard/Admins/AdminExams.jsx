@@ -235,7 +235,7 @@ const AdminExams = () => {
               Are you sure you want to delete this exam?
             </h2>
             <p className="text-gray-500 mb-6">This action cannot be undone.</p>
-            <div className="flex justify-center gap-6">
+            <div className="flex justify-around gap-6">
               <button
                 onClick={handleDeleteExam}
                 className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"

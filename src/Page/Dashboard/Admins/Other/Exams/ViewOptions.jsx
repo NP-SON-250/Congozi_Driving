@@ -38,7 +38,7 @@ const ViewOptions = ({ question, onBack, onEdit, onDelete }) => {
               <tr key={index} className="border-t hover:bg-gray-50 relative">
                 <td className="px-6 py-1 whitespace-nowrap">{option.text}</td>
                 <td className="px-6 py-1 whitespace-nowrap">
-                  {option.isCorrect ? "Yes" : "No"}
+                  {option.isCorrect ? "True" : "False"}
                 </td>
                 <td className="px-6 py-1 text-right relative">
                   <button
