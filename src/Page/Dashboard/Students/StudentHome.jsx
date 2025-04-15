@@ -14,16 +14,16 @@ const StudentHome = () => {
 
         {/* Cards Section */}
         <div className="grid md:grid-cols-3 grid-cols-1 w-full md:px-0 px-12 gap-12 md:pt-2 py-5 md:gap-12">
-          <StHomeCard bgColor="bg-blue-900" title="Total Exams" count={examData.length} />
-          <StHomeCard bgColor="bg-[#F08080]" title="Passed Exams" count={20} />
+          <StHomeCard bgColor="bg-blue-900" title="Total Exams" count={20} />
+          <StHomeCard bgColor="bg-[#F08080]" title="Expired Exams" count={2} />
           <Link to={"/students/unpaidexams"} className="block w-full">
-            <StHomeCard bgColor="bg-[#FACC2E]" title="Unpaid Exams" count={4} />
+            <StHomeCard bgColor="bg-[#FACC2E]" title="Unpaid Exams" count={8} />
           </Link>
           <Link to={"/students/waitingexams"} className="block w-full">
             <StHomeCard bgColor="bg-blue-200" title="Waiting Exams" count={examData.length} />
           </Link>
-          <StHomeCard bgColor="bg-[#86B404]" title="Passed Exams" count={20} />
-          <StHomeCard bgColor="bg-[#FE9A2E]" title="Failed Exams" count={4} />
+          <StHomeCard bgColor="bg-[#86B404]" title="Passed Exams" count={1} />
+          <StHomeCard bgColor="bg-[#FE9A2E]" title="Failed Exams" count={1} />
         </div>
         <img src={Image} alt="" className="w-[140px] md:ml-[400px] ml-28" />
       </div>

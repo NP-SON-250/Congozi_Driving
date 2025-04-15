@@ -7,8 +7,6 @@ import Image6 from "../assets/trafic4.jpg";
 import Image7 from "../assets/trafic1.jpg";
 import Image8 from "../assets/trafic3.jpg";
 
-
-
 //Exams data
 
 export const examData = [
@@ -17,8 +15,9 @@ export const examData = [
     title: "Driving Theory Test",
     type: "Learn",
     fees: 9000,
-    number: "001",// To be added defaultly
-    status: "Active", //To be added defaultly
+    number: "001",
+    duration: 300,
+    status: "Active",
     accessCode: [
       {
         code: "LRN6090P1",
@@ -32,42 +31,7 @@ export const examData = [
         ],
         grant: "Single User",
       },
-      {
-        code: "LRN05Z602",
-        users: [
-          {
-            id: 1,
-            names: "KALIM Huston",
-            address: "Rwamagana,Rwanda",
-            phone: "250786421928",
-          },
-          {
-            id: 2,
-            names: "MUKAMA Steven",
-            address: "Karongi,Rwanda",
-            phone: "250789821558",
-          },
-          {
-            id: 3,
-            names: "CYOMUKAMA Merone",
-            address: "Nyagatare,Rwanda",
-            phone: "250786421321",
-          },
-          {
-            id: 4,
-            names: "NKUSI Fred",
-            address: "Rwamagana,Rwanda",
-            phone: "250786421558",
-          },
-          {
-            id: 5,
-            names: "KABAROKORE Penninah",
-            address: "Nyagatare,Rwanda",
-            phone: "250786421438",
-          },
-        ],
-        grant: "Five Users",
-      },
+      
     ],
     questions: [
       {
@@ -287,8 +251,9 @@ export const examData = [
     title: "Driving Theory Test",
     type: "Test",
     fees: 20000,
-    number: "002",
-    status: "No Question",
+    duration: 300,
+    number: "001",
+    status: "Unpaid",
     accessCode: [
       {
         code: "TST6090XB",
@@ -302,42 +267,7 @@ export const examData = [
         ],
         grant: "Single User",
       },
-      {
-        code: "LRN05Z602",
-        users: [
-          {
-            id: 1,
-            names: "KALIM Huston",
-            address: "Rwamagana,Rwanda",
-            phone: "250786421928",
-          },
-          {
-            id: 2,
-            names: "MUKAMA Steven",
-            address: "Karongi,Rwanda",
-            phone: "250789821558",
-          },
-          {
-            id: 3,
-            names: "CYOMUKAMA Merone",
-            address: "Nyagatare,Rwanda",
-            phone: "250786421321",
-          },
-          {
-            id: 4,
-            names: "NKUSI Fred",
-            address: "Rwamagana,Rwanda",
-            phone: "250786421558",
-          },
-          {
-            id: 5,
-            names: "KABAROKORE Penninah",
-            address: "Nyagatare,Rwanda",
-            phone: "250786421438",
-          },
-        ],
-        grant: "Five Users",
-      },
+      
     ],
     questions: [
       {
@@ -575,8 +505,9 @@ export const examData = [
     title: "Driving Theory Test",
     type: "Test",
     fees: 10000,
-    number: "003",
-    status: "Have Questions",
+    number: "002",
+    duration: 300,
+    status: "Waiting",
     accessCode: [
       {
         code: "TST609V4Y",
@@ -590,42 +521,7 @@ export const examData = [
         ],
         grant: "Single User",
       },
-      {
-        code: "LRN05Z602",
-        users: [
-          {
-            id: 1,
-            names: "KALIM Huston",
-            address: "Rwamagana,Rwanda",
-            phone: "250786421928",
-          },
-          {
-            id: 2,
-            names: "MUKAMA Steven",
-            address: "Karongi,Rwanda",
-            phone: "250789821558",
-          },
-          {
-            id: 3,
-            names: "CYOMUKAMA Merone",
-            address: "Nyagatare,Rwanda",
-            phone: "250786421321",
-          },
-          {
-            id: 4,
-            names: "NKUSI Fred",
-            address: "Rwamagana,Rwanda",
-            phone: "250786421558",
-          },
-          {
-            id: 5,
-            names: "KABAROKORE Penninah",
-            address: "Nyagatare,Rwanda",
-            phone: "250786421438",
-          },
-        ],
-        grant: "Five Users",
-      },
+      
     ],
     questions: [
       {
@@ -863,45 +759,11 @@ export const examData = [
     title: "Driving Theory Test",
     type: "Learn",
     fees: 1000,
-    number: "004",
-    status: "Have Questions",
+    number: "002",
+    duration: 300,
+    status: "Unpaid",
     accessCode: [
-      {
-        code: "LRN05Z602",
-        users: [
-          {
-            id: 1,
-            names: "KALIM Huston",
-            address: "Rwamagana,Rwanda",
-            phone: "250786421928",
-          },
-          {
-            id: 2,
-            names: "MUKAMA Steven",
-            address: "Karongi,Rwanda",
-            phone: "250789821558",
-          },
-          {
-            id: 3,
-            names: "CYOMUKAMA Merone",
-            address: "Nyagatare,Rwanda",
-            phone: "250786421321",
-          },
-          {
-            id: 4,
-            names: "NKUSI Fred",
-            address: "Rwamagana,Rwanda",
-            phone: "250786421558",
-          },
-          {
-            id: 5,
-            names: "KABAROKORE Penninah",
-            address: "Nyagatare,Rwanda",
-            phone: "250786421438",
-          },
-        ],
-        grant: "Five Users",
-      },
+      
       {
         code: "LRN609Yb0",
         users: [
@@ -1151,8 +1013,9 @@ export const examData = [
     title: "Driving Theory Test",
     type: "Learn",
     fees: 7000,
-    number: ["005"],
-    status: "No Question",
+    number: ["003"],
+    duration: 300,
+    status: "Waiting",
     accessCode: [
       {
         code: "LRN0O8N0",
@@ -1166,42 +1029,7 @@ export const examData = [
         ],
         grant: "Single User",
       },
-      {
-        code: "LRN05Z602",
-        users: [
-          {
-            id: 1,
-            names: "KALIM Huston",
-            address: "Rwamagana,Rwanda",
-            phone: "250786421928",
-          },
-          {
-            id: 2,
-            names: "MUKAMA Steven",
-            address: "Karongi,Rwanda",
-            phone: "250789821558",
-          },
-          {
-            id: 3,
-            names: "CYOMUKAMA Merone",
-            address: "Nyagatare,Rwanda",
-            phone: "250786421321",
-          },
-          {
-            id: 4,
-            names: "NKUSI Fred",
-            address: "Rwamagana,Rwanda",
-            phone: "250786421558",
-          },
-          {
-            id: 5,
-            names: "KABAROKORE Penninah",
-            address: "Nyagatare,Rwanda",
-            phone: "250786421438",
-          },
-        ],
-        grant: "Five Users",
-      },
+      
     ],
     questions: [
       {
@@ -1439,8 +1267,9 @@ export const examData = [
     title: "Driving Theory Test",
     type: "Test",
     fees: 15000,
-    number: ["006"],
-    status: "Have Questions",
+    number: ["003"],
+    duration: 300,
+    status: "Waiting",
     accessCode: [
       {
         code: "TST609WE6",
@@ -1453,42 +1282,6 @@ export const examData = [
           },
         ],
         grant: "Single User",
-      },
-      {
-        code: "LRN05Z602",
-        users: [
-          {
-            id: 1,
-            names: "KALIM Huston",
-            address: "Rwamagana,Rwanda",
-            phone: "250786421928",
-          },
-          {
-            id: 2,
-            names: "MUKAMA Steven",
-            address: "Karongi,Rwanda",
-            phone: "250789821558",
-          },
-          {
-            id: 3,
-            names: "CYOMUKAMA Merone",
-            address: "Nyagatare,Rwanda",
-            phone: "250786421321",
-          },
-          {
-            id: 4,
-            names: "NKUSI Fred",
-            address: "Rwamagana,Rwanda",
-            phone: "250786421558",
-          },
-          {
-            id: 5,
-            names: "KABAROKORE Penninah",
-            address: "Nyagatare,Rwanda",
-            phone: "250786421438",
-          },
-        ],
-        grant: "Five Users",
       },
     ],
     questions: [
@@ -1727,8 +1520,9 @@ export const examData = [
     title: "Driving Theory Test",
     type: "Test",
     fees: 15000,
-    number: ["007"],
-    status: "No Question",
+    number: ["004"],
+    duration: 300,
+    status: "Unpaid",
     accessCode: [
       {
         code: "TST609M0OP",
@@ -1742,42 +1536,7 @@ export const examData = [
         ],
         grant: "Single User",
       },
-      {
-        code: "LRN05Z602",
-        users: [
-          {
-            id: 1,
-            names: "KALIM Huston",
-            address: "Rwamagana,Rwanda",
-            phone: "250786421928",
-          },
-          {
-            id: 2,
-            names: "MUKAMA Steven",
-            address: "Karongi,Rwanda",
-            phone: "250789821558",
-          },
-          {
-            id: 3,
-            names: "CYOMUKAMA Merone",
-            address: "Nyagatare,Rwanda",
-            phone: "250786421321",
-          },
-          {
-            id: 4,
-            names: "NKUSI Fred",
-            address: "Rwamagana,Rwanda",
-            phone: "250786421558",
-          },
-          {
-            id: 5,
-            names: "KABAROKORE Penninah",
-            address: "Nyagatare,Rwanda",
-            phone: "250786421438",
-          },
-        ],
-        grant: "Five Users",
-      },
+      
     ],
     questions: [
       {
@@ -2015,8 +1774,9 @@ export const examData = [
     title: "Driving Theory Test",
     type: "Learn",
     fees: 5000,
-    number: ["008"],
-    status: "Have Questions",
+    number: ["004"],
+    duration: 300,
+    status: "Unpaid",
     accessCode: [
       {
         code: "LRN6090PXX",
@@ -2029,42 +1789,6 @@ export const examData = [
           },
         ],
         grant: "Single User",
-      },
-      {
-        code: "LRN05Z602",
-        users: [
-          {
-            id: 1,
-            names: "KALIM Huston",
-            address: "Rwamagana,Rwanda",
-            phone: "250786421928",
-          },
-          {
-            id: 2,
-            names: "MUKAMA Steven",
-            address: "Karongi,Rwanda",
-            phone: "250789821558",
-          },
-          {
-            id: 3,
-            names: "CYOMUKAMA Merone",
-            address: "Nyagatare,Rwanda",
-            phone: "250786421321",
-          },
-          {
-            id: 4,
-            names: "NKUSI Fred",
-            address: "Rwamagana,Rwanda",
-            phone: "250786421558",
-          },
-          {
-            id: 5,
-            names: "KABAROKORE Penninah",
-            address: "Nyagatare,Rwanda",
-            phone: "250786421438",
-          },
-        ],
-        grant: "Five Users",
       },
     ],
     questions: [
@@ -2300,7 +2024,6 @@ export const examData = [
   },
 ];
 
-
 export const accountData = [
   {
     id: 1,
@@ -2506,8 +2229,6 @@ export const accountData = [
     ],
   },
 ];
-
-
 
 //Navbar
 

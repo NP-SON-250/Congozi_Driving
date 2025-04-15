@@ -40,7 +40,9 @@ const Home = () => {
             </p>
             <div className="md:absolute md:w-[50%] w-full md:justify-normal flex justify-center  md:left-[470px] md:top-[290px]">
             <div className="flex justify-center md:w-[35%] w-[70%] text-md font-bold text-white items-center gap-4 md:px-1 py-2 bg-blue-500 hover:bg-blue-800 rounded-full">
+              <Link to={'/kwiyandikisha'}>
               <button>Tangira Uyumunsi</button>
+              </Link>
               <div className="w-6 rounded-full bg-white h-6 flex justify-center items-center p-2">
                 <FaArrowRight className="text-blue-500" />
               </div>

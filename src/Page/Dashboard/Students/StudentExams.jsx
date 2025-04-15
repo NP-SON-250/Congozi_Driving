@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import { examData } from "../../../Data/morkData";
-import { FaCartPlus, FaEdit } from "react-icons/fa";
+import {
+  FaCartPlus,
+  FaEdit,
+  FaArrowAltCircleRight,
+  FaArrowAltCircleLeft,
+} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Irembo from "../../../assets/irembopay.png";
 import Mtn from "../../../assets/MTN.jpg";
@@ -74,7 +79,10 @@ const StudentExams = () => {
             </thead>
             <tbody>
               {currentExams.map((exam) => (
-                <tr key={exam.id} className="bg-white border text-blue-900 md:text-base text-xs">
+                <tr
+                  key={exam.id}
+                  className="bg-white border text-blue-900 md:text-base text-xs"
+                >
                   <td className="text-center py-2 px-4">{exam.number}</td>
                   <td className="text-center py-2 px-4">
                     {exam.accessCode.map((code, i) => (
@@ -102,7 +110,9 @@ const StudentExams = () => {
                         <FaEdit />
                       </button>
                     ) : (
-                      <button className="text-blue-900 py-1 px-3" disabled>-</button>
+                      <button className="text-blue-900 py-1 px-3" disabled>
+                        -
+                      </button>
                     )}
                   </td>
                 </tr>
@@ -112,17 +122,33 @@ const StudentExams = () => {
         </div>
       </div>
 
-      <div className="flex justify-center mt-4 gap-2 md:pb-0 pb-28">
-        {Array.from({ length: totalPages }, (_, index) => (
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-around md:gap-[830px] gap-[250px] md:pb-0 pb-10">
           <button
-            key={index + 1}
-            onClick={() => paginate(index + 1)}
-            className={`px-4 py-2 rounded ${currentPage === index + 1 ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+            className={`px-4 py-2 text-blue-900 rounded ${
+              currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
+            disabled={currentPage === 1}
           >
-            {index + 1}
+            <FaArrowAltCircleLeft size={24} />
           </button>
-        ))}
-      </div>
+          <button
+            className={`px-4 py-2 text-blue-900 rounded ${
+              currentPage === totalPages - 1
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))
+            }
+            disabled={currentPage === totalPages - 1}
+          >
+            <FaArrowAltCircleRight size={24} />
+          </button>
+        </div>
+      )}
 
       {/* Payment Popup */}
       {selectedExam && (
@@ -140,12 +166,26 @@ const StudentExams = () => {
                   Dear UMURERWA Anaise,
                 </h2>
                 <p className="mt-2 text-start text-blue-900 p-6">
-                  Your Exam Access Code <b>{selectedExam.id}</b> for <b>{selectedExam.type}</b> has been selected. Please pay <b>{selectedExam.fees} RWF</b> to access the exam.
+                  Your Exam Access Code <b>{selectedExam.id}</b> for{" "}
+                  <b>{selectedExam.type}</b> has been selected. Please pay{" "}
+                  <b>{selectedExam.fees} RWF</b> to access the exam.
                 </p>
                 <div className="flex justify-center p-6 mt-12 gap-6">
-                  <button className="bg-red-500 text-white px-4 py-2 rounded" onClick={closePopup}>Close</button>
-                  <button className="bg-yellow-500 text-white px-4 py-2 rounded">Pay Later</button>
-                  <button className="bg-green-500 text-white px-4 py-2 rounded" onClick={handleProceedToPayment}>Pay Now</button>
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 rounded"
+                    onClick={closePopup}
+                  >
+                    Close
+                  </button>
+                  <button className="bg-yellow-500 text-white px-4 py-2 rounded">
+                    Pay Later
+                  </button>
+                  <button
+                    className="bg-green-500 text-white px-4 py-2 rounded"
+                    onClick={handleProceedToPayment}
+                  >
+                    Pay Now
+                  </button>
                 </div>
               </>
             ) : (
@@ -153,18 +193,29 @@ const StudentExams = () => {
                 <div className="text-left">
                   <ul className="md:space-y-6 space-y-2 bg-gray-200 h-full p-4">
                     <li className="text-blue-900 font-bold">
-                      <input type="radio" name="payment" checked readOnly /> MTN Mobile Money
+                      <input type="radio" name="payment" checked readOnly /> MTN
+                      Mobile Money
                     </li>
-                    <li><input type="radio" name="payment" /> Airtel Money</li>
-                    <li><input type="radio" name="payment" /> Ikarita ya Banki</li>
-                    <li><input type="radio" name="payment" /> Amafaranga mu ntoki / Ejenti</li>
-                    <li><input type="radio" name="payment" /> Konti za banki</li>
+                    <li>
+                      <input type="radio" name="payment" /> Airtel Money
+                    </li>
+                    <li>
+                      <input type="radio" name="payment" /> Ikarita ya Banki
+                    </li>
+                    <li>
+                      <input type="radio" name="payment" /> Amafaranga mu ntoki
+                      / Ejenti
+                    </li>
+                    <li>
+                      <input type="radio" name="payment" /> Konti za banki
+                    </li>
                     <img src={Irembo} alt="" className="w-24" />
                   </ul>
                 </div>
                 <div className="flex flex-col justify-center items-start px-3 py-2">
                   <p className="text-start">
-                    Kanda ino mibare kuri telefone yawe ya MTN maze <br /> wishyure:
+                    Kanda ino mibare kuri telefone yawe ya MTN maze <br />{" "}
+                    wishyure:
                   </p>
                   <p className="flex justify-center gap-2 md:py-6 font-bold">
                     <img src={Mtn} alt="" className="w-10 h-6" />
@@ -184,8 +235,10 @@ const StudentExams = () => {
                     Ishyura {selectedExam.fees} RWF
                   </button>
                   <p className="text-start py-2 font-medium">
-                    Nyuma yo kwemeza kwishyura unyuze kuri Ishyura {selectedExam.fees}, <br />
-                    Uragabwa SMS kuri telefone yawe wemeze maze ushyiremo umubare w'ibanga.
+                    Nyuma yo kwemeza kwishyura unyuze kuri Ishyura{" "}
+                    {selectedExam.fees}, <br />
+                    Urahabwa SMS kuri telefone yawe wemeze maze ushyiremo
+                    umubare w'ibanga.
                   </p>
                 </div>
               </div>

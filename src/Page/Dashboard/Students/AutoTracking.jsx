@@ -4,6 +4,8 @@ import { MdOutlineContentPasteSearch } from "react-icons/md";
 import Police from "../../../assets/Policelogo.png";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import { examData } from "../../../Data/morkData";
+import ContinueCard from "../../../Components/Cards/ContinueCard";
+import ConfirmCard from "../../../Components/Cards/ConfirmCard";
 
 const AutoTracking = () => {
   const [isSearched, setIsSearched] = useState(false);
@@ -11,6 +13,9 @@ const AutoTracking = () => {
   const [examDetails, setExamDetails] = useState(null);
   const [grantedUsers, setGrantedUsers] = useState([]);
   const [showAllUsers, setShowAllUsers] = useState(false);
+
+  const [showContinueCard, setShowContinueCard] = useState(false);
+  const [showConfirmCard, setShowConfirmCard] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -56,6 +61,21 @@ const AutoTracking = () => {
 
   const handleStartExam = () => {
     navigate(`/liveExam?examId=${examCode}`);
+  };
+
+  const handleShowContinueCard = () => {
+    setShowContinueCard(true);
+  };
+  const handleCloseContinueCard = () => {
+    setShowContinueCard(false);
+  };
+
+  const handleShowConfirmCard = () => {
+    setShowContinueCard(false);
+    setShowConfirmCard(true);
+  };
+  const handleCloseConfirmCard = () => {
+    setShowConfirmCard(false);
   };
 
   return (
@@ -222,7 +242,7 @@ const AutoTracking = () => {
               <div className="flex gap-6">
                 <button
                   className="bg-blue-500 text-white px-4 py-2 md:w-[100px] w-[80px] rounded-full"
-                  onClick={handleStartExam}
+                  onClick={handleShowContinueCard}
                 >
                   Yes
                 </button>
@@ -237,6 +257,24 @@ const AutoTracking = () => {
           </div>
         )}
       </div>
+
+      {/* Continue Card Popup */}
+      {showContinueCard && (
+        <ContinueCard
+          code={examCode}
+          onClose={handleCloseContinueCard}
+          onClick={handleShowConfirmCard}
+        />
+      )}
+
+      {/* Confirm Card Popup */}
+      {showConfirmCard && (
+        <ConfirmCard
+          code={examCode}
+          onClose={handleCloseConfirmCard}
+          onClick={handleStartExam}
+        />
+      )}
     </div>
   );
 };

@@ -59,7 +59,7 @@ const StudentMarket = () => {
 
   return (
     <div className="flex flex-col justify-center items-start md:px-5 gap-1 bg-white">
-      <WelcomeDear/>
+      <WelcomeDear />
 
       {/* Filters */}
       <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
@@ -122,7 +122,7 @@ const StudentMarket = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-around md:gap-[900px] gap-[250px] md:pb-0 pb-10">
+        <div className="flex justify-around md:gap-[830px] gap-[250px] md:pb-0 pb-10">
           <button
             className={`px-4 py-2 text-blue-900 rounded ${
               currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""
@@ -151,7 +151,7 @@ const StudentMarket = () => {
       {/* Payment Popup */}
       {selectedExam && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[999]">
-          <div className="bg-white rounded-lg shadow-lg md:max-w-3xl w-full text-center relative">
+          <div className="bg-Total rounded-lg shadow-lg md:max-w-3xl w-full text-center relative">
             <button
               className="absolute top-1 right-1 text-xl bg-white text-red-700 border-2 border-white rounded-full w-8 h-8 flex justify-center"
               onClick={closePopup}
@@ -160,10 +160,10 @@ const StudentMarket = () => {
             </button>
             {paymentStep === "confirmation" ? (
               <>
-                <h2 className="text-xl font-bold text-blue-900 p-6">
+                <h2 className="text-lg text-start font-bold text-white px-6 pt-6">
                   Dear UMURERWA Anaise,
                 </h2>
-                <p className="mt-2 text-start text-blue-900 p-6">
+                <p className="mt-0 text-start text-white px-6">
                   Your Exam {selectedExam.number} for {selectedExam.type} has
                   been successfully purchased! Please make payment for your bill
                   ({selectedExam.fees} RWF) to get exam access code.
@@ -175,7 +175,9 @@ const StudentMarket = () => {
                   >
                     Close
                   </button>
-                  <button className="bg-yellow-500 text-white px-4 py-2 rounded">
+                  <button className="bg-yellow-500 text-white px-4 py-2 rounded"
+                  onClick={closePopup}
+                  >
                     Pay Later
                   </button>
                   <button
@@ -187,7 +189,7 @@ const StudentMarket = () => {
                 </div>
               </>
             ) : (
-              <div className="flex md:flex-row flex-col md:gap-6 gap-1">
+              <div className="flex md:flex-row bg-white flex-col md:gap-6 gap-1">
                 <div className="text-left">
                   <ul className="md:space-y-6 space-y-2 bg-gray-200 h-full p-4">
                     <li className="text-blue-900 font-bold">

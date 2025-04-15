@@ -44,7 +44,7 @@ const UsersLay = ({ role }) => {
           <Topbar currentSection={currentSection} role={role} />
         </div>
       </div>
-      <div className="pt-20 lg:pl-[300px] md:pb-[60px] pb-[14vh]">
+      <div className="md:pt-16 pt-20 lg:pl-[300px] md:pb-[60px] pb-[14vh]">
         <Outlet />
         {/* Footer */}
         <div className="md:fixed md:bottom-0 md:left-0 w-full">
