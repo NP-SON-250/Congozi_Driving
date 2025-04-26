@@ -8,7 +8,7 @@ const StHomeCard = ({ bgColor, title, count }) => {
     >
       <CiFolderOn className="text-white" size={70} />
       <div className="flex flex-col justify-center items-end">
-        <h2 className="text-white md:text-xl text-lg">{title}</h2>
+        <h2 className="text-white text-md ">{title}</h2>
         <p className="text-white md:text-5xl text-3xl">{count}</p>
       </div>
     </div>

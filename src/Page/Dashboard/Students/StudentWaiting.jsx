@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import ExamsCard from "../../../Components/Cards/ExamsCard";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
-import { examData } from "../../../Data/morkData";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import { SlNote } from "react-icons/sl";
 import { useNavigate, useLocation } from "react-router-dom";
 import queryString from "query-string";
 import AutoTracking from "./AutoTracking";
+import axios from "axios";
 
 const StudentWaiting = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -18,6 +18,29 @@ const StudentWaiting = () => {
 
   const location = useLocation();
   const { accessCode } = queryString.parse(location.search);
+  const [exam, setExam] = useState({ data: [] });
+  
+  // Fetch paid exams
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "http://localhost:4900/api/v1/purchases/complete",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setExam(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   useEffect(() => {
     if (accessCode) setIsExamStarted(true);
@@ -32,14 +55,17 @@ const StudentWaiting = () => {
     return () => window.removeEventListener("resize", updateExamsPerPage);
   }, []);
 
-  const filteredExams = examData.filter(
+  const filteredExams = exam.data.filter(
     (exam) =>
-      (type === "" || exam.type.toLowerCase().includes(type.toLowerCase())) &&
-      (fees === "" || exam.fees.toString().includes(fees)) &&
+      (type === "" ||
+        exam.purchasedItem.type.toLowerCase().includes(type.toLowerCase())) &&
+      (fees === "" || exam.purchasedItem.fees.toString().includes(fees)) &&
       (searchTerm === "" ||
-        exam.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        exam.fees.toString().includes(searchTerm) ||
-        exam.number.includes(searchTerm))
+        exam.purchasedItem.type
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        exam.purchasedItem.fees.toString().includes(searchTerm) ||
+        exam.purchasedItem.number.includes(searchTerm))
   );
 
   const totalPages = Math.ceil(filteredExams.length / examsPerPage);
@@ -51,12 +77,12 @@ const StudentWaiting = () => {
   const navigate = useNavigate();
 
   const handleDoExam = (exam) => {
-    if (exam.accessCode && exam.accessCode.length > 0) {
-      const accessCode = exam.accessCode[0].code;
+    if (exam.accessCode) {
+      const accessCode = exam.accessCode;
       navigate(`/students/waitingexams?accessCode=${accessCode}`);
       setIsExamStarted(true);
     } else {
-      console.error("No access code available for this exam.");
+      console.error("Nta code yo gukora ikikizamini ufite.");
     }
   };
 
@@ -65,7 +91,7 @@ const StudentWaiting = () => {
       {isExamStarted ? (
         <AutoTracking examNumber={accessCode} />
       ) : (
-        <div className="flex flex-col justify-around items-center md:px-5 gap-1 bg-white">
+        <div className="flex flex-col justify-around items-center md:px-5 gap-1 bg-white md:p-2">
           <WelcomeDear />
           <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
             <input
@@ -108,15 +134,21 @@ const StudentWaiting = () => {
           ) : (
             <div className="grid md:grid-cols-3 w-full gap-4 md:gap-3 py-1">
               {currentExams.map((exam, index) => {
-                const isLearn = exam.type.toLowerCase().includes("learn");
+                const isLearn = exam.itemId.type
+                  .toLowerCase()
+                  .includes("learn");
                 const buttonColor = isLearn ? "bg-yellow-500" : "bg-green-500";
+                const buttonText = isLearn ? "Learn Exam" : "Do Exam"
                 return (
                   <ExamsCard
                     key={index}
-                    {...exam}
+                    title={exam.itemId.title}
+                    number={exam.itemId.number}
+                    fees={exam.itemId.fees}
+                    type={exam.itemId.type}
                     onPurchase={() => handleDoExam(exam)}
                     icon={<SlNote />}
-                    button={"Do Exam"}
+                    button={buttonText}
                     buttonColor={buttonColor}
                   />
                 );
@@ -127,28 +159,30 @@ const StudentWaiting = () => {
           {totalPages > 1 && (
             <div className="flex justify-around md:gap-[900px] gap-[280px] md:pb-0 pb-10">
               <div>
-              <button
-                className={`text-blue-900 ${
-                  currentPage === 0 ? "opacity-50" : ""
-                }`}
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
-                disabled={currentPage === 0}
-              >
-                <FaArrowAltCircleLeft size={24} />
-              </button>
+                <button
+                  className={`text-blue-900 ${
+                    currentPage === 0 ? "opacity-50" : ""
+                  }`}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 0))
+                  }
+                  disabled={currentPage === 0}
+                >
+                  <FaArrowAltCircleLeft size={24} />
+                </button>
               </div>
               <div>
-              <button
-                className={`text-blue-900 ${
-                  currentPage === totalPages - 1 ? "opacity-50" : ""
-                }`}
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))
-                }
-                disabled={currentPage === totalPages - 1}
-              >
-                <FaArrowAltCircleRight size={24} />
-              </button>
+                <button
+                  className={`text-blue-900 ${
+                    currentPage === totalPages - 1 ? "opacity-50" : ""
+                  }`}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))
+                  }
+                  disabled={currentPage === totalPages - 1}
+                >
+                  <FaArrowAltCircleRight size={24} />
+                </button>
               </div>
             </div>
           )}

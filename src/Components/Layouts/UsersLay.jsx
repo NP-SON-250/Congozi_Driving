@@ -44,12 +44,12 @@ const UsersLay = ({ role }) => {
           <Topbar currentSection={currentSection} role={role} />
         </div>
       </div>
-      <div className="md:pt-16 pt-20 lg:pl-[300px] md:pb-[60px] pb-[14vh]">
+      <div className="pt-20 lg:pl-[300px] md:pb-[60px] pb-[14vh]">
         <Outlet />
         {/* Footer */}
-        <div className="md:fixed md:bottom-0 md:left-0 w-full">
+        <div className="md:fixed md:bottom-0 md:left-0 md:right-0 md:block hidden w-full">
           <div className="flex justify-center bg-Unpaid">
-            <p className="p-4 text-blue-900 md:text-2xl text-sm font-bold text-center uppercase">
+            <p className="md:p-[6px] p-5 text-blue-900 md:text-2xl text-xs font-bold text-center uppercase">
               &copy; {getCurrentYear()} Congozi Expert Technical Unity{" "}
               <span className="normal-case">Limited</span>
             </p>

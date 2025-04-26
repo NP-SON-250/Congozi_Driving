@@ -1,40 +1,72 @@
 import React, { useState, useEffect } from "react";
+import AccountCard from "../../../Components/Cards/AdminCards/AccountCard";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
-import { BsCart } from "react-icons/bs";
+import { FaHandHoldingDollar } from "react-icons/fa6";
 import Irembo from "../../../assets/irembopay.png";
 import Mtn from "../../../assets/MTN.jpg";
-import { accountData } from "../../../Data/morkData";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
-import AccountCard from "../../../Components/Cards/AdminCards/AccountCard";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
 
-const DataComponent = () => {
+const SchoolUnpaid = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [accountsPerPage, setAccountsPerPage] = useState(6);
   const [searchTerm, setSearchTerm] = useState("");
-  const [valid, setValid] = useState("");
+  const [validIn, setvalidIn] = useState("");
   const [fees, setFees] = useState("");
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [paymentStep, setPaymentStep] = useState("confirmation");
 
-  const accounts = accountData;
+  const [account, setAccount] = useState({ data: [] });
+  const [userName, setUserName] = useState("");
+  // Get user info from localStorage
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      setUserName(`${user.fName} ${user.lName}`);
+    }
+  }, []);
+  // Fetch unpaid accounts
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "http://localhost:4900/api/v1/purchases/pending",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAccount(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   useEffect(() => {
-    const updateAccountsPerPage = () => {
-      setAccountsPerPage(window.innerWidth >= 768 ? 6 : 2);
-    };
-    updateAccountsPerPage();
-    window.addEventListener("resize", updateAccountsPerPage);
-    return () => window.removeEventListener("resize", updateAccountsPerPage);
+    fetchData();
   }, []);
 
-  const filteredAccounts = accounts.filter(
-    (account) =>
-      (valid === "" || account.valid.toLowerCase().includes(valid.toLowerCase())) &&
-      (fees === "" || account.fees.toString().includes(fees)) &&
+  // Adjust items per page on screen resize
+  useEffect(() => {
+    const updateaccountsPerPage = () => {
+      setAccountsPerPage(window.innerWidth >= 768 ? 6 : 2);
+    };
+    updateaccountsPerPage();
+    window.addEventListener("resize", updateaccountsPerPage);
+    return () => window.removeEventListener("resize", updateaccountsPerPage);
+  }, []);
+
+  const filteredAccounts = account.data.filter(
+    (item) =>
+      (validIn === "" ||
+        item.itemId.validIn?.toLowerCase().includes(validIn.toLowerCase())) &&
+      (fees === "" || item.itemId.fees?.toString().includes(fees)) &&
       (searchTerm === "" ||
-        account.valid.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        account.fees.toString().includes(searchTerm) ||
-        account.title.includes(searchTerm))
+        item.itemId.validIn?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.itemId.fees?.toString().includes(searchTerm) ||
+        item.itemId.title?.includes(searchTerm))
   );
 
   const totalPages = Math.ceil(filteredAccounts.length / accountsPerPage);
@@ -45,10 +77,6 @@ const DataComponent = () => {
 
   const handlePurchaseClick = (account) => {
     setSelectedAccount(account);
-    setPaymentStep("confirmation");
-  };
-
-  const handleProceedToPayment = () => {
     setPaymentStep("payment");
   };
 
@@ -57,18 +85,43 @@ const DataComponent = () => {
     setPaymentStep("confirmation");
   };
 
+  const handlePayment = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const purchaseId = selectedAccount._id;
+      const response = await axios.put(
+        `http://localhost:4900/api/v1/purchases/${purchaseId}`,
+        { status: "complete" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      toast.success(
+        "Ushoje kwishyura neza, mukanya urahabwa code yo gufungura ikizamini."
+      );
+      closePopup();
+      fetchData();
+    } catch (error) {
+      toast.error("Kwishyura byanze.");
+      console.error("Payment error:", error);
+    }
+  };
+
   return (
-    <div className="flex flex-col justify-center items-start md:px-5 gap-1 bg-white">
-      <WelcomeDear/>
+    <div className="flex flex-col justify-center items-center md:px-5 gap-1 bg-white md:p-2">
+      <WelcomeDear />
 
       {/* Filters */}
       <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
         <input
           type="text"
-          placeholder="---Select account valid time---"
-          value={valid}
-          onChange={(e) => setValid(e.target.value)}
-          className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer text-bold"
+          placeholder="---Select account validIn---"
+          value={validIn}
+          onChange={(e) => setvalidIn(e.target.value)}
+          className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer"
         />
         <input
           type="text"
@@ -77,7 +130,7 @@ const DataComponent = () => {
           onChange={(e) => setFees(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer"
         />
-        <div className="w-full px-3 md:flex justify-center items-center hidden md:bloc">
+        <div className="w-full px-3 md:flex justify-center items-center hidden">
           <input
             type="search"
             placeholder="Search Everything"
@@ -103,16 +156,21 @@ const DataComponent = () => {
         <p className="text-center py-4 text-red-500">No data found</p>
       ) : (
         <div className="grid md:grid-cols-3 w-full gap-4 md:gap-3 py-1">
-          {currentAccounts.map((account, index) => {
-            const isLearn = account.valid.toLowerCase().includes("days");
-            const buttonColor = account.fees > 20000 ? "bg-green-500" : "bg-yellow-500";
+          {currentAccounts.map((accountItem, index) => {
+            const account = accountItem.itemId;
+            const buttonColor =
+              account.validIn >= 30 ? "bg-green-500" : "bg-yellow-500";
             return (
               <AccountCard
                 key={index}
-                {...account}
-                onPurchase={() => handlePurchaseClick(account)}
-                icon={<BsCart />}
-                button={"Purchase"}
+                title={`Account ${currentPage * accountsPerPage + index + 1}: ${
+                  account.title
+                }`}
+                fees={account.fees}
+                validIn={account.validIn}
+                onPurchase={() => handlePurchaseClick(accountItem)}
+                icon={<FaHandHoldingDollar />}
+                button={"Proceed Payment"}
                 buttonColor={buttonColor}
               />
             );
@@ -122,7 +180,7 @@ const DataComponent = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex absolute md:gap-[860px] gap-[250px] right-0 md:bottom-[9vh] bottom-[16vh]">
+        <div className="flex justify-around md:gap-[900px] gap-[250px] md:pb-0 pb-10">
           <button
             className={`px-4 py-2 text-blue-900 rounded ${
               currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""
@@ -159,33 +217,7 @@ const DataComponent = () => {
               ✖
             </button>
             {paymentStep === "confirmation" ? (
-              <>
-                <h2 className="text-xl font-bold text-blue-900 p-6">
-                  Dear UMURERWA Anaise,
-                </h2>
-                <p className="mt-2 text-start  px-48 text-blue-900">
-                  Your account {selectedAccount.title} which is valid in {selectedAccount.valid} has
-                  been successfully purchased! Please make payment for your bill
-                  ({selectedAccount.fees} RWF) to get account access code.
-                </p>
-                <div className="flex justify-center p-6 mt-12 gap-6">
-                  <button
-                    className="bg-red-500 text-white px-4 py-2 rounded"
-                    onClick={closePopup}
-                  >
-                    Close
-                  </button>
-                  <button className="bg-yellow-500 text-white px-4 py-2 rounded">
-                    Pay Later
-                  </button>
-                  <button
-                    className="bg-green-500 text-white px-4 py-2 rounded"
-                    onClick={handleProceedToPayment}
-                  >
-                    Pay Now
-                  </button>
-                </div>
-              </>
+              <></>
             ) : (
               <div className="flex md:flex-row flex-col md:gap-6 gap-1">
                 <div className="text-left">
@@ -230,12 +262,15 @@ const DataComponent = () => {
                       placeholder="ex: 0789xxxxxxx"
                       className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
                     />
-                    <button className="bg-green-500 text-white px-4 py-2 rounded mt-4 w-full">
+                    <button
+                      className="bg-green-500 text-white px-4 py-2 rounded mt-4 w-full"
+                      onClick={handlePayment}
+                    >
                       Ishyura {selectedAccount.fees} RWF
                     </button>
                     <p className="text-start py-2 font-medium">
                       Nyuma yo kwemeza kwishyura unyuze kuri Ishyura{" "}
-                      {selectedAccount.fees}, Uragabwa SMS <br />
+                      {selectedAccount.fees}, Urahabwa SMS <br />
                       kuri telefone yawe wemeze maze ushyiremo umubare w'ibanga.
                     </p>
                   </div>
@@ -245,8 +280,9 @@ const DataComponent = () => {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 };
 
-export default DataComponent;
+export default SchoolUnpaid;

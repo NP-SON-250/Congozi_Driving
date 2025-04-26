@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import { BsCart } from "react-icons/bs";
-import Irembo from "../../../assets/irembopay.png";
-import Mtn from "../../../assets/MTN.jpg";
-import { accountData } from "../../../Data/morkData";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import AccountCard from "../../../Components/Cards/AdminCards/AccountCard";
 import CompanyPopup from "../../../Components/Cards/CompanyPopup";
-
+import axios from "axios";
 const SchoolDemo = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [accountsPerPage, setAccountsPerPage] = useState(6);
@@ -17,7 +14,39 @@ const SchoolDemo = () => {
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [paymentStep, setPaymentStep] = useState("confirmation");
 
-  const accounts = accountData;
+  const [account, setAccount] = useState({ data: [] });
+  const [userName, setUserName] = useState("");
+    // Get user info from localStorage
+    useEffect(() => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser && storedUser !== "undefined") {
+        try {
+          setUserName(JSON.parse(storedUser));
+        } catch (err) {
+          console.error("Failed to parse stored user:", err);
+        }
+      }
+    }, []);
+    // Fetch all accounts
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get("http://localhost:4900/api/v1/accounts", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setAccount(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const accounts = account.data || [];
 
   useEffect(() => {
     const updateAccountsPerPage = () => {
@@ -31,10 +60,10 @@ const SchoolDemo = () => {
   const filteredAccounts = accounts.filter(
     (account) =>
       (valid === "" ||
-        account.valid.toLowerCase().includes(valid.toLowerCase())) &&
+        account.validIn.toLowerCase().includes(valid.toLowerCase())) &&
       (fees === "" || account.fees.toString().includes(fees)) &&
       (searchTerm === "" ||
-        account.valid.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        account.validIn.toLowerCase().includes(searchTerm.toLowerCase()) ||
         account.fees.toString().includes(searchTerm) ||
         account.title.includes(searchTerm))
   );
@@ -60,7 +89,7 @@ const SchoolDemo = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-start md:px-5 gap-1 bg-white">
+    <div className="flex flex-col justify-center items-center md:px-5 gap-1 bg-white md:p-2 ">
       <WelcomeDear />
 
       {/* Filters */}
@@ -102,13 +131,12 @@ const SchoolDemo = () => {
 
       {/* account Cards */}
       {filteredAccounts.length === 0 ? (
-        <p className="text-center py-4 text-red-500">No data found</p>
+        <p className=" py-4 text-red-500">Not data found</p>
       ) : (
         <div className="grid md:grid-cols-3 w-full gap-4 md:gap-3 py-1">
           {currentAccounts.map((account, index) => {
-            const isLearn = account.valid.toLowerCase().includes("days");
             const buttonColor =
-              account.fees > 20000 ? "bg-green-500" : "bg-yellow-500";
+              account.validIn >= 30 ? "bg-green-500" : "bg-yellow-500";
             return (
               <AccountCard
                 key={index}

@@ -54,7 +54,7 @@ const LandingLay = () => {
         {/* Footer */}
         <div className="md:fixed md:bottom-0 md:left-0 md:right-0 w-full">
           <div className="flex justify-center bg-Unpaid">
-            <p className="p-4 text-blue-900 md:text-2xl text-sm font-bold text-center uppercase">
+            <p className="p-4 text-blue-900 md:text-xs text-xs font-bold text-center uppercase">
               &copy; {getCurrentYear()} Congozi Expert Technical Unity{" "}
               <span className="normal-case">Limited</span>
             </p>

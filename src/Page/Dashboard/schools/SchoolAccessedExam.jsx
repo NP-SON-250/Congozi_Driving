@@ -6,11 +6,10 @@ import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import ContinueCard from "../../../Components/Cards/ContinueCard";
 import ConfirmCard from "../../../Components/Cards/ConfirmCard";
 import axios from "axios";
-const AutoTracking = () => {
+const SchoolAccessedExam = () => {
   const [isSearched, setIsSearched] = useState(false);
-  const [examCode, setExamCode] = useState("");
-  const [examDetails, setExamDetails] = useState(null);
-  const [grantedUsers, setGrantedUsers] = useState(null);
+  const [examId, setExamId] = useState("");
+  const [userName, setUserName] = useState("");
 
   const [showContinueCard, setShowContinueCard] = useState(false);
   const [showConfirmCard, setShowConfirmCard] = useState(false);
@@ -21,26 +20,24 @@ const AutoTracking = () => {
   const params = new URLSearchParams(location.search);
 
   useEffect(() => {
-    const initialExamCode = params.get("accessCode") || "";
-    setExamCode(initialExamCode);
+    const initialExamId = params.get("id") || "";
+    setExamId(initialExamId);
   }, [params]);
 
   useEffect(() => {
-    if (examCode) {
+    if (examId) {
       const fetchData = async () => {
         try {
           const token = localStorage.getItem("token");
           const response = await axios.get(
-            `http://localhost:4900/api/v1/purchases/access/${examCode}`,
+            `http://localhost:4900/api/v1/exams/${examId}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
             }
           );
-          setExam(response.data);
-          setExamDetails(response.data.data.itemId);
-          setGrantedUsers(response.data.data.purchasedBy);
+          setExam(response.data.data);
         } catch (error) {
           console.error("Error fetching data:", error);
         }
@@ -48,27 +45,28 @@ const AutoTracking = () => {
 
       fetchData();
     }
-  }, [examCode]);
+  }, [examId]);
 
   const handleSearch = () => {
     setIsSearched(true);
   };
 
   const handleNotReady = () => {
-    setExamCode("");
+    setExamId("");
     setIsSearched(false);
-    navigate(`/students/tracking`);
+    navigate(`/schools/accessedexam`);
   };
 
   const handleStartExam = () => {
-    if (examDetails?.type === "Learn" || examDetails?.type === "learn") {
-      navigate(`/liveLearn?code=${examCode}`);
-    } else if (examDetails?.type === "Test" || examDetails?.type === "test") {
-      navigate(`/liveExam?code=${examCode}`);
+    if (exam?.type === "Learn" || exam?.type === "learn") {
+      navigate(`/schoolsliveLearn?id=${examId}`);
+    } else if (exam?.type === "Test" || exam?.type === "test") {
+      navigate(`/schoolsliveExam?id=${examId}`);
     } else {
       alert("Invalid exam type.");
     }
   };
+  
 
   const handleShowContinueCard = () => {
     setShowContinueCard(true);
@@ -85,6 +83,17 @@ const AutoTracking = () => {
     setShowConfirmCard(false);
   };
 
+  // Get user info from localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser && storedUser !== "undefined") {
+      try {
+        setUserName(JSON.parse(storedUser));
+      } catch (err) {
+        console.error("Failed to parse stored user:", err);
+      }
+    }
+  }, []);
   return (
     <div className="flex flex-col justify-center items-center md:px-5 gap-1 bg-white md:p-2">
       <WelcomeDear />
@@ -104,13 +113,13 @@ const AutoTracking = () => {
             </div>
             <div className="flex flex-col gap-4">
               <p className="capitalize font-bold text-lg text-center">
-                Enter your examination access code
+                Enter your examination access id
               </p>
               <div className="w-full md:px-3 md:pb-16 flex justify-center items-center px-6 pb-24 relative">
                 <input
                   type="search"
-                  value={examCode}
-                  onChange={(e) => setExamCode(e.target.value)}
+                  value={examId}
+                  onChange={(e) => setExamId(e.target.value)}
                   placeholder="Search exam code"
                   className="border-2 px-5 border-blue-500 p-2 rounded-full md:w-1/2 w-full outline-none"
                 />
@@ -125,7 +134,7 @@ const AutoTracking = () => {
           </div>
         ) : (
           <div className="flex flex-col justify-center p-2">
-            {examDetails ? (
+            {exam ? (
               <div>
                 <table className="border-collapse border border-gray-500 w-full mt-2">
                   <tbody>
@@ -142,68 +151,63 @@ const AutoTracking = () => {
                         Exam Title
                       </td>
                       <td className="border border-gray-400 p-1">
-                        {examDetails.title}
+                        {exam.title}
                       </td>
                     </tr>
                     <tr>
                       <td className="border border-gray-400 p-1 font-bold">
-                        Exam Access Code
+                        Exam Access Id
                       </td>
-                      <td className="border border-gray-400 p-1">{examCode}</td>
+                      <td className="border border-gray-400 p-1">{examId}</td>
                     </tr>
                     <tr>
                       <td className="border border-gray-400 p-1 font-bold">
                         Fees
                       </td>
                       <td className="border border-gray-400 p-1">
-                        {examDetails.fees}
+                        {exam.fees}
                       </td>
                     </tr>
 
-                    {grantedUsers && (
+                    {userName && (
                       <>
                         <tr>
-                          <td className="border border-gray-400 px-1 md:text-base text-xs bg-blue-100 text-center text-blue-900">
-                            Students Granted Access:
+                          <td className="border border-gray-400 px-1 md:text-base text-xs bg-blue-100 text-start text-blue-900">
+                            School Granted:
                           </td>
-                          <td className="border border-gray-400 px-1 md:text-base text-xs bg-blue-100 text-center text-blue-900">
-                            {grantedUsers.fName}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="border border-gray-400 px-1">
-                            Student's Name
-                          </td>
-                          <td className="border border-gray-400 px-1">
-                            {grantedUsers.fName} {grantedUsers.lName}
+                          <td className="border border-gray-400 px-1 md:text-base text-xs bg-blue-100 text-start text-blue-900">
+                            {userName?.fName}
                           </td>
                         </tr>
                         <tr>
                           <td className="border border-gray-400 px-1">
-                            Student Address
+                          School Owner
                           </td>
                           <td className="border border-gray-400 px-1">
-                            {grantedUsers.address}
+                            {userName?.fName} {userName?.lName}
                           </td>
                         </tr>
                         <tr>
                           <td className="border border-gray-400 px-1">
-                            Student Phone
+                          School Address
                           </td>
                           <td className="border border-gray-400 px-1">
-                            {grantedUsers.phone}
+                            {userName?.address}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="border border-gray-400 px-1">
+                            School Phone
+                          </td>
+                          <td className="border border-gray-400 px-1">
+                            {userName.phone}
                           </td>
                         </tr>
                       </>
                     )}
                   </tbody>
                 </table>
-              </div>
-            ) : (
-              <p className="text-red-500 text-center">Exam not found</p>
-            )}
-
-            <div className="flex md:flex-row flex-col justify-center w-full items-center gap-4 md:py-2 py-6">
+                <div className="flex md:flex-row flex-col justify-center w-full items-center gap-4 md:py-2 py-6">
               <p>Are you ready to start the exam?</p>
               <div className="flex gap-6">
                 <button
@@ -220,6 +224,10 @@ const AutoTracking = () => {
                 </button>
               </div>
             </div>
+              </div>
+            ) : (
+              <p className="text-red-500 text-center">Exam not found</p>
+            )}
           </div>
         )}
       </div>
@@ -227,24 +235,24 @@ const AutoTracking = () => {
       {/* Continue Card Popup */}
       {showContinueCard && (
         <ContinueCard
-          code={examCode}
+          code={examId}
           onClose={handleCloseContinueCard}
           onClick={handleShowConfirmCard}
-          onChange={(e) => setExamCode(e.target.value)}
+          onChange={(e) => setExamId(e.target.value)}
         />
       )}
 
       {/* Confirm Card Popup */}
       {showConfirmCard && (
         <ConfirmCard
-          code={examCode}
+          code={examId}
           onClose={handleCloseConfirmCard}
           onClick={handleStartExam}
-          onChange={(e) => setExamCode(e.target.value)}
+          onChange={(e) => setExamId(e.target.value)}
         />
       )}
     </div>
   );
 };
 
-export default AutoTracking;
+export default SchoolAccessedExam;

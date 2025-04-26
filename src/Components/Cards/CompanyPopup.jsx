@@ -5,7 +5,7 @@ const CompanyPopup = ({ onClose }) => {
   const [tinNumber, setTinNumber] = React.useState("");
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[999]">
       <div className="bg-[#1e2a87] text-white rounded-2xl p-6 w-[90%] md:w-[500px] relative">
         {/* Close Button */}
         <button
@@ -16,12 +16,10 @@ const CompanyPopup = ({ onClose }) => {
         </button>
 
         {/* Content */}
-        <p className="text-center mb-2 font-medium leading-6">
-          hemererwe kwinjira umuntu ufite <strong>company!</strong>
-          <br />
-          cyangwa uhamagare bagufashe
-          <br />
-          <span className="text-orange-400 font-semibold text-lg">
+        <p className="text-center mb-2 capitalize">
+          hemererwe kugura umuntu ufite <br /> <strong className="pr-2">Ikkigo!</strong>
+          cyangwa uwabsabye hamagara:
+          <span className="text-orange-400 font-semibold text-lg pl-2">
             0783905790
           </span>
         </p>
@@ -34,23 +32,23 @@ const CompanyPopup = ({ onClose }) => {
         <div className="flex flex-col gap-3">
           <input
             type="text"
-            placeholder="izina rya company"
+            placeholder="Telefone Cg Emaili Y'ikigo Cyawe"
             value={companyName}
             onChange={(e) => setCompanyName(e.target.value)}
             className="p-2 rounded-md text-black"
           />
           <input
             type="text"
-            placeholder="nimero ikuranga (TIN)"
+            placeholder="Ijambo Banga Winjiriraho"
             value={tinNumber}
             onChange={(e) => setTinNumber(e.target.value)}
             className="p-2 rounded-md text-black"
           />
           <button
             onClick={() => alert("Injira clicked")}
-            className="bg-orange-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-orange-600"
+            className="bg-orange-500  text-white px-4 py-2 rounded-md font-semibold hover:bg-orange-600"
           >
-            injira
+            Injira
           </button>
         </div>
       </div>

@@ -36,14 +36,22 @@ import SchoolMyExams from "./Page/Dashboard/schools/SchoolMyExams";
 import SchoolMyAccount from "./Page/Dashboard/schools/SchoolMyAccount";
 import AdminsPayments from "./Page/Dashboard/Admins/AdminsPayments";
 import SchoolDemo from "./Page/Dashboard/Students/SchoolDemo";
+import SchoolUnpaid from "./Page/Dashboard/schools/SchoolUnpaid";
+import SchoolWaiting from "./Page/Dashboard/schools/SchoolWaiting";
+import SchoolAccessableExams from "./Page/Dashboard/schools/SchoolAccessableExams";
+import SchoolAccessedExam from "./Page/Dashboard/schools/SchoolAccessedExam";
+import SchoolLiveExam from "./Page/Dashboard/schools/SchoolLiveExam";
+import SchoolLiveLearn from "./Page/Dashboard/schools/SchoolLiveLearn";
+import LiveLearn from "./Page/Dashboard/Students/LiveLearn";
 const App = () => {
   
   // Disable right click
-  // onContextMenu={(e) => e.preventDefault()}
+  // onContextMenu={(e) => e.preventDefault()} 
+  //select-none
 
   return (
     <>
-      <div className="overflow-x-hidden font-Poppins select-none">
+      <div className="overflow-x-hidden font-Poppins">
         <Routes>
           {/* Landing Routes */}
           <Route element={<LandingLay />}>
@@ -65,6 +73,7 @@ const App = () => {
             <Route path="/students/unpaidexams" element={<StudentUnpaid />} />
             <Route path="/students/waitingexams" element={<StudentWaiting />} />
             <Route path="/liveExam" element={<LiveExam />} />
+            <Route path="/liveLearn" element={<LiveLearn />} />
             <Route path="/students/school" element={<SchoolDemo />} />
           </Route>
           {/* Admins Routes */}
@@ -83,6 +92,14 @@ const App = () => {
             <Route path="/schools/online" element={<SchoolDoExams />} />
             <Route path="/schools/exams" element={<SchoolMyExams />} />
             <Route path="/schools/account" element={<SchoolMyAccount />} />
+            <Route path="/schools/unpaidaccounts" element={<SchoolUnpaid />} />
+            <Route path="/schools/waitingaccounts" element={<SchoolWaiting />} />
+            <Route path="/schools/accessableexams" element={<SchoolAccessableExams />} />
+            <Route path="/schools/accessedexam" element={<SchoolAccessedExam />} />
+            <Route path="/schoolsliveExam" element={<SchoolLiveExam />} />
+            <Route path="/schoolsliveLearn" element={<SchoolLiveLearn />} />
+            
+
           </Route>
         </Routes>
       </div>

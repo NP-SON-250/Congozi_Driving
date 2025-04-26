@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
-import { examData } from "../../../Data/morkData";
 import {
   FaCartPlus,
   FaEdit,
@@ -20,23 +20,45 @@ const getCurrentDate = () => {
 };
 
 const StudentExams = () => {
+  const [allExams, setAllExams] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedExam, setSelectedExam] = useState(null);
   const [paymentStep, setPaymentStep] = useState("confirmation");
-  const examsPerPage = 3;
+  const examsPerPage = 5;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    const fetchExams = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        const response = await axios.get(
+          "http://localhost:4900/api/v1/purchases/user",
+          config
+        );
+        const result = response.data?.data;
+        setAllExams(Array.isArray(result) ? result : [result]);
+      } catch (error) {
+        console.error("Error fetching exam data:", error);
+      }
+    };
+
+    fetchExams();
+  }, []);
 
   const indexOfLastExam = currentPage * examsPerPage;
   const indexOfFirstExam = indexOfLastExam - examsPerPage;
-  const currentExams = examData.slice(indexOfFirstExam, indexOfLastExam);
-  const totalPages = Math.ceil(examData.length / examsPerPage);
-
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const currentExams = allExams.slice(indexOfFirstExam, indexOfLastExam);
+  const totalPages = Math.ceil(allExams.length / examsPerPage);
 
   const handleDoExam = (exam) => {
     if (exam.accessCode && exam.accessCode.length > 0) {
-      const accessCode = exam.accessCode[0].code;
-      navigate(`/students/waitingexams?accessCode=${accessCode}`);
+      navigate(`/liveExam?code=${exam.accessCode}`);
     } else {
       console.error("No access code available for this exam.");
     }
@@ -63,7 +85,7 @@ const StudentExams = () => {
         <h1>My Examinations</h1>
       </div>
 
-      <div className="overflow-x-auto mt-0 md:pt-0 pt-20">
+      <div className="overflow-x-auto rounded-lg shadow border border-blue-900">
         <div className="min-w-full inline-block align-middle">
           <table className="min-w-full table-auto">
             <thead>
@@ -78,34 +100,42 @@ const StudentExams = () => {
               </tr>
             </thead>
             <tbody>
-              {currentExams.map((exam) => (
+              {currentExams.map((exam, index) => (
                 <tr
-                  key={exam.id}
+                  key={exam._id}
                   className="bg-white border text-blue-900 md:text-base text-xs"
                 >
-                  <td className="text-center py-2 px-4">{exam.number}</td>
-                  <td className="text-center py-2 px-4">
-                    {exam.accessCode.map((code, i) => (
-                      <div key={i}>{code.code}</div>
-                    ))}
+                  <td className="text-center md:tex-md text-xs py-2 px-4">
+                    {indexOfFirstExam + index + 1}
                   </td>
-                  <td className="text-center p-2">{exam.type}</td>
-                  <td className="text-center p-2">{getCurrentDate()}</td>
-                  <td className="text-center p-2">{exam.fees}</td>
-                  <td className="text-center p-2">{exam.status}</td>
+                  <td className="text-center md:tex-md text-xs px-1">
+                    {exam.accessCode}
+                  </td>
+                  <td className="text-center md:tex-md text-xs p-2">
+                    {exam.itemId?.type}
+                  </td>
+                  <td className="text-center md:tex-md text-xs px-2">
+                    {getCurrentDate()}
+                  </td>
+                  <td className="text-center md:tex-md text-xs px-2">
+                    {exam.amount}
+                  </td>
+                  <td className="text-center md:tex-md text-xs px-2">
+                    {exam.status}
+                  </td>
                   <td className="text-center p-2">
-                    {exam.status === "Unpaid" ? (
+                    {exam.status === "pending" ? (
                       <button
                         title="Proceed to payment"
                         onClick={() => handlePurchaseClick(exam)}
-                        className="text-blue-900 py-1 px-3 flex items-center gap-2"
+                        className="text-blue-900 py-1 px-3 flex md:tex-xs text-xs items-center gap-2"
                       >
                         <FaCartPlus />
                       </button>
-                    ) : exam.status === "Waiting" ? (
+                    ) : exam.status === "complete" ? (
                       <button
                         onClick={() => handleDoExam(exam)}
-                        className="text-blue-900 py-1 px-3 flex items-center gap-2"
+                        className="text-blue-900 py-1 px-3 md:tex-xs text-xs flex items-center gap-2"
                       >
                         <FaEdit />
                       </button>
@@ -129,21 +159,21 @@ const StudentExams = () => {
             className={`px-4 py-2 text-blue-900 rounded ${
               currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
             }`}
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
           >
             <FaArrowAltCircleLeft size={24} />
           </button>
           <button
             className={`px-4 py-2 text-blue-900 rounded ${
-              currentPage === totalPages - 1
+              currentPage === totalPages
                 ? "opacity-50 cursor-not-allowed"
                 : ""
             }`}
             onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
             }
-            disabled={currentPage === totalPages - 1}
+            disabled={currentPage === totalPages}
           >
             <FaArrowAltCircleRight size={24} />
           </button>
@@ -153,7 +183,7 @@ const StudentExams = () => {
       {/* Payment Popup */}
       {selectedExam && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[999]">
-          <div className="bg-white rounded-lg shadow-lg md:max-w-3xl w-full text-center relative">
+          <div className="bg-Total rounded-lg shadow-lg md:max-w-3xl w-full text-center relative">
             <button
               className="absolute top-1 right-1 text-xl bg-white text-red-700 border-2 border-white rounded-full w-8 h-8 flex justify-center"
               onClick={closePopup}
@@ -162,13 +192,15 @@ const StudentExams = () => {
             </button>
             {paymentStep === "confirmation" ? (
               <>
-                <h2 className="text-xl font-bold text-blue-900 p-6">
-                  Dear UMURERWA Anaise,
+                <h2 className="text-lg text-start font-bold text-white px-6 pt-6">
+                  Dear {selectedExam.purchasedBy?.lName},
                 </h2>
-                <p className="mt-2 text-start text-blue-900 p-6">
-                  Your Exam Access Code <b>{selectedExam.id}</b> for{" "}
-                  <b>{selectedExam.type}</b> has been selected. Please pay{" "}
-                  <b>{selectedExam.fees} RWF</b> to access the exam.
+                <p className="mt-0 text-start text-white px-6">
+                  Your Exam {selectedExam.itemId?.number} for{" "}
+                  {selectedExam.itemId?.type} has been successfully
+                  purchased! Please make payment for your bill (
+                  {selectedExam.itemId?.fees} RWF) to get exam access
+                  code.
                 </p>
                 <div className="flex justify-center p-6 mt-12 gap-6">
                   <button
@@ -177,7 +209,10 @@ const StudentExams = () => {
                   >
                     Close
                   </button>
-                  <button className="bg-yellow-500 text-white px-4 py-2 rounded">
+                  <button
+                    className="bg-yellow-500 text-white px-4 py-2 rounded"
+                    onClick={closePopup}
+                  >
                     Pay Later
                   </button>
                   <button
@@ -189,7 +224,7 @@ const StudentExams = () => {
                 </div>
               </>
             ) : (
-              <div className="flex md:flex-row flex-col md:gap-6 gap-1">
+              <div className="flex md:flex-row bg-white flex-col md:gap-6 gap-1">
                 <div className="text-left">
                   <ul className="md:space-y-6 space-y-2 bg-gray-200 h-full p-4">
                     <li className="text-blue-900 font-bold">
@@ -203,8 +238,8 @@ const StudentExams = () => {
                       <input type="radio" name="payment" /> Ikarita ya Banki
                     </li>
                     <li>
-                      <input type="radio" name="payment" /> Amafaranga mu ntoki
-                      / Ejenti
+                      <input type="radio" name="payment" /> Amafaranga mu ntoki /
+                      Ejenti
                     </li>
                     <li>
                       <input type="radio" name="payment" /> Konti za banki
@@ -214,7 +249,7 @@ const StudentExams = () => {
                 </div>
                 <div className="flex flex-col justify-center items-start px-3 py-2">
                   <p className="text-start">
-                    Kanda ino mibare kuri telefone yawe ya MTN maze <br />{" "}
+                    Kanda ino mibare kuri telefone yawe ya MTN maze <br />
                     wishyure:
                   </p>
                   <p className="flex justify-center gap-2 md:py-6 font-bold">
@@ -226,20 +261,21 @@ const StudentExams = () => {
                     #
                   </p>
                   <p>Cyangwa ushyiremo nomero yawe ya MTM MoMo Maze wishyure</p>
-                  <input
-                    type="text"
-                    placeholder="ex: 0789xxxxxxx"
-                    className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
-                  />
-                  <button className="bg-green-500 text-white px-4 py-2 rounded mt-4 w-full">
-                    Ishyura {selectedExam.fees} RWF
-                  </button>
-                  <p className="text-start py-2 font-medium">
-                    Nyuma yo kwemeza kwishyura unyuze kuri Ishyura{" "}
-                    {selectedExam.fees}, <br />
-                    Urahabwa SMS kuri telefone yawe wemeze maze ushyiremo
-                    umubare w'ibanga.
-                  </p>
+                  <div className="w-full">
+                    <input
+                      type="text"
+                      placeholder="ex: 0789xxxxxxx"
+                      className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
+                    />
+                    <button className="bg-green-500 text-white px-4 py-2 rounded mt-4 w-full">
+                      Ishyura {selectedExam.itemId?.fees} RWF
+                    </button>
+                    <p className="text-start py-2 font-medium">
+                      Nyuma yo kwemeza kwishyura unyuze kuri Ishyura{" "}
+                      {selectedExam.itemId?.fees}, Uragabwa SMS <br />
+                      kuri telefone yawe wemeze maze ushyiremo umubare w'ibanga.
+                    </p>
+                  </div>
                 </div>
               </div>
             )}

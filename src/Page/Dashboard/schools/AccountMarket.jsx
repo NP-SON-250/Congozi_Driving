@@ -3,11 +3,9 @@ import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import { BsCart } from "react-icons/bs";
 import Irembo from "../../../assets/irembopay.png";
 import Mtn from "../../../assets/MTN.jpg";
-import { accountData } from "../../../Data/morkData";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
-import ExamsCard from "../../../Components/Cards/ExamsCard";
 import AccountCard from "../../../Components/Cards/AdminCards/AccountCard";
-
+import axios from "axios";
 const SchoolDemo = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [accountsPerPage, setAccountsPerPage] = useState(6);
@@ -17,7 +15,42 @@ const SchoolDemo = () => {
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [paymentStep, setPaymentStep] = useState("confirmation");
 
-  const accounts = accountData;
+  const [account, setAccount] = useState({ data: [] });
+  const [userName, setUserName] = useState("");
+  // Get user info from localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser && storedUser !== "undefined") {
+      try {
+        setUserName(JSON.parse(storedUser));
+      } catch (err) {
+        console.error("Failed to parse stored user:", err);
+      }
+    }
+  }, []);
+  // Fetch all accounts
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "http://localhost:4900/api/v1/accounts",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAccount(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const accounts = account.data || [];
 
   useEffect(() => {
     const updateAccountsPerPage = () => {
@@ -30,10 +63,11 @@ const SchoolDemo = () => {
 
   const filteredAccounts = accounts.filter(
     (account) =>
-      (valid === "" || account.valid.toLowerCase().includes(valid.toLowerCase())) &&
+      (valid === "" ||
+        account.validIn.toLowerCase().includes(valid.toLowerCase())) &&
       (fees === "" || account.fees.toString().includes(fees)) &&
       (searchTerm === "" ||
-        account.valid.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        account.validIn.toLowerCase().includes(searchTerm.toLowerCase()) ||
         account.fees.toString().includes(searchTerm) ||
         account.title.includes(searchTerm))
   );
@@ -53,6 +87,50 @@ const SchoolDemo = () => {
     setPaymentStep("payment");
   };
 
+  const handlePayLaterClick = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        `http://localhost:4900/api/v1/purchases/${selectedAccount._id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      closePopup();
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        alert("You have already purchased this account.");
+      } else {
+        console.error("Purchase request failed:", error);
+        alert("Failed to initiate purchase. Please try again.");
+      }
+    }
+  };
+  const handlePayNowClick = async () => {
+    console.log(selectedAccount._id)
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        `http://localhost:4900/api/v1/purchases/paid/${selectedAccount._id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      closePopup();
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        alert("Item not found.");
+      } else {
+        console.error("Purchase request failed:", error);
+      }
+    }
+  };
   const closePopup = () => {
     setSelectedAccount(null);
     setPaymentStep("confirmation");
@@ -60,7 +138,7 @@ const SchoolDemo = () => {
 
   return (
     <div className="flex flex-col justify-center items-start md:px-5 gap-1 bg-white">
-      <WelcomeDear/>
+      <WelcomeDear />
 
       {/* Filters */}
       <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
@@ -105,17 +183,21 @@ const SchoolDemo = () => {
       ) : (
         <div className="grid md:grid-cols-3 w-full gap-4 md:gap-3 py-1">
           {currentAccounts.map((account, index) => {
-            const isLearn = account.valid.toLowerCase().includes("days");
-            const buttonColor = account.fees > 20000 ? "bg-green-500" : "bg-yellow-500";
+            const buttonColor =
+              account.validIn >= 30 ? "bg-green-500" : "bg-yellow-500";
             return (
               <AccountCard
-                key={index}
-                {...account}
-                onPurchase={() => handlePurchaseClick(account)}
-                icon={<BsCart />}
-                button={"Purchase"}
-                buttonColor={buttonColor}
-              />
+                  key={index}
+                  title={`Account ${currentPage * accountsPerPage + index + 1}: ${
+                    account.title
+                  }`}
+                  fees={account.fees}
+                  validIn={account.validIn}
+                  onPurchase={() => handlePurchaseClick(account)}
+                  icon={<BsCart />}
+                  button={"Purchase"}
+                  buttonColor={buttonColor}
+                />
             );
           })}
         </div>
@@ -152,7 +234,7 @@ const SchoolDemo = () => {
       {/* Payment Popup */}
       {selectedAccount && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[999]">
-          <div className="bg-white rounded-lg shadow-lg md:max-w-3xl w-full text-center relative">
+          <div className="bg-Total rounded-lg shadow-lg md:max-w-3xl w-full text-center relative">
             <button
               className="absolute top-1 right-1 text-xl bg-white text-red-700 border-2 border-white rounded-full w-8 h-8 flex justify-center"
               onClick={closePopup}
@@ -161,13 +243,22 @@ const SchoolDemo = () => {
             </button>
             {paymentStep === "confirmation" ? (
               <>
-                <h2 className="text-xl font-bold text-blue-900 p-6">
-                  Dear UMURERWA Anaise,
+                <h2 className="text-lg text-start font-bold text-white px-6 pt-6">
+                  Dear {userName?.fName} {userName?.lName},
                 </h2>
-                <p className="mt-2 text-start  px-48 text-blue-900">
-                  Your account {selectedAccount.title} which is valid in {selectedAccount.valid} has
-                  been successfully purchased! Please make payment for your bill
-                  ({selectedAccount.fees} RWF) to get account access code.
+                <p className="mt-0 text-start text-white px-6">
+                  Your{" "}
+                  <span className="font-bold">{selectedAccount.title}</span>{" "}
+                  account which is valid in{" "}
+                  <span className="font-bold">
+                    {selectedAccount.validIn} days
+                  </span>{" "}
+                  has been successfully purchased! Please make payment for your
+                  bill
+                  <span className="font-bold pl-1">
+                    ({selectedAccount.fees} RWF)
+                  </span>{" "}
+                  to get account access code.
                 </p>
                 <div className="flex justify-center p-6 mt-12 gap-6">
                   <button
@@ -176,7 +267,10 @@ const SchoolDemo = () => {
                   >
                     Close
                   </button>
-                  <button className="bg-yellow-500 text-white px-4 py-2 rounded">
+                  <button
+                    className="bg-yellow-500 text-white px-4 py-2 rounded"
+                    onClick={handlePayLaterClick}
+                  >
                     Pay Later
                   </button>
                   <button
@@ -231,7 +325,9 @@ const SchoolDemo = () => {
                       placeholder="ex: 0789xxxxxxx"
                       className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
                     />
-                    <button className="bg-green-500 text-white px-4 py-2 rounded mt-4 w-full">
+                    <button className="bg-green-500 text-white px-4 py-2 rounded mt-4 w-full"
+                    onClick={handlePayNowClick}
+                    >
                       Ishyura {selectedAccount.fees} RWF
                     </button>
                     <p className="text-start py-2 font-medium">

@@ -7,12 +7,8 @@ import { LuCircleArrowLeft } from "react-icons/lu";
 import { FiArrowRightCircle } from "react-icons/fi";
 import { FaRegEye } from "react-icons/fa6";
 import DescriptionCard from "../../../Components/Cards/DescriptionCard";
-import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-
-const LiveExam = () => {
-  const [examCode, setExamCode] = useState("");
-  const [paidExam, setPaidExam] = useState(null);
+const SchoolLiveExam = () => {
+  const [examId, setExamId] = useState("");
   const [examToDo, setExamToDo] = useState(null);
   const [examQuestions, setExamQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(0);
@@ -26,65 +22,18 @@ const LiveExam = () => {
   const [totalMarks, setTotalMarks] = useState(0);
   const [showNoQuestionsMessage, setShowNoQuestionsMessage] = useState(false);
 
-  const [selectedOption, setSelectedOption] = useState(null);
   const location = useLocation();
-  const navigate = useNavigate();
 
-  const errors = (message) => {
-    toast.error(message, {
-      position: "top-center",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-  };
-
-  const success = (message) => {
-    toast.success(message, {
-      position: "top-center",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-  };
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const code = params.get("code") || "";
-    setExamCode(code);
+    const id = params.get("id") || "";
+    setExamId(id);
   }, [location.search]);
-
-  useEffect(() => {
-    const fetchPaidExam = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get(
-          `http://localhost:4900/api/v1/purchases/access/${examCode}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setPaidExam(res.data.data.itemId);
-      } catch (error) {
-        console.error("Error fetching paid exam:", error);
-      }
-    };
-    if (examCode) fetchPaidExam();
-  }, [examCode]);
 
   useEffect(() => {
     const fetchExamDetails = async () => {
       try {
         const token = localStorage.getItem("token");
-        const examId = paidExam?.examId || paidExam?._id;
-        if (!examId) return;
         const res = await axios.get(
           `http://localhost:4900/api/v1/exams/${examId}`,
           {
@@ -98,37 +47,37 @@ const LiveExam = () => {
         console.error("Error fetching exam details:", error);
       }
     };
-    if (paidExam) fetchExamDetails();
-  }, [paidExam]);
+    if (examId) fetchExamDetails();
+  }, [examId]);
 
   useEffect(() => {
-    if (examToDo && examCode) {
-      setExamQuestions(examToDo.questions || []);
-      const storedTime = localStorage.getItem(`examTimeLeft_${examCode}`);
+    if (examToDo && examId) {
+      setExamQuestions(examToDo?.questions || []);
+      const storedTime = localStorage.getItem(`examTimeLeft_${examId}`);
       const initialTime = storedTime ? parseInt(storedTime, 10) : 1200;
       setTimeLeft(initialTime);
     }
-  }, [examToDo, examCode]);
+  }, [examToDo, examId]);
 
   useEffect(() => {
-    if (examFinished || !examCode) return;
+    if (examFinished || !examId) return;
 
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime <= 1) {
           clearInterval(timer);
-          localStorage.removeItem(`examTimeLeft_${examCode}`);
+          localStorage.removeItem(`examTimeLeft_${examId}`);
           handleSubmitExam();
           return 0;
         }
         const newTime = prevTime - 1;
-        localStorage.setItem(`examTimeLeft_${examCode}`, newTime);
+        localStorage.setItem(`examTimeLeft_${examId}`, newTime);
         return newTime;
       });
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [examFinished, examCode]);
+  }, [examFinished, examId]);
 
   useEffect(() => {
     localStorage.setItem("selectedOptions", JSON.stringify(selectedOptions));
@@ -143,65 +92,18 @@ const LiveExam = () => {
     });
   };
 
-  const handleSubmitExam = async () => {
-    try {
-      let score = 0;
-      examQuestions.forEach((q) => {
-        const selectedOptionId = selectedOptions[q._id];
-        const correctOption = q.options.find((opt) => opt.isCorrect);
-        if (selectedOptionId && selectedOptionId === correctOption?._id) {
-          score++;
-        }
-      });
-
-      const token = localStorage.getItem("token");
-      if (!token) {
-        errors("Ntacyo wakora udafite konti, banza winjire.");
-        setExamFinished(true);
-        navigate("/kwinjira");
-        return;
+  const handleSubmitExam = () => {
+    let score = 0;
+    examQuestions.forEach((q) => {
+      const selectedOptionId = selectedOptions[q._id];
+      const correctOption = q.options.find((opt) => opt.isCorrect);
+      if (selectedOptionId && selectedOptionId === correctOption?._id) {
+        score++;
       }
-
-      const savedOptions =
-        JSON.parse(localStorage.getItem("selectedOptions")) || {};
-      const responses = Object.keys(savedOptions).map((questionId) => ({
-        questionId,
-        selectedOptionId: savedOptions[questionId],
-      }));
-
-      const payload = {
-        examId: examToDo._id,
-        responses,
-      };
-
-      const res = await fetch(`http://localhost:4900/api/v1/responses/add`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || data.status !== "200") {
-        const message = data.message || "Gutanga ibisubizo byanze.";
-        throw new Error(message);
-      }
-
-      success("Ibisubizo byawe byoherejwe neza.");
-      localStorage.removeItem("selectedOptions");
-      localStorage.removeItem(`examTimeLeft_${examCode}`);
-      setSelectedOption(null);
-      setTotalMarks(score);
-      setExamFinished(true);
-      // navigate("/students/exams");
-    } catch (error) {
-      console.error("Submission error:", error);
-      setExamFinished(true);
-      errors(error.message || "Habaye ikibazo mu kohereza ibisubizo.");
-    }
+    });
+    setTotalMarks(score);
+    setExamFinished(true);
+    localStorage.removeItem(`examTimeLeft_${examId}`);
   };
 
   const confirmFinishExam = () => setShowModal(true);
@@ -209,7 +111,7 @@ const LiveExam = () => {
   const handleModalResponse = (res) => {
     if (res === "yes") {
       localStorage.removeItem("selectedOptions");
-      localStorage.removeItem(`examTimeLeft_${examCode}`);
+      localStorage.removeItem(`examTimeLeft_${examId}`);
       handleSubmitExam();
     }
     setShowModal(false);
@@ -249,8 +151,9 @@ const LiveExam = () => {
                 number={examToDo?.number}
                 type={examToDo?.type}
                 timeLeft={formatTime(timeLeft)}
-                access={examCode}
+                access={examId}
               />
+
               <div className="flex flex-wrap justify-start py-1 md:gap-4 gap-2">
                 {examQuestions.map((q, idx) => {
                   const isCurrent = selectedQuestion === idx;
@@ -262,7 +165,7 @@ const LiveExam = () => {
                       disabled={examFinished}
                       className={`w-20 h-10 text-sm rounded-md flex justify-center items-center 
                       ${
-                        isAnswered
+                       isAnswered
                           ? "bg-blue-500 text-white"
                           : "bg-white border"
                       } 
@@ -321,10 +224,10 @@ const LiveExam = () => {
                   })}
                 </div>
                 {!examFinished && (
-                  <div className="mt-4 md:flex md:justify-between grid grid-cols-2 gap-4 md:pb-0 pb-4">
+                  <div className="mt-4 flex flex-wrap gap-4 pb-4 justify-between">
                     <button
                       onClick={confirmFinishExam}
-                      className="bg-blue-900 text-white px-4 py-1 rounded flex justify-center items-center gap-2"
+                      className="bg-blue-900 text-white px-4 py-1 rounded flex jus items-center gap-2"
                     >
                       <GrSend />
                       Soza Ikizamini
@@ -423,7 +326,7 @@ const LiveExam = () => {
                             No, Back
                           </button>
                           <button
-                            onClick={() => handleSubmitExam()}
+                            onClick={() => handleModalResponse("yes")}
                             className="bg-Total text-white px-4 py-1 rounded"
                           >
                             Yes, I finish
@@ -541,7 +444,7 @@ const LiveExam = () => {
                     onClick={() => {
                       localStorage.removeItem("selectedOptions");
                       localStorage.removeItem("examTimeLeft");
-                      window.location.href = "/students/waitingexams";
+                      window.location.href = "/schools/accessableexams";
                     }}
                     className="bg-red-300 text-white py-2 px-4 rounded"
                   >
@@ -553,9 +456,8 @@ const LiveExam = () => {
           </div>
         </>
       )}
-      <ToastContainer />
     </div>
   );
 };
 
-export default LiveExam;
+export default SchoolLiveExam;

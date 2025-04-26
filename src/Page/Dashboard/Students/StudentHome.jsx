@@ -1,33 +1,95 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import StHomeCard from "../../../Components/Cards/StHomeCard";
-import LandingFooter from "../../../Components/Footers/LandingFooter";
 import Image from "../../../assets/Studeh.png";
 import { Link } from "react-router-dom";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
-import { examData } from "../../../Data/morkData";
+import axios from "axios";
+
 const StudentHome = () => {
+  const [unpaidExams, setUnpaidExams] = useState([]);
+  const [totalExams, setTotalExams] = useState([]);
+  const [expiredExams, setExpiredExams] = useState([]);
+  const [waitingExams, setWaitingExams] = useState([]);
+  const [passedExams, setPassedExams] = useState([]);
+  const [failedExams, setFailedExams] = useState([]);
+  const [userData, setUserData] = useState(null); // Store user data
+
+  useEffect(() => {
+    // Load user data from localStorage if available
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUserData(parsedUser); // Set the user data to state
+      } catch (err) {
+        console.error("Failed to load user data:", err);
+      }
+    }
+
+    // Fetch exam data once the component is mounted
+    const token = localStorage.getItem("token");
+
+    const fetchAllExams = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        const [
+          unpaidRes,
+          totalRes,
+          expiredRes,
+          waitingRes,
+          passedRes,
+          failedRes,
+        ] = await Promise.all([
+          axios.get("http://localhost:4900/api/v1/unpaidexams", config),
+          axios.get("http://localhost:4900/api/v1/totaluserexams", config),
+          axios.get("http://localhost:4900/api/v1/expiredexams", config),
+          axios.get("http://localhost:4900/api/v1/waittingexams", config),
+          axios.get("http://localhost:4900/api/v1/passedexams", config),
+          axios.get("http://localhost:4900/api/v1/failledexams", config),
+        ]);
+
+        setUnpaidExams(unpaidRes.data?.data || []);
+        setTotalExams(totalRes.data?.data || []);
+        setExpiredExams(expiredRes.data?.data || []);
+        setWaitingExams(waitingRes.data?.data || []);
+        setPassedExams(passedRes.data?.data || []);
+        setFailedExams(failedRes.data?.data || []);
+      } catch (error) {
+        console.error("Error fetching exam data:", error);
+      }
+    };
+
+    fetchAllExams();
+  }, []);
 
   return (
-    <>
-      <div className="flex flex-col justify-center items-start md:px-5 gap-2 bg-white">
-        <WelcomeDear/>
+    <div className="flex flex-col justify-center items-start md:px-5 gap-2 bg-white md:p-2">
+      <WelcomeDear userData={userData} /> {/* Pass userData as a prop if needed */}
 
-        {/* Cards Section */}
-        <div className="grid md:grid-cols-3 grid-cols-1 w-full md:px-0 px-12 gap-12 md:pt-2 py-5 md:gap-12">
-          <StHomeCard bgColor="bg-blue-900" title="Total Exams" count={20} />
-          <StHomeCard bgColor="bg-[#F08080]" title="Expired Exams" count={2} />
-          <Link to={"/students/unpaidexams"} className="block w-full">
-            <StHomeCard bgColor="bg-[#FACC2E]" title="Unpaid Exams" count={8} />
-          </Link>
-          <Link to={"/students/waitingexams"} className="block w-full">
-            <StHomeCard bgColor="bg-blue-200" title="Waiting Exams" count={examData.length} />
-          </Link>
-          <StHomeCard bgColor="bg-[#86B404]" title="Passed Exams" count={1} />
-          <StHomeCard bgColor="bg-[#FE9A2E]" title="Failed Exams" count={1} />
-        </div>
-        <img src={Image} alt="" className="w-[140px] md:ml-[400px] ml-28" />
+      {/* Cards Section */}
+      <div className="grid md:grid-cols-3 grid-cols-1 w-full md:px-0 px-12 gap-12 md:pt-2 py-5 md:gap-12">
+        <StHomeCard bgColor="bg-blue-900" title="Total Exams" count={totalExams.length} />
+        <StHomeCard bgColor="bg-red-700" title="Expired Exams" count={expiredExams.length} />
+        
+        <Link to="/students/unpaidexams" className="block w-full">
+          <StHomeCard bgColor="bg-yellow-700" title="Unpaid Exams" count={unpaidExams.length} />
+        </Link>
+
+        <Link to="/students/waitingexams" className="block w-full">
+          <StHomeCard bgColor="bg-blue-700" title="Waiting Exams" count={waitingExams.length} />
+        </Link>
+
+        <StHomeCard bgColor="bg-green-700" title="Passed Exams" count={passedExams.length} />
+        <StHomeCard bgColor="bg-orange-600" title="Failed Exams" count={failedExams.length} />
       </div>
-    </>
+
+      <img src={Image} alt="" className="w-[140px] md:ml-[400px] ml-28" />
+    </div>
   );
 };
 

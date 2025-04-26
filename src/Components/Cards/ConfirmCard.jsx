@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Police from "../../assets/Policelogo.png";
 
-const ConfirmCard = ({ code, onClick, onClose }) => {
+const ConfirmCard = ({ code, onClick, onClose,onChange }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
@@ -19,6 +19,7 @@ const ConfirmCard = ({ code, onClick, onClose }) => {
             name="code"
             id="code"
             value={code}
+            onChange={onChange}
             className="w-full px-4 py-1 border rounded-full text-center hidden"
           />
           <div className="flex justify-around gap-5 pb-4">

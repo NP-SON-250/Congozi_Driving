@@ -7,7 +7,7 @@ const AccountCard = ({
   onPurchase,
   button,
   icon,
-  valid,
+  validIn,
   buttonColor = "bg-yellow-500",
 }) => {
   return (
@@ -21,7 +21,7 @@ const AccountCard = ({
             <p className="text-Total">
             Acount Fees: <span className="font-bold">{fees} Rwf</span>
             </p>
-            <p className="text-Total">Valid in: {valid}</p>
+            <p className="text-Total">Valid in: {validIn} Days</p>
           </div>
         </div>
         <div className="pt-1">

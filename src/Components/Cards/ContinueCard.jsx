@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import Police from "../../assets/Policelogo.png";
 
-const ContinueCard = ({ code, onClick, onClose }) => {
-
+const ContinueCard = ({ code, onClick, onChange, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
       <div className="relative flex flex-col justify-center items-center gap-10 bg-Total md:w-1/2 md:ml-72 p-8 rounded-xl shadow-lg">
@@ -19,6 +18,7 @@ const ContinueCard = ({ code, onClick, onClose }) => {
             name="code"
             id="code"
             value={code}
+            onChange={onChange}
             className="w-full px-4 py-1 border rounded-full text-center"
           />
           <div className="flex justify-around gap-5 pb-4">

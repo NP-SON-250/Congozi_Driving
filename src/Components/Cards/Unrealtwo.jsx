@@ -4,14 +4,13 @@ import QuestionCard from "../../../Components/Cards/QuestionCard";
 import { examData } from "../../../Data/morkData";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import Police from "../../../assets/Policelogo.png";
-import { useNavigate } from "react-router-dom";
 const LiveExam = () => {
   const [examNumber, setExamNumber] = useState("");
   const [selectedQuestion, setSelectedQuestion] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState(() => {
     return JSON.parse(localStorage.getItem("selectedOptions")) || {};
   });
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(1200);
   const [examFinished, setExamFinished] = useState(false);
   const [examQuestions, setExamQuestions] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -23,7 +22,6 @@ const LiveExam = () => {
   const [viewedQuestions, setViewedQuestions] = useState({});
   const [testVersion, setTestVersion] = useState(null);
   const [paymentStep, setPaymentStep] = useState("confirmation");
-  const navigate = useNavigate();
 
   const location = useLocation();
 
@@ -46,7 +44,7 @@ const LiveExam = () => {
       if (storedTime) {
         setTimeLeft(parseInt(storedTime, 10));
       } else {
-        localStorage.setItem("examTimeLeft", 60);
+        localStorage.setItem("examTimeLeft", 1200);
         setTimeLeft(1200);
       }
     }
@@ -126,8 +124,8 @@ const LiveExam = () => {
   };
 
   const formatTime = (seconds) => {
-    const m = Math.floor(seconds / 1);
-    const s = seconds % 1;
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
     return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
   };
 
@@ -171,6 +169,7 @@ const LiveExam = () => {
 
       if (timeLeft === 0) {
         clearInterval(intervalRef.current);
+        // You can auto-submit the exam here
         console.log("Time's up! Auto-submitting...");
       }
     };

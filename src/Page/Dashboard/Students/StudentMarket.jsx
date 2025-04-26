@@ -4,8 +4,9 @@ import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import { BsCart } from "react-icons/bs";
 import Irembo from "../../../assets/irembopay.png";
 import Mtn from "../../../assets/MTN.jpg";
-import { examData } from "../../../Data/morkData";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
 
 const StudentMarket = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -16,7 +17,38 @@ const StudentMarket = () => {
   const [selectedExam, setSelectedExam] = useState(null);
   const [paymentStep, setPaymentStep] = useState("confirmation");
 
-  const exams = examData;
+  const [exam, setExam] = useState({ data: [] });
+  const [userName, setUserName] = useState("");
+  // Get user info from localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser && storedUser !== "undefined") {
+      try {
+        setUserName(JSON.parse(storedUser));
+      } catch (err) {
+        console.error("Failed to parse stored user:", err);
+      }
+    }
+  }, []);
+  
+  // Fetch paid exams
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get("http://localhost:4900/api/v1/exams", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setExam(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const updateExamsPerPage = () => {
@@ -27,6 +59,7 @@ const StudentMarket = () => {
     return () => window.removeEventListener("resize", updateExamsPerPage);
   }, []);
 
+  const exams = exam.data || [];
   const filteredExams = exams.filter(
     (exam) =>
       (type === "" || exam.type.toLowerCase().includes(type.toLowerCase())) &&
@@ -52,13 +85,57 @@ const StudentMarket = () => {
     setPaymentStep("payment");
   };
 
+  const handlePayLaterClick = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        `http://localhost:4900/api/v1/purchases/${selectedExam._id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      closePopup();
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        alert("You have already purchased this exam.");
+      } else {
+        console.error("Purchase request failed:", error);
+        alert("Failed to initiate purchase. Please try again.");
+      }
+    }
+  };
+  const handlePayNowClick = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        `http://localhost:4900/api/v1/purchases/paid/${selectedExam._id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      closePopup();
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        alert("Item not found.");
+      } else {
+        console.error("Purchase request failed:", error);
+      }
+    }
+  };
+
   const closePopup = () => {
     setSelectedExam(null);
     setPaymentStep("confirmation");
   };
 
   return (
-    <div className="flex flex-col justify-center items-start md:px-5 gap-1 bg-white">
+    <div className="flex flex-col justify-center items-center md:px-5 gap-1 bg-white md:p-2">
       <WelcomeDear />
 
       {/* Filters */}
@@ -161,7 +238,7 @@ const StudentMarket = () => {
             {paymentStep === "confirmation" ? (
               <>
                 <h2 className="text-lg text-start font-bold text-white px-6 pt-6">
-                  Dear UMURERWA Anaise,
+                  Dear {userName?.fName} {userName?.lName},
                 </h2>
                 <p className="mt-0 text-start text-white px-6">
                   Your Exam {selectedExam.number} for {selectedExam.type} has
@@ -175,8 +252,9 @@ const StudentMarket = () => {
                   >
                     Close
                   </button>
-                  <button className="bg-yellow-500 text-white px-4 py-2 rounded"
-                  onClick={closePopup}
+                  <button
+                    className="bg-yellow-500 text-white px-4 py-2 rounded"
+                    onClick={handlePayLaterClick}
                   >
                     Pay Later
                   </button>
@@ -232,7 +310,10 @@ const StudentMarket = () => {
                       placeholder="ex: 0789xxxxxxx"
                       className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
                     />
-                    <button className="bg-green-500 text-white px-4 py-2 rounded mt-4 w-full">
+                    <button
+                      className="bg-green-500 text-white px-4 py-2 rounded mt-4 w-full"
+                      onClick={handlePayNowClick}
+                    >
                       Ishyura {selectedExam.fees} RWF
                     </button>
                     <p className="text-start py-2 font-medium">
@@ -247,6 +328,7 @@ const StudentMarket = () => {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 };

@@ -22,8 +22,7 @@ const AdminExams = () => {
   const [examToDelete, setExamToDelete] = useState(null);
   const [showAddExamPopup, setShowAddExamPopup] = useState(false);
   const [exams, setExams] = useState(examData);
-  const [viewingExam, setViewingExam] = useState(null); // State to track the selected exam for viewing questions
-
+  const [viewingExam, setViewingExam] = useState(null); 
   const toggleMenu = (examId) => {
     setSelectedMenu(selectedMenu === examId ? null : examId);
   };

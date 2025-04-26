@@ -1,135 +1,223 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { MdOutlineContentPasteSearch } from "react-icons/md";
-import Police from "../../../assets/Policelogo.png";
-import WelcomeDear from "../../../Components/Cards/WelcomeDear";
+import React, { useEffect, useState } from "react";
+import { FaCamera } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 const StudentAccount = () => {
-  const [isSearched, setIsSearched] = useState(false);
-  const [examCode, setExamCode] = useState("");
-  const navigate = useNavigate();
-  const location = useLocation();
-  
-  // Exam details (hardcoded except for Exam Access Code)
-  const examDetails = {
-    studentName: "UMURERWA Anaise",
-    studentAddress: "Nyagatare, Rwanda",
-    studentPhone: "25078xxxxxxx",
-    examAccessCode: examCode, // Dynamic value
-    examRegisteredDate: "17-03-2025 08:37:42 PM",
-    examValueDate: "20-03-2025 12:00:00 AM",
-    grantedAccessStatus: "Granted Access",
-  };
+  const [profileImage, setProfileImage] = useState(null);
+  const [email, setEmail] = useState("");
+  const [fName, setFName] = useState("");
+  const [lName, setLName] = useState("");
+  const [address, setAddress] = useState("");
+  const [telephone, setTelephone] = useState("");
+  const [userId, setUserId] = useState(null);
+  const [originalData, setOriginalData] = useState({});
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState("");
 
-  const params = new URLSearchParams(location.search);
   useEffect(() => {
-    const initialExamNumber = params.get("examNumber") || "";
-    setExamCode(initialExamNumber);
-  }, [params]);
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUserId(parsedUser._id);
+        setEmail(parsedUser.email || "");
+        setFName(parsedUser.fName || "");
+        setLName(parsedUser.lName || "");
+        setAddress(parsedUser.address || ""); 
+        setTelephone(parsedUser.phone || ""); 
+        setProfileImage(parsedUser.profile || null); 
+        setOriginalData({
+          profile: parsedUser.profile || null,
+          email: parsedUser.email || "",
+          fName: parsedUser.fName || "",
+          lName: parsedUser.lName || "",
+          address: parsedUser.address || "",
+          phone: parsedUser.phone || "",
+        });
+      } catch (err) {
+        console.error("Failed to parse stored user:", err);
+      }
+    }
+  }, []);
 
-  // Handle search click
-  const handleSearch = () => {
-    if (examCode.trim() !== "") {
-      setIsSearched(true);
+  // Handle profile image file selection
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfileImage(file);
     }
   };
 
-  const handleNotReady = () => {
-    setExamCode("");
-    setIsSearched(false);
-  };
+  // Save updated profile data
+  const handleSave = async () => {
+    const newData = new FormData();
+    newData.append('profile', profileImage);
+    newData.append('email', email);
+    newData.append('fName', fName);
+    newData.append('lName', lName);
+    newData.append('address', address);
+    newData.append('phone', telephone);
 
-  const handleStartExam = () => {
-    navigate(`/liveExam?examNumber=${examCode}`);
+    try {
+      const response = await axios.put(
+        `http://localhost:4900/api/v1/users/${userId}`,
+        newData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data', 
+          },
+        }
+      );
+
+      setMessage("Profile updated successfully.");
+      setMessageType("success");
+
+      const updatedUser = response.data;
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      // Update state with new profile data
+      setEmail(updatedUser.email || "");
+      setFName(updatedUser.fName || "");
+      setLName(updatedUser.lName || "");
+      setAddress(updatedUser.address || "");
+      setTelephone(updatedUser.phone || "");
+      setProfileImage(updatedUser.profile || null);
+      setOriginalData(updatedUser);
+    } catch (error) {
+      console.error("Update failed:", error);
+      setMessage("Failed to update profile. Please try again.");
+      setMessageType("error");
+    }
   };
+  
 
   return (
-    <div className="flex flex-col justify-center items-center md:px-5 gap-1 bg-white">
-      <WelcomeDear/>
+    <div className="flex items-top justify-center">
+      <div className="bg-white shadow-md rounded-lg md:p-1 p-6 w-full max-w-xl text-center">
+        <h2 className="md:text-xs text-md font-bold text-blue-900 mb-1">
+          Your Profile
+        </h2>
 
-      <div className="flex flex-col gap-2 w-full border border-gray-400 rounded-md mt-2 ">
-        <div className="flex justify-center items-center gap-3 border border-gray-400 text-center w-full bg-blue-100 py-0 rounded-md">
-          <MdOutlineContentPasteSearch size={24} className="text-blue-900" />
-          <h1 className=" text-center md:text-3xl text-base text-blue-900">
-            Examination Tracking Center
-          </h1>
-        </div>
-
-        {/* Conditional Rendering based on Search */}
-        {!isSearched ? (
-          // Search Input Section
-          <div className="flex flex-col justify-center">
-            <div className="flex justify-center items-center">
-              <img src={Police} alt="Police Logo" className="w-24 py-3" />
-            </div>
-            <div className="flex flex-col gap-4">
-              <p className="capitalize font-bold text-lg text-center">
-                Enter your examination access code
-              </p>
-              <div className="w-full md:px-3 md:pb-16 flex justify-center items-center px-6 pb-24">
-                <input
-                  type="search"
-                  value={examCode}
-                  onChange={(e) => setExamCode(e.target.value)}
-                  placeholder="Search exam code"
-                  className="border-2 px-5 border-blue-500 p-2 rounded-full md:w-1/2 w-full outline-none"
-                />
-                <button
-                  onClick={handleSearch}
-                  className="absolute md:right-[263px] right-6 bg-blue-500 cursor-pointer rounded-r-full p-2 text-white"
-                >
-                  Search
-                </button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          // Exam Details Section
-          <div className="flex flex-col justify-center p-2">
-            <h2 className="text-xl font-bold text-center">Examination Details</h2>
-            <table className="border-collapse border border-gray-500 w-full mt-2">
-              <tbody>
-                <tr>
-                  <td className="border border-gray-400 p-1 font-bold">Student’s Name</td>
-                  <td className="border border-gray-400 p-1">{examDetails.studentName}</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-400 p-1 font-bold">Student Address</td>
-                  <td className="border border-gray-400 p-1">{examDetails.studentAddress}</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-400 p-1 font-bold">Student Phone</td>
-                  <td className="border border-gray-400 p-1">{examDetails.studentPhone}</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-400 p-1 font-bold">Exam Access Code</td>
-                  <td className="border border-gray-400 p-1">{examDetails.examAccessCode}</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-400 p-1 font-bold">Exam Registered Date</td>
-                  <td className="border border-gray-400 p-1">{examDetails.examRegisteredDate}</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-400 p-1 font-bold">Exam Value Date</td>
-                  <td className="border border-gray-400 p-1">{examDetails.examValueDate}</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-400 p-1 font-bold">Granted Access Status</td>
-                  <td className="border border-gray-400 p-1">{examDetails.grantedAccessStatus}</td>
-                </tr>
-              </tbody>
-            </table>
-
-            {/* Exam Start Buttons */}
-            <div className="flex md:flex-row flex-col justify-center items-center gap-4 mt-5">
-              <p>Are you ready to start exam?</p>
-              <div className="flex gap-32">
-              <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={handleStartExam}>Yes</button>
-              <button className="bg-yellow-500 text-white px-4 py-2 rounded-md" onClick={handleNotReady}>I'm Not Ready</button>
-              </div>
-            </div>
+        {/* Message Display */}
+        {message && (
+          <div
+            className={`text-sm mb-3 px-4 py-2 rounded ${
+              messageType === "success"
+                ? "bg-green-100 text-green-700 border border-green-300"
+                : "bg-red-100 text-red-700 border border-red-300"
+            }`}
+          >
+            {message}
           </div>
         )}
+
+        {/* Profile Image */}
+        <div className="relative w-24 h-24 mx-auto mb-1">
+          <img
+            src={
+              profileImage instanceof File
+                ? URL.createObjectURL(profileImage) // Generate URL only if profileImage is a file object
+                : profileImage || "https://res.cloudinary.com/da12yf0am/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1740671685/SBS%20Images/file_limbge.webp" // Fallback if no image is selected
+            }
+            alt="Profile"
+            className="w-full h-full object-cover rounded-full border border-gray-300"
+          />
+          <label className="absolute bottom-0 right-0 bg-white p-[6px] rounded-full shadow cursor-pointer">
+            <FaCamera />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
+            />
+          </label>
+        </div>
+
+        {/* Form */}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSave();
+          }}
+          className="space-y-1 px-4 text-left"
+        >
+          <div>
+            <label className="block md:text-xs text-md font-medium">
+              Email
+            </label>
+            <input
+              type="email"
+              value={email} // This should always be a string
+              className="w-full px-4 md:text-xs text-md py-1 border rounded"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="block md:text-xs text-md font-medium">
+              First Name
+            </label>
+            <input
+              type="text"
+              value={fName} // This should always be a string
+              className="w-full px-4 md:text-xs text-md py-1 border rounded"
+              onChange={(e) => setFName(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="block md:text-xs text-md font-medium">
+              Last Name
+            </label>
+            <input
+              type="text"
+              value={lName} // This should always be a string
+              className="w-full px-4 md:text-xs text-md py-1 border rounded"
+              onChange={(e) => setLName(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="block md:text-xs text-md font-medium">
+              Address
+            </label>
+            <input
+              type="text"
+              value={address} // This should always be a string
+              className="w-full px-4 md:text-xs text-md py-1 border rounded"
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="block md:text-xs text-md font-medium">
+              Telephone
+            </label>
+            <input
+              type="text"
+              value={telephone} // This should always be a string
+              className="w-full px-4 md:text-xs text-md py-1 border rounded"
+              onChange={(e) => setTelephone(e.target.value)}
+            />
+          </div>
+
+          <div className="pt-4 flex md:text-xs text-md md:flex-row flex-col md:gap-10 gap-0 items-center">
+            <button
+              type="submit"
+              className="bg-blue-900 text-white px-6 py-1 rounded hover:bg-blue-800 mb-3"
+            >
+              Save Changes
+            </button>
+
+            <Link
+              to="/change/password"
+              className="text-blue-600 hover:text-yellow-600"
+            >
+              Change password?
+            </Link>
+          </div>
+        </form>
       </div>
     </div>
   );

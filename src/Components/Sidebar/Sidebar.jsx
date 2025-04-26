@@ -1,27 +1,24 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { RiLogoutCircleRLine } from "react-icons/ri";
 import { MdMoreHoriz } from "react-icons/md";
 import { HiHome } from "react-icons/hi2";
 import { BsCart } from "react-icons/bs";
-import { PiFolderSimpleUserLight } from "react-icons/pi";
-import { IoIosMenu } from "react-icons/io";
+import { PiFolderSimpleUserLight, PiExam } from "react-icons/pi";
+import { IoIosMenu, IoIosArrowForward } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
-import { IoIosArrowForward } from "react-icons/io";
 import { MdDashboard } from "react-icons/md";
-import { PiExam } from "react-icons/pi";
-import { MdManageAccounts } from "react-icons/md";
-import { MdAccountBalance } from "react-icons/md";
+import { MdManageAccounts, MdAccountBalance } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
 import { FcSalesPerformance } from "react-icons/fc";
 import { FaGoogleScholar } from "react-icons/fa6";
+import { RiLogoutCircleLine } from "react-icons/ri";
 
 const Sidebar = ({ role = "students", onSignOut }) => {
   const location = useLocation();
   const [showAll, setShowAll] = useState(false);
 
   const handleNavClick = (path) => {
-    window.location.href = path; // hard reload to reset system
+    window.location.href = path;
   };
 
   const sidebarMenu = {
@@ -29,108 +26,108 @@ const Sidebar = ({ role = "students", onSignOut }) => {
       {
         name: "Home",
         path: "/students/home",
-        iconR: <HiHome size={24} />,
-        iconL: <IoIosArrowForward size={24} />,
+        iconR: <HiHome />,
+        iconL: <IoIosArrowForward />,
       },
       {
         name: "Examination Market",
         path: "/students/market",
-        iconR: <BsCart size={24} />,
-        iconL: <IoIosArrowForward size={24} />,
+        iconR: <BsCart />,
+        iconL: <IoIosArrowForward />,
       },
       {
         name: "Do Exams Online",
         path: "/students/tracking",
-        iconR: <PiFolderSimpleUserLight size={24} />,
-        iconL: <IoIosArrowForward size={24} />,
+        iconR: <PiFolderSimpleUserLight />,
+        iconL: <IoIosArrowForward />,
       },
       {
         name: "My Examinations",
         path: "/students/exams",
-        iconR: <IoIosMenu size={24} />,
-        iconL: <IoIosArrowForward size={24} />,
+        iconR: <IoIosMenu />,
+        iconL: <IoIosArrowForward />,
       },
       {
         name: "My Account",
         path: "/students/account",
-        iconR: <IoSettingsOutline size={24} />,
-        iconL: <IoIosArrowForward size={24} />,
+        iconR: <IoSettingsOutline />,
+        iconL: <IoIosArrowForward />,
       },
       {
         name: "School Account Market",
         path: "/students/school",
-        iconR: <FaGoogleScholar size={24} />,
-        iconL: <IoIosArrowForward size={24} />,
+        iconR: <FaGoogleScholar />,
+        iconL: <IoIosArrowForward />,
       },
     ],
     schools: [
       {
         name: "Home",
         path: "/schools/home",
-        iconR: <HiHome size={24} />,
-        iconL: <IoIosArrowForward size={24} />,
+        iconR: <HiHome />,
+        iconL: <IoIosArrowForward />,
       },
       {
         name: "Account Market",
         path: "/schools/account/market",
-        iconR: <BsCart size={24} />,
-        iconL: <IoIosArrowForward size={24} />,
+        iconR: <BsCart />,
+        iconL: <IoIosArrowForward />,
       },
       {
         name: "Do Exams Online",
         path: "/schools/online",
-        iconR: <PiFolderSimpleUserLight size={24} />,
-        iconL: <IoIosArrowForward size={24} />,
+        iconR: <PiFolderSimpleUserLight />,
+        iconL: <IoIosArrowForward />,
       },
       {
         name: "My Examinations",
         path: "/schools/exams",
-        iconR: <IoIosMenu size={24} />,
-        iconL: <IoIosArrowForward size={24} />,
+        iconR: <IoIosMenu />,
+        iconL: <IoIosArrowForward />,
       },
       {
         name: "My Account",
         path: "/schools/account",
-        iconR: <IoSettingsOutline size={24} />,
-        iconL: <IoIosArrowForward size={24} />,
+        iconR: <IoSettingsOutline />,
+        iconL: <IoIosArrowForward />,
       },
     ],
     admins: [
       {
         name: "Dashboard",
         path: "/admins/home",
-        iconR: <MdDashboard size={24} />,
-        iconL: <IoIosArrowForward size={24} />,
+        iconR: <MdDashboard />,
+        iconL: <IoIosArrowForward />,
       },
       {
         name: "Exams",
         path: "/admins/exams",
-        iconR: <PiExam size={24} />,
-        iconL: <IoIosArrowForward size={24} />,
+        iconR: <PiExam />,
+        iconL: <IoIosArrowForward />,
       },
       {
         name: "Accounts",
         path: "/admins/accounts",
-        iconR: <MdAccountBalance size={24} />,
-        iconL: <IoIosArrowForward size={24} />,
+        iconR: <MdAccountBalance />,
+        iconL: <IoIosArrowForward />,
       },
       {
         name: "Users",
         path: "/admins/users",
-        iconR: <FaUsers size={24} />,
-        iconL: <IoIosArrowForward size={24} />,
+        iconR: <FaUsers />,
+        iconL: <IoIosArrowForward />,
       },
       {
         name: "Payments",
         path: "/admins/payments",
-        iconR: <FcSalesPerformance size={24} />,
-        iconL: <IoIosArrowForward size={24} />,
+        iconR: <FcSalesPerformance />,
+        iconL: <IoIosArrowForward />,
       },
       {
         name: "My Account",
         path: "/admins/profile",
-        iconR: <MdManageAccounts size={24} />,
-        iconL: <IoIosArrowForward size={24} />,
+        iconR: <MdManageAccounts />,
+        iconL: <IoIosArrowForward />,
       },
     ],
   };
@@ -142,15 +139,15 @@ const Sidebar = ({ role = "students", onSignOut }) => {
   return (
     <div className="container relative">
       {/* Desktop Sidebar */}
-      <div className="w-[300px] h-[78vh] px-4 py-4 overflow-y-auto shadow fixed bottom-[75px] left-0 md:block hidden z-[50]">
+      <div className="w-[300px] h-[82vh] px-4 py-4 overflow-y-auto shadow fixed bottom-[45px] left-0 md:block hidden z-[50]">
         <ul>
           {items.map((item, index) => (
             <li key={index} className="py-[10px]">
               <button
                 onClick={() => handleNavClick(item.path)}
-                className={`flex items-center w-full text-left px-3 py-1 rounded-full text-lg font-medium ${
+                className={`flex items-center w-full text-left px-3 py-1 rounded-full text-md font-medium ${
                   location.pathname === item.path
-                    ? " border border-Passed font-bold md:text-xl"
+                    ? " border border-Passed font-extrabold md:text-md"
                     : "text-black"
                 }`}
               >
@@ -162,6 +159,17 @@ const Sidebar = ({ role = "students", onSignOut }) => {
               </button>
             </li>
           ))}
+          <div
+            className="flex items-center px-3 fixed bottom-14 cursor-pointer"
+            onClick={() => {
+              localStorage.clear();
+              if (onSignOut) onSignOut(); 
+              window.location.href = "/";
+            }}
+          >
+            <RiLogoutCircleLine className="mr-3 text-blue-500" />
+            <p className="text-md font-medium">Sign Out</p>
+          </div>
         </ul>
       </div>
 
@@ -174,8 +182,8 @@ const Sidebar = ({ role = "students", onSignOut }) => {
                 onClick={() => handleNavClick(item.path)}
                 className={`flex flex-col items-center text-lg p-0 rounded-2xl font-medium ${
                   location.pathname === item.path
-                    ? "text-lg text-blue-500"
-                    : "text-gray-700"
+                    ? "text-xs text-blue-500"
+                    : "text-gray-700 text-xs"
                 }`}
               >
                 <span
@@ -208,7 +216,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
               <div className="icon">
                 <MdMoreHoriz size={40} />
               </div>
-              <span>More</span>
+              <span className="text-xs font-bold">More</span>
             </button>
           </li>
         </ul>
@@ -235,9 +243,9 @@ const Sidebar = ({ role = "students", onSignOut }) => {
                     {item.iconR}
                   </span>
                   <span
-                    className={`mt-1 text-lg ${
+                    className={`mt-1 text-xs ${
                       location.pathname === item.path
-                        ? "text-lg text-blue-500"
+                        ? "text-lg text-blue-500 "
                         : "text-gray-700"
                     }`}
                   >

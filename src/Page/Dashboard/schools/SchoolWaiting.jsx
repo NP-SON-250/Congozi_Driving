@@ -3,24 +3,30 @@ import AccountCard from "../../../Components/Cards/AdminCards/AccountCard";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa6";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
-import { SlNote } from "react-icons/sl";
 import { useNavigate, useLocation } from "react-router-dom";
 import queryString from "query-string";
 import axios from "axios";
 
-const SchoolDoExams = () => {
+// Utility: Calculate remaining days from today to endDate
+const getRemainingDays = (endDate) => {
+  const today = new Date();
+  const end = new Date(endDate);
+  const diffTime = end - today;
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
+};
+
+const SchoolWaiting = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [accountsPerPage, setAccountsPerPage] = useState(6);
   const [searchTerm, setSearchTerm] = useState("");
   const [validIn, setValidIn] = useState("");
   const [fees, setFees] = useState("");
-  //   const [isaccountStarted, setIsaccountStarted] = useState(false);
 
   const location = useLocation();
   const { accessCode } = queryString.parse(location.search);
   const [account, setAccount] = useState({ data: [] });
 
-  // Fetch paid accounts
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -42,8 +48,6 @@ const SchoolDoExams = () => {
     fetchData();
   }, []);
 
-
-
   useEffect(() => {
     const updateAccountsPerPage = () => {
       setAccountsPerPage(window.innerWidth >= 768 ? 6 : 2);
@@ -53,12 +57,12 @@ const SchoolDoExams = () => {
     return () => window.removeEventListener("resize", updateAccountsPerPage);
   }, []);
 
-  const filteredAccounts = account.data.filter(
-    (account) =>
+  const filteredAccounts = account.data.filter((account) => {
+    const remainingDays = getRemainingDays(account.endDate);
+    return (
+      remainingDays > 0 &&
       (validIn === "" ||
-        account.itemId.validIn
-          .toLowerCase()
-          .includes(validIn.toLowerCase())) &&
+        account.itemId.validIn.toLowerCase().includes(validIn.toLowerCase())) &&
       (fees === "" || account.itemId.fees.toString().includes(fees)) &&
       (searchTerm === "" ||
         account.itemId.validIn
@@ -66,6 +70,11 @@ const SchoolDoExams = () => {
           .includes(searchTerm.toLowerCase()) ||
         account.itemId.fees.toString().includes(searchTerm) ||
         account.itemId.title.includes(searchTerm))
+    );
+  });
+
+  const soonToExpireAccounts = filteredAccounts.filter(
+    (acc) => getRemainingDays(acc.endDate) == 1
   );
 
   const totalPages = Math.ceil(filteredAccounts.length / accountsPerPage);
@@ -77,18 +86,37 @@ const SchoolDoExams = () => {
   const navigate = useNavigate();
 
   const handleViewExams = (account) => {
+    const remainingDays = getRemainingDays(account.endDate);
+
+    if (remainingDays <= 0) {
+      alert("Your access to this account has expired.");
+      return;
+    }
+
+    if (remainingDays === 1) {
+      alert("⚠️ Warning: This account will expire in 1 day!");
+    }
+
     if (account.accessCode) {
-        const accessCode = account.accessCode;
-        navigate(`/schools/accessableexams?accessCode=${accessCode}`);
-      } else {
-        console.error("Nta code yo kukwereka ibizamini ufite.");
-      }
+      const accessCode = account.accessCode;
+      navigate(`/schools/accessableexams?accessCode=${accessCode}`);
+    } else {
+      console.error("No access code available to show exams.");
+    }
   };
 
   return (
     <div>
       <div className="flex flex-col justify-around items-center md:px-5 gap-1 bg-white md:p-2">
         <WelcomeDear />
+
+        {soonToExpireAccounts.length > 0 && (
+          <div className="w-[90%] bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md mb-3">
+            ⚠️ <strong>Heads up!</strong> You have {soonToExpireAccounts.length} account
+            {soonToExpireAccounts.length > 1 ? "s" : ""} expiring within 1 day. Make sure to use them in time!
+          </div>
+        )}
+
         <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
           <input
             type="text"
@@ -130,16 +158,19 @@ const SchoolDoExams = () => {
         ) : (
           <div className="grid md:grid-cols-3 w-full gap-4 md:gap-3 py-1">
             {currentAccounts.map((account, index) => {
+              const remainingDays = getRemainingDays(account.endDate);
               const buttonColor =
-              account.itemId.validIn >= 30 ? "bg-green-500" : "bg-yellow-500";
+                account.itemId.validIn >= 30 ? "bg-green-500" : "bg-yellow-500";
+
               return (
                 <AccountCard
                   key={index}
-                  title={`Account ${currentPage * accountsPerPage + index + 1}: ${
-                    account.itemId.title
-                  }`}
+                  title={`Account ${
+                    currentPage * accountsPerPage + index + 1
+                  }: ${account.itemId.title}`}
                   fees={account.itemId.fees}
                   validIn={account.itemId.validIn}
+                  remainingDays={remainingDays}
                   onPurchase={() => handleViewExams(account)}
                   icon={<FaRegEye />}
                   button={"View Exams"}
@@ -183,4 +214,4 @@ const SchoolDoExams = () => {
   );
 };
 
-export default SchoolDoExams;
+export default SchoolWaiting;

@@ -8,8 +8,8 @@ const ExamsCard = ({
   onPurchase,
   button,
   icon,
-  valid,
   buttonColor = "bg-yellow-500",
+  onClose
 }) => {
   return (
     <div className="w-full md:px-0 px-3">

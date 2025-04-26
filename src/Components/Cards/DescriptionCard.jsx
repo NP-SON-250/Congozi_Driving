@@ -1,0 +1,28 @@
+import React from "react";
+
+const DescriptionCard = ({access,questions,total20,total100,pass20,pass100,number,type,timeLeft}) => {
+  return (
+    <div className="text-blue-900 bg-green-500 p-1 rounded-md">
+      <div className="flex flex-wrap justify-center gap-2 w-full py-1 md:px-12 px-2">
+        <p>Exam Access Code: {access}</p>
+      </div>
+      <div className="grid md:grid-cols-4 grid-cols-2 gap-4 w-full py-1 md:px-12 px-2">
+        <p>Total Questions: {questions}</p>
+        <p>Total Marks:{total20}/20 or</p>
+        <p>Total Marks: {total100}/100</p>
+        <p>Pass Marks: {pass20} or</p>
+        <p>Pass Marks: {pass100} % </p>
+        <p>Exam Number: {number}</p>
+        <p>Exam Type: {type}</p>
+        <p>
+          Exam Time:{" "}
+          <span className="bg-white p-2 rounded-full text-blue-900 font-bold">
+            {timeLeft}
+          </span>
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default DescriptionCard;

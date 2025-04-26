@@ -1,13 +1,14 @@
-import React from "react";
-
-const  HalfInput = ({ label, type, placeholder, value, onChange }) => {
+const HalfInput  = ({ label, type = "text", placeholder, value, onChange, name, id }) => {
+  const inputId = id || name || label.toLowerCase().replace(/\s+/g, "-");
   return (
-    <div className="flex md:flex-row flex-col gap-3 w-full md:pl-4 px-4">
+    <div className="flex md:flex-row flex-col gap-3 w-full md:pl-4  px-4">
       {/* Label */}
-      <label className="text-gray-700 font-medium w-[30%]">{label}:</label>
+      <label htmlFor={inputId} className="text-gray-700 font-medium md:w-[30%] w-full">{label}:</label>
 
       {/* Input Field */}
       <input
+        id={inputId}
+        name={name}
         type={type}
         placeholder={placeholder}
         value={value}

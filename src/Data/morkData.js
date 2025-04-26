@@ -31,7 +31,6 @@ export const examData = [
         ],
         grant: "Single User",
       },
-      
     ],
     questions: [
       {
@@ -267,7 +266,6 @@ export const examData = [
         ],
         grant: "Single User",
       },
-      
     ],
     questions: [
       {
@@ -521,7 +519,6 @@ export const examData = [
         ],
         grant: "Single User",
       },
-      
     ],
     questions: [
       {
@@ -763,7 +760,6 @@ export const examData = [
     duration: 300,
     status: "Unpaid",
     accessCode: [
-      
       {
         code: "LRN609Yb0",
         users: [
@@ -1029,7 +1025,6 @@ export const examData = [
         ],
         grant: "Single User",
       },
-      
     ],
     questions: [
       {
@@ -1536,7 +1531,6 @@ export const examData = [
         ],
         grant: "Single User",
       },
-      
     ],
     questions: [
       {
@@ -2240,12 +2234,12 @@ export const navContents = [
   },
   {
     id: 2,
-    name: "Serivisi",
+    name: "Serivisi Zacu",
     link: "/serivisi",
   },
   {
     id: 3,
-    name: "Kwiyandikishe",
+    name: "Kwiyandikisha",
     link: "/kwiyandikisha",
   },
   {
