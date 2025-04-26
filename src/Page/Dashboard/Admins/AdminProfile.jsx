@@ -61,7 +61,7 @@ const AdminProfile = () => {
 
     try {
       const response = await axios.put(
-        `http://localhost:4900/api/v1/users/${userId}`,
+        `https://congozi-backend.onrender.com/api/v1/users/${userId}`,
         newData,
         {
           headers: {

@@ -89,7 +89,7 @@ const StudentMarket = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `http://localhost:4900/api/v1/purchases/${selectedExam._id}`,
+        `https://congozi-backend.onrender.com/api/v1/purchases/${selectedExam._id}`,
         {},
         {
           headers: {
@@ -111,7 +111,7 @@ const StudentMarket = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `http://localhost:4900/api/v1/purchases/paid/${selectedExam._id}`,
+        `https://congozi-backend.onrender.com/api/v1/purchases/paid/${selectedExam._id}`,
         {},
         {
           headers: {

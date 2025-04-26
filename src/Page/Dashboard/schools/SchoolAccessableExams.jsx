@@ -26,7 +26,7 @@ const SchoolAccessableExams = () => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:4900/api/v1/exams", {
+      const response = await axios.get("https://congozi-backend.onrender.com/api/v1/exams", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

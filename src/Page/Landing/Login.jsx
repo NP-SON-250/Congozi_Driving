@@ -22,7 +22,7 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:4900/api/v1/users/auth", {
+      const response = await axios.post("https://congozi-backend.onrender.com/api/v1/users/auth", {
         identifier,
         password,
       });
