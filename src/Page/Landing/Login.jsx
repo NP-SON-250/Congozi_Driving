@@ -22,10 +22,13 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post("https://congozi-backend.onrender.com/api/v1/users/auth", {
-        identifier,
-        password,
-      });
+      const response = await axios.post(
+        "https://congozi-backend.onrender.com/api/v1/users/auth",
+        {
+          identifier,
+          password,
+        }
+      );
 
       const { token, data, message } = response.data;
 
@@ -50,7 +53,8 @@ const Login = () => {
           break;
       }
     } catch (error) {
-      const errMsg = error?.response?.data?.message || "Login failed. Try again.";
+      const errMsg =
+        error?.response?.data?.message || "Login failed. Try again.";
       toast.error(errMsg);
     }
   };

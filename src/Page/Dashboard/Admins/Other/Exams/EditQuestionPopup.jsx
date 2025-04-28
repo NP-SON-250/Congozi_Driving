@@ -7,13 +7,29 @@ const EditQuestionPopup = ({
   editedPhrase,
   editedImage,
   setEditedMarks,
-  setEditedQuestionPhrase,
+  setEditedPhrase,
   setEditedImage,
   setShowEditPopup,
   handleSaveEdit,
 }) => {
   const fileInputRef = useRef(null);
 
+  const handleEditInputChange = (e) => {
+    const { name, value, files } = e.target;
+  
+    if (name === "image") {
+      const file = files[0];
+      setEditedImage(file);
+      if (file) {
+        const previewURL = URL.createObjectURL(file);
+        setEditedImagePreview(previewURL);
+      }
+    } else {
+      if (name === "marks") setEditedMarks(value);
+      if (name === "phrase") setEditedPhrase(value);
+    }
+  };
+  
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -29,7 +45,7 @@ const EditQuestionPopup = ({
   if (!questionToEdit) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[999]">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-xl font-semibold mb-4">Edit Question</h2>
 
@@ -48,7 +64,7 @@ const EditQuestionPopup = ({
             <label className="block text-sm font-medium">Question Phrase</label>
             <textarea
               value={editedPhrase}
-              onChange={(e) => setEditedQuestionPhrase(e.target.value)}
+              onChange={(e) => setEditedPhrase(e.target.value)}
               className="w-full px-3 py-1 border rounded"
             />
           </div>
@@ -56,7 +72,7 @@ const EditQuestionPopup = ({
           <div>
             <label className="block text-sm font-medium mb-1">Image</label>
             <div
-              className="flex cursor-pointer border px-3 py-2 rounded items-center gap-3"
+              className="flex cursor-pointer px-3 py-2 rounded items-center gap-3"
               onClick={handleImageClick}
             >
               <FaPaperclip className="text-blue-600" />

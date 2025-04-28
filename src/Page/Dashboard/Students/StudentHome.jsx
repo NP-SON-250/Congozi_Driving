@@ -12,7 +12,7 @@ const StudentHome = () => {
   const [waitingExams, setWaitingExams] = useState([]);
   const [passedExams, setPassedExams] = useState([]);
   const [failedExams, setFailedExams] = useState([]);
-  const [userData, setUserData] = useState(null); // Store user data
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     // Load user data from localStorage if available

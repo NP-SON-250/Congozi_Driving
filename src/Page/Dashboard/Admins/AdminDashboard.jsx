@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CurrentData from "../../../Components/Cards/AdminCards/CurrentData";
 import {
   PiArrowBendDoubleUpRightLight,
@@ -6,7 +6,7 @@ import {
 } from "react-icons/pi";
 import { TbUserQuestion } from "react-icons/tb";
 import { FcEditImage, FcSalesPerformance } from "react-icons/fc";
-import { examData } from "../../../Data/morkData";
+import axios from "axios";
 
 import Users from "./Other/Users/Users";
 import Payments from "./Other/Payments/Payments";
@@ -19,6 +19,59 @@ const AdminDashboard = () => {
     setActiveSection(section);
   };
 
+  const [totalExams, setTotalExams] = useState([]);
+  const [totalUsers, setTotalUsers] = useState([]);
+  const [TotalPayments, setTotalPayments] = useState([]);
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    // Load user data from localStorage if available
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUserData(parsedUser); // Set the user data to state
+      } catch (err) {
+        console.error("Failed to load user data:", err);
+      }
+    }
+
+    // Fetch data once the component is mounted
+    const token = localStorage.getItem("token");
+
+    const fetchAllData = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        const [userRes, examRes, paymentRes] = await Promise.all([
+          axios.get(
+            "https://congozi-backend.onrender.com/api/v1/users",
+            config
+          ),
+          axios.get(
+            "https://congozi-backend.onrender.com/api/v1/exams",
+            config
+          ),
+          axios.get(
+            "https://congozi-backend.onrender.com/api/v1/purchases",
+            config
+          ),
+        ]);
+
+        setTotalExams(examRes.data?.data || []);
+        setTotalUsers(userRes.data?.data || []);
+        setTotalPayments(paymentRes.data?.data || []);
+      } catch (error) {
+        console.error("Error fetching exam data:", error);
+      }
+    };
+
+    fetchAllData();
+  }, []);
   return (
     <>
       {activeSection === "dashboard" && (
@@ -28,7 +81,7 @@ const AdminDashboard = () => {
             <div className="w-full md:px-4 px-4 cursor-pointer">
               <CurrentData
                 title={"Total Users"}
-                value={"290"}
+                value={totalUsers.length}
                 icon={<TbUserQuestion size={26} />}
                 indicator={<PiArrowBendDoubleUpRightLight size={24} />}
                 percentage={"80.03%"}
@@ -40,7 +93,7 @@ const AdminDashboard = () => {
             <div className="w-full md:px-0 px-4 cursor-pointer">
               <CurrentData
                 title={"Total Exams"}
-                value={examData.length}
+                value={totalExams.length}
                 icon={<FcEditImage size={26} />}
                 indicator={<PiArrowBendDoubleUpLeftLight size={24} />}
                 percentage={"8.01%"}
@@ -52,7 +105,7 @@ const AdminDashboard = () => {
             <div className="w-full md:px-0 px-4 cursor-pointer">
               <CurrentData
                 title={"Total Payments"}
-                value={"100"}
+                value={TotalPayments.length}
                 icon={<FcSalesPerformance size={26} />}
                 indicator={<PiArrowBendDoubleUpRightLight size={24} />}
                 percentage={"19%"}

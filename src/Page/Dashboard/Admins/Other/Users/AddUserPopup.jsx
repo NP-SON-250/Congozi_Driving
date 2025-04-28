@@ -2,33 +2,54 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import React, { useState } from "react";
 
 const AddUserPopup = ({
-  newName,
+  newFName,
+  newLName,
   newEmail,
   newRole,
-  newStatus,
-  newTelephone,
-  setNewName,
+  newAddress,
+  newPhone,
+  newIdcard,
+  newPassword,
+  setNewFName,
+  setNewLName,
   setNewEmail,
   setNewRole,
-  setNewStatus,
-  setNewTelephone,
+  setNewAddress,
+  setNewPhone,
+  setNewIdcard,
+  setNewPassword,
   setShowAddPopup,
   handleAddUser,
 }) => {
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[999]">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Add New User</h2>
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          Add New User
+        </h2>
         <div className="space-y-4">
           <input
             type="text"
-            placeholder="Full Name"
+            placeholder="First Name"
             className="w-full border px-4 py-1 rounded"
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
+            value={newFName}
+            onChange={(e) => setNewFName(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Last Name"
+            className="w-full border px-4 py-1 rounded"
+            value={newLName}
+            onChange={(e) => setNewLName(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Address"
+            className="w-full border px-4 py-1 rounded"
+            value={newAddress}
+            onChange={(e) => setNewAddress(e.target.value)}
           />
           <input
             type="email"
@@ -37,21 +58,30 @@ const AddUserPopup = ({
             value={newEmail}
             onChange={(e) => setNewEmail(e.target.value)}
           />
+
+          <input
+            type="text"
+            placeholder="Id Card"
+            className="w-full border px-4 py-1 rounded"
+            value={newIdcard}
+            onChange={(e) => setNewIdcard(e.target.value)}
+          />
           <input
             type="tel"
-            placeholder="Telephone"
+            placeholder="Telefone"
             className="w-full border px-4 py-1 rounded"
-            value={newTelephone}
-            onChange={(e) => setNewTelephone(e.target.value)}
+            value={newPhone}
+            onChange={(e) => setNewPhone(e.target.value)}
           />
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
               className="w-full border px-4 py-1 rounded pr-10"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
             />
+
             <span
               onClick={() => setShowPassword((prev) => !prev)}
               className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
@@ -64,19 +94,10 @@ const AddUserPopup = ({
             value={newRole}
             onChange={(e) => setNewRole(e.target.value)}
           >
-            <option value="">Select Role</option>
-            <option value="Student">Student</option>
-            <option value="School">School</option>
-            <option value="Admin">Admin</option>
-          </select>
-          <select
-            className="w-full border px-4 py-1 rounded"
-            value={newStatus}
-            onChange={(e) => setNewStatus(e.target.value)}
-          >
-            <option value="">Select Status</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
+            <option value="">----</option>
+            <option value="student">student</option>
+            <option value="school">school</option>
+            <option value="admin">admin</option>
           </select>
         </div>
         <div className="flex justify-around space-x-4 mt-6">

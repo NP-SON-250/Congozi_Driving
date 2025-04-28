@@ -1,266 +1,257 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { TiArrowBackOutline } from "react-icons/ti";
-import { FaArrowRight } from "react-icons/fa6";
-import { GoPlus } from "react-icons/go";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import Loader from "../components/SharedComponents/Loader";
-import Hello from "../components/Hello/Hello";
-const ConductExam = () => {
-  const { id } = useParams();
-  const [isLoading, setIsLoading] = useState(true);
-  const [examData, setExamData] = useState(null);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [timeRemaining, setTimeRemaining] = useState(() => {
-    const savedTime = localStorage.getItem("timeRemaining");
-    return savedTime ? parseInt(savedTime, 10) : 20 * 60 * 1000;
-  });
-  const navigate = useNavigate();
+import { IoReturnUpBack } from "react-icons/io5";
+import { MdMoreHoriz } from "react-icons/md";
+import ViewOptions from "./ViewOptions";
+import EditQuestionPopup from "./EditQuestionPopup";
+import AddOptionPopup from "./AddOptionPopup";
+import DeleteQuestionPopup from "./DeleteQuestionPopup";
+const ViewQuestions = ({ exam, onBack }) => {
+  const [selectedMenu, setSelectedMenu] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const questionsPerPage = 4;
 
-  const errors = (message) => {
-    toast.error(message, {
-      position: "top-center",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+  const [viewOptionsQuestion, setViewOptionsQuestion] = useState(null);
+  const [showEditPopup, setShowEditPopup] = useState(false);
+  const [questionToEdit, setQuestionToEdit] = useState(null);
+  const [editedMarks, setEditedMarks] = useState("");
+  const [editedPhrase, setEditedPhrase] = useState("");
+  const [editedImage, setEditedImage] = useState("");
+
+  const [questionToAddOption, setQuestionToAddOption] = useState(null);
+  const [questionToDelete, setQuestionToDelete] = useState(null);
+
+  const [question, setQuestion] = useState(null);
+  const totalPages = Math.ceil(exam.questions.length / questionsPerPage);
+
+  const toggleMenu = (index) => {
+    setSelectedMenu(selectedMenu === index ? null : index);
   };
 
-  const success = (message) => {
-    toast.success(message, {
-      position: "top-center",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-  };
-
-  useEffect(() => {
-    setIsLoading(true);
-    fetch(`https://heroes-driving-be.onrender.com/api/v1/exams/single/${id}`)
-      .then((response) => response.json())
-      .then((data) => setExamData(data.data))
-      .catch((error) => console.error("Error fetching exam data:", error));
-  }, [id]);
-
-  useEffect(() => {
-    if (examData) {
-      setIsLoading(false);
-      const savedOptions =
-        JSON.parse(localStorage.getItem("selectedOptions")) || {};
-      const currentQuestionId = examData.questions[currentQuestionIndex]._id;
-      setSelectedOption(savedOptions[currentQuestionId] || null);
-    }
-  }, [currentQuestionIndex, examData]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeRemaining((prevTime) => {
-        if (prevTime > 0) {
-          const newTime = prevTime - 1000;
-          localStorage.setItem("timeRemaining", newTime);
-          return newTime;
-        } else {
-          submitData();
-          navigate("/");
-          return 0;
-        }
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [navigate]);
-
-  const handleOptionChange = (event) => {
-    const currentQuestionId = examData.questions[currentQuestionIndex]._id;
-    setSelectedOption(event.target.value);
-
-    const savedOptions =
-      JSON.parse(localStorage.getItem("selectedOptions")) || {};
-    savedOptions[currentQuestionId] = event.target.value;
-    localStorage.setItem("selectedOptions", JSON.stringify(savedOptions));
-  };
-
-  const handleNext = () => {
-    if (currentQuestionIndex < examData.questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
     }
   };
 
-  const handleBack = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
-  };
-
-  const submitData = () => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      console.error("Ntakikuranga nkaho winjiye kuri sisiteme");
-      alert("Banza winjire kuri sisiteme.");
-      navigate("/login");
-      return;
-    }
-
-    const savedOptions =
-      JSON.parse(localStorage.getItem("selectedOptions")) || {};
-    const responses = Object.keys(savedOptions).map((questionId) => ({
-      questionId,
-      selectedOptionId: savedOptions[questionId],
-    }));
-
-    const payload = {
-      examId: examData._id,
-      responses,
-    };
-
-    fetch(
-      `https://heroes-driving-be.onrender.com/api/v1/newresponses/add/${examData._id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
+  const fetchQuestions = async () => {
+    try {
+      const res = await axios.get(
+        `https://congozi-backend.onrender.com/api/v1/questions/${exam._id}`
+      );
+      if (res.data && res.data.data) {
+        setQuestion(res.data.data);
       }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        if (data.status === "200") {
-          success("Your response has been saved");
-          localStorage.removeItem("selectedOptions");
-          localStorage.removeItem("timeRemaining");
-          setSelectedOption(null);
-          navigate("/");
-        } else {
-          console.error("Submission failed:", data);
-          errors(data.message || "Submission failed");
-        }
-      })
-      .catch((error) => {
-        console.error("Error submitting data:", error);
-        errors("Error submitting data");
-      });
+    } catch (error) {
+      console.error("Failed to fetch questions:", error);
+    }
   };
 
-  const clearLocalStorage = () => {
-    localStorage.removeItem("selectedOptions");
-    localStorage.removeItem("timeRemaining");
-    setSelectedOption(null);
+  useEffect(() => {
+    fetchQuestions();
+  }, [exam]);
+  const startIndex = (currentPage - 1) * questionsPerPage;
+  const currentQuestions = question.slice(
+    startIndex,
+    startIndex + questionsPerPage
+  );
+
+  const handleViewOptions = (question) => {
+    setViewOptionsQuestion(question);
   };
 
-  if (!examData) {
-    return <div>Loading...</div>;
-  }
+  const handleBackToQuestions = () => {
+    setViewOptionsQuestion(null);
+  };
 
-  const currentQuestion = examData.questions[currentQuestionIndex];
-  const minutes = Math.floor(timeRemaining / (1000 * 60));
-  const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+  const handleEditClick = (question) => {
+    setQuestionToEdit(question);
+    setEditedMarks(question.marks);
+    setEditedPhrase(question.questionPhrase);
+    setEditedImage(question.image || "");
+    setShowEditPopup(true);
+  };
+
+  const handleSaveQuestionEdit = () => {
+    console.log("Updated Question:", {
+      id: questionToEdit._id,
+      marks: editedMarks,
+      questionPhrase: editedPhrase,
+      image: editedImage,
+    });
+    setShowEditPopup(false);
+  };
+
+  // ✅ Save options for a specific question
+  const handleSaveOptions = (questionId, newOptions) => {
+    console.log("Saved Options for Question:", questionId, newOptions);
+    setQuestionToAddOption(null);
+  };
+
+  const handleDeleteQuestion = () => {
+    console.log("Deleting Question:", questionToDelete);
+    setQuestionToDelete(null);
+  };
 
   return (
-    <div>
-      <Hello />
-      {isLoading && <Loader />}
+    <div className="md:px-6 py-6 px-1">
+      {viewOptionsQuestion ? (
+        <ViewOptions
+          question={viewOptionsQuestion}
+          onBack={handleBackToQuestions}
+          onEdit={() => alert("Edit functionality")}
+          onDelete={() => alert("Delete functionality")}
+        />
+      ) : (
+        <>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Questions for: {exam.id}</h2>
+            <button
+              onClick={onBack}
+              title="Back to exams"
+              className="bg-gray-300 text-blue-900 px-4 py-2 text-2xl font-bold rounded hover:bg-gray-400"
+            >
+              <IoReturnUpBack size={24} />
+            </button>
+          </div>
+          <div className="overflow-x-auto rounded-lg shadow border border-blue-900">
+            <table className="w-full text-left table-auto">
+              <thead className="bg-gray-100 text-gray-700">
+                <tr>
+                  <th className="px-6 py-1 whitespace-nowrap">Question</th>
+                  <th className="px-6 py-1 whitespace-nowrap">Image</th>
+                  <th className="px-6 py-1 whitespace-nowrap">Options</th>
+                  <th className="px-6 py-1 whitespace-nowrap">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentQuestions.map((question, index) => (
+                  <tr key={index} className="border-t hover:bg-gray-50">
+                    <td className="px-6 py-1 whitespace-nowrap">
+                      {question.phrase}
+                    </td>
+                    <td className="px-6 py-1 whitespace-nowrap">
+                      {question.image ? (
+                        <img
+                          src={question.image}
+                          alt="Q"
+                          className="h-10 w-10 rounded-full"
+                        />
+                      ) : (
+                        "No Image"
+                      )}
+                    </td>
+                    <td className="px-6 py-1 whitespace-nowrap">
+                      {question.options?.length}
+                    </td>
+                    <td className="px-6 py-1 text-right relative">
+                      <button
+                        onClick={() => toggleMenu(index)}
+                        className="p-2 hover:bg-gray-200 rounded-full"
+                      >
+                        <MdMoreHoriz size={22} />
+                      </button>
+                      {selectedMenu === index && (
+                        <div className="absolute right-6 mt-2 w-52 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                          <ul className="text-sm text-blue-900">
+                            <li
+                              className="hover:bg-gray-100 px-4 py-1 cursor-pointer"
+                              onClick={() => handleEditClick(question)}
+                            >
+                              Edit
+                            </li>
+                            <li
+                              className="hover:bg-gray-100 text-red-500 px-4 py-1 cursor-pointer"
+                              onClick={() => setQuestionToDelete(question)}
+                            >
+                              Delete
+                            </li>
 
-      <div className="font-[Poppins] flex justify-center">
-        <div className="font-[Poppins] relative bg-white rounded-md p-12 lg:w-full md:w-[45rem] w-full lg:mt-14 md:mt-36 mt-14 lg:pb-5 pb-20 shadow-2xl">
-          <div className="font-[Poppins] flex md:gap-20 gap-5 pb-10 justify-center">
-            <h1 className="font-[Poppins]">{examData.title}</h1>
-            <h1 className="font-[Poppins]">
-              {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-            </h1>
+                            <li
+                              className="hover:bg-gray-100 px-4 py-1 cursor-pointer"
+                              onClick={() => setQuestionToAddOption(question)} // ✅ Open popup
+                            >
+                              Add Options
+                            </li>
+                            {question.options.length > 0 && (
+                              <li
+                                className="hover:bg-gray-100 px-4 py-1 cursor-pointer pb-2"
+                                onClick={() => handleViewOptions(question)}
+                              >
+                                View {question.options.length} Options
+                              </li>
+                            )}
+                          </ul>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <div className="font-[Poppins]">
-            <p className="font-[Poppins] lg:text-2xl md:text-4xl text-2xl">
-              {currentQuestion.question}
-            </p>
-            {currentQuestion.options.map((option) => (
-              <div key={option._id} className="font-[Poppins]">
-                <input
-                  type="radio"
-                  id={option._id}
-                  name="option"
-                  className="font-[Poppins] lg:w-3 lg:h-3 w-6 h-6 border-2 border-slate-400 mt-10 cursor-pointer"
-                  value={option._id}
-                  checked={selectedOption === option._id}
-                  onChange={handleOptionChange}
-                />
-                <label
-                  htmlFor={option._id}
-                  className="font-[Poppins] lg:text-lg text-2xl ml-4 cursor-pointer"
-                >
-                  {option.option}
-                </label>
-              </div>
-            ))}
-          </div>
-          <div className="font-[Poppins] flex lg:gap-24 gap-5 justify-center">
+          {/* Pagination */}
+          <div className="flex justify-center items-center mt-6 space-x-4">
             <button
-              onClick={handleBack}
-              disabled={currentQuestionIndex === 0}
-              className={`text-white lg:text-base md:text-3xl 
-              flex justify-between items-center
-              p-2 lg:w-28 md:w-48 w-32 rounded-md lg:mt-20 mt-32 mb-4 ${
-                currentQuestionIndex === 0
-                  ? "bg-gray cursor-not-allowed"
-                  : "bg-[#006991] hover:bg-[#004766]"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`px-4 py-2 rounded ${
+                currentPage === 1
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-blue-600 text-white hover:bg-blue-700"
               }`}
             >
-              <TiArrowBackOutline className="font-[Poppins] bg-transparent text-white rounded-full lg:text-xl md:text-3xl" />{" "}
-              Garuka{" "}
+              Previous
             </button>
 
+            <span className="text-gray-700 font-medium">
+              Page {currentPage} of {totalPages}
+            </span>
+
             <button
-              onClick={handleNext}
-              disabled={currentQuestionIndex === examData.questions.length - 1}
-              className={`text-white lg:text-xl md:text-3xl
-              flex justify-between items-center
-              p-2 lg:w-44 md:w-48 w-32 rounded-md lg:mt-20 mt-32 mb-4 ${
-                currentQuestionIndex === examData.questions.length - 1
-                  ? "bg-gray cursor-not-allowed"
-                  : "bg-[#006991] hover:bg-[#004766]"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`px-4 py-2 rounded ${
+                currentPage === totalPages
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-blue-600 text-white hover:bg-blue-700"
               }`}
             >
-              {" "}
-              Komeza{" "}
-              <FaArrowRight className="font-[Poppins] bg-transparent text-white rounded-full lg:text-xl md:text-3xl" />
-            </button>
-            <button
-              onClick={submitData}
-              disabled={currentQuestionIndex === 0}
-              className={`text-white lg:text-xl md:text-3xl
-              flex justify-between items-center cursor-pointer
-              p-2 lg:w-32 md:w-48 w-32 rounded-md lg:mt-20 mt-32 mb-4 ${
-                currentQuestionIndex === 0
-                  ? "bg-gray cursor-not-allowed"
-                  : "bg-[#006991] hover:bg-[#004766]"
-              }`}
-            >
-              {" "}
-              Ohereza{" "}
-              <GoPlus className="font-[Poppins] bg-transparent text-white rounded-full lg:text-xl md:text-3xl" />
+              Next
             </button>
           </div>
-          <div className="font-[Poppins] flex gap-10 justify-center text-xl font-bold cursor-pointer hover:text-[#006991]">
-            <button onClick={clearLocalStorage}>Siba ibyo wasubije</button>
-          </div>
-        </div>
-        <ToastContainer />
-      </div>
+        </>
+      )}
+      {showEditPopup && (
+        <EditQuestionPopup
+          questionToEdit={questionToEdit}
+          editedMarks={editedMarks}
+          editedPhrase={editedPhrase}
+          editedImage={editedImage}
+          setEditedMarks={setEditedMarks}
+          setEditedPhrase={setEditedPhrase}
+          setEditedImage={setEditedImage}
+          setShowEditPopup={setShowEditPopup}
+          handleSaveEdit={handleSaveQuestionEdit}
+        />
+      )}
+
+      {/* ✅ Add Option Popup */}
+      {questionToAddOption && (
+        <AddOptionPopup
+          question={questionToAddOption}
+          onClose={() => setQuestionToAddOption(null)}
+          onSave={handleSaveOptions}
+        />
+      )}
+
+      {questionToDelete && (
+        <DeleteQuestionPopup
+          onConfirm={handleDeleteQuestion}
+          onCancel={() => setQuestionToDelete(null)}
+        />
+      )}
     </div>
   );
 };
 
-export default ConductExam;
+export default ViewQuestions;

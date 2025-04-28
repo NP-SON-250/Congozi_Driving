@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoReturnUpBack } from "react-icons/io5";
 import { MdMoreHoriz } from "react-icons/md";
 import ViewOptions from "./ViewOptions";
 import EditQuestionPopup from "./EditQuestionPopup";
 import AddOptionPopup from "./AddOptionPopup";
 import DeleteQuestionPopup from "./DeleteQuestionPopup";
+import axios from "axios";
+
 const ViewQuestions = ({ exam, onBack }) => {
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,28 +17,47 @@ const ViewQuestions = ({ exam, onBack }) => {
   const [questionToEdit, setQuestionToEdit] = useState(null);
   const [editedMarks, setEditedMarks] = useState("");
   const [editedPhrase, setEditedPhrase] = useState("");
-  const [editedImage, setEditedImage] = useState("");
+  const [editedImage, setEditedImage] = useState(null);
+  const [editedImagePreview, setEditedImagePreview] = useState("");
 
   const [questionToAddOption, setQuestionToAddOption] = useState(null);
   const [questionToDelete, setQuestionToDelete] = useState(null);
 
-  const totalPages = Math.ceil(exam.questions.length / questionsPerPage);
+  const [questions, setQuestions] = useState([]); // Corrected: from null to []
 
   const toggleMenu = (index) => {
     setSelectedMenu(selectedMenu === index ? null : index);
   };
+
+  const fetchQuestions = async () => {
+    try {
+      const res = await axios.get(
+        `https://congozi-backend.onrender.com/api/v1/questions/${exam._id}`
+      );
+      if (res.data && res.data.data) {
+        setQuestions(res.data.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch questions:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchQuestions();
+  }, [exam]);
+
+  const totalPages = Math.ceil(questions.length / questionsPerPage); // ✅ updated to use fetched questions
+  const startIndex = (currentPage - 1) * questionsPerPage;
+  const currentQuestions = questions.slice(
+    startIndex,
+    startIndex + questionsPerPage
+  );
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
-
-  const startIndex = (currentPage - 1) * questionsPerPage;
-  const currentQuestions = exam.questions.slice(
-    startIndex,
-    startIndex + questionsPerPage
-  );
 
   const handleViewOptions = (question) => {
     setViewOptionsQuestion(question);
@@ -49,30 +70,69 @@ const ViewQuestions = ({ exam, onBack }) => {
   const handleEditClick = (question) => {
     setQuestionToEdit(question);
     setEditedMarks(question.marks);
-    setEditedPhrase(question.questionPhrase);
-    setEditedImage(question.image || "");
+    setEditedPhrase(question.phrase);
+    setEditedImage(null);
+    setEditedImagePreview(question.image || "");
     setShowEditPopup(true);
   };
 
-  const handleSaveQuestionEdit = () => {
-    console.log("Updated Question:", {
-      id: questionToEdit._id,
-      marks: editedMarks,
-      questionPhrase: editedPhrase,
-      image: editedImage,
-    });
-    setShowEditPopup(false);
+  const handleSaveQuestionEdit = async () => {
+    if (!questionToEdit) return;
+    try {
+      let formData = new FormData();
+      formData.append("marks", editedMarks);
+      formData.append("phrase", editedPhrase);
+
+      // Only append image if a new one was selected
+      if (editedImage) {
+        formData.append("image", editedImage);
+      }
+
+      await axios.put(
+        `https://congozi-backend.onrender.com/api/v1/questions/${questionToEdit._id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("Question updated successfully");
+      setShowEditPopup(false);
+      fetchQuestions(); // ✅ Refresh the updated questions
+    } catch (error) {
+      console.error("Failed to update question:", error);
+    }
   };
 
-  // ✅ Save options for a specific question
-  const handleSaveOptions = (questionId, newOptions) => {
-    console.log("Saved Options for Question:", questionId, newOptions);
-    setQuestionToAddOption(null);
+  const handleSaveOptions = async (questionId, newOptions) => {
+    try {
+      const res = await axios.post(
+        `https://congozi-backend.onrender.com/api/v1/options/${questionId}`,
+        { options: newOptions }
+      );
+
+      console.log("Options added successfully:", res.data);
+      setQuestionToAddOption(null);
+      fetchQuestions(); // Refresh questions so we can see the newly added options
+    } catch (error) {
+      console.error("Failed to add options:", error);
+    }
   };
 
-  const handleDeleteQuestion = () => {
-    console.log("Deleting Question:", questionToDelete);
-    setQuestionToDelete(null);
+  const handleDeleteQuestion = async () => {
+    if (!questionToDelete) return;
+    try {
+      await axios.delete(
+        `https://congozi-backend.onrender.com/api/v1/questions/${questionToDelete._id}`
+      );
+      console.log("Question deleted successfully");
+      setQuestionToDelete(null);
+      fetchQuestions();
+    } catch (error) {
+      console.error("Failed to delete question:", error);
+    }
   };
 
   return (
@@ -91,11 +151,12 @@ const ViewQuestions = ({ exam, onBack }) => {
             <button
               onClick={onBack}
               title="Back to exams"
-              className="bg-gray-300 text-blue-900 px-4 py-2 text-2xl font-bold rounded hover:bg-gray-400"
+              className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400"
             >
-              <IoReturnUpBack size={24} />
+              <IoReturnUpBack size={20} />
             </button>
           </div>
+
           <div className="overflow-x-auto rounded-lg shadow border border-blue-900">
             <table className="w-full text-left table-auto">
               <thead className="bg-gray-100 text-gray-700">
@@ -110,7 +171,7 @@ const ViewQuestions = ({ exam, onBack }) => {
                 {currentQuestions.map((question, index) => (
                   <tr key={index} className="border-t hover:bg-gray-50">
                     <td className="px-6 py-1 whitespace-nowrap">
-                      {question.questionPhrase}
+                      {question.phrase}
                     </td>
                     <td className="px-6 py-1 whitespace-nowrap">
                       {question.image ? (
@@ -124,7 +185,7 @@ const ViewQuestions = ({ exam, onBack }) => {
                       )}
                     </td>
                     <td className="px-6 py-1 whitespace-nowrap">
-                      {question.options.length}
+                      {question.options?.length}
                     </td>
                     <td className="px-6 py-1 text-right relative">
                       <button
@@ -148,10 +209,9 @@ const ViewQuestions = ({ exam, onBack }) => {
                             >
                               Delete
                             </li>
-
                             <li
                               className="hover:bg-gray-100 px-4 py-1 cursor-pointer"
-                              onClick={() => setQuestionToAddOption(question)} // ✅ Open popup
+                              onClick={() => setQuestionToAddOption(question)}
                             >
                               Add Options
                             </li>
@@ -172,6 +232,7 @@ const ViewQuestions = ({ exam, onBack }) => {
               </tbody>
             </table>
           </div>
+
           {/* Pagination */}
           <div className="flex justify-center items-center mt-6 space-x-4">
             <button
@@ -204,6 +265,8 @@ const ViewQuestions = ({ exam, onBack }) => {
           </div>
         </>
       )}
+
+      {/* Popups */}
       {showEditPopup && (
         <EditQuestionPopup
           questionToEdit={questionToEdit}
@@ -218,7 +281,6 @@ const ViewQuestions = ({ exam, onBack }) => {
         />
       )}
 
-      {/* ✅ Add Option Popup */}
       {questionToAddOption && (
         <AddOptionPopup
           question={questionToAddOption}

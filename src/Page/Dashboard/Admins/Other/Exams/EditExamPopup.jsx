@@ -4,11 +4,9 @@ const EditExamPopup = ({
   editingExam,
   editedTitle,
   editedFees,
-  editedStatus,
   editedType,
   setEditedTitle,
   setEditedFees,
-  setEditedStatus,
   setEditedType,
   setShowEditPopup,
   handleSaveEdit,
@@ -16,7 +14,7 @@ const EditExamPopup = ({
   if (!editingExam) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[999]">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg relative">
         <h3 className="text-xl font-semibold mb-2">Edit Exam</h3>
 
@@ -37,8 +35,9 @@ const EditExamPopup = ({
               onChange={(e) => setEditedType(e.target.value)}
               className="w-full border border-blue-900/20 rounded px-3 py-2 mt-1"
             >
-              <option value="Active">Learn</option>
-              <option value="Not Active">Test</option>
+              <option value="">---</option>
+              <option value="learn">learn</option>
+              <option value="test">test</option>
             </select>
           </div>
 
@@ -50,18 +49,6 @@ const EditExamPopup = ({
               onChange={(e) => setEditedFees(e.target.value)}
               className="w-full border border-blue-900/20 rounded px-3 py-1 mt-1"
             />
-          </div>
-
-          <div>
-            <label className="text-sm font-medium text-gray-700">Status</label>
-            <select
-              value={editedStatus}
-              onChange={(e) => setEditedStatus(e.target.value)}
-              className="w-full border border-blue-900/20 rounded px-3 py-2 mt-1"
-            >
-              <option value="Active">Active</option>
-              <option value="Not Active">Not Active</option>
-            </select>
           </div>
 
           <div>

@@ -1,110 +1,114 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MdMoreHoriz } from "react-icons/md";
 import EditUserPopup from "./Other/Users/EditUserPopup";
 import DeleteUserPopup from "./Other/Users/DeleteUserPopup";
 import AddUserPopup from "./Other/Users/AddUserPopup";
 
-const mockUsers = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john@example.com",
-    role: "Student",
-    status: "Active",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    email: "jane@example.com",
-    role: "Admin",
-    status: "Inactive",
-  },
-  {
-    id: 3,
-    name: "Robert Joe",
-    email: "robert@example.com",
-    role: "School",
-    status: "Active",
-  },
-  {
-    id: 4,
-    name: "Alexis HAKIZIMANA",
-    email: "alexis@example.com",
-    role: "Admin",
-    status: "Active",
-  },
-  {
-    id: 5,
-    name: "Katushabe Geofrey",
-    email: "geofrey@example.com",
-    role: "School",
-    status: "Inactive",
-  },
-  {
-    id: 6,
-    name: "Linda Brown",
-    email: "linda@example.com",
-    role: "Student",
-    status: "Active",
-  },
-];
+import axios from "axios";
 
 const USERS_PER_PAGE = 4;
 
 const AdminUsers = () => {
+  const [users, setUsers] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
-  const [editedName, setEditedName] = useState("");
+  const [editedFName, setEditedFName] = useState("");
+  const [editedLName, setEditedLName] = useState("");
+  const [editedPhone, setEditedPhone] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
+  const [editedIdcard, setEditedIdcard] = useState("");
   const [editedRole, setEditedRole] = useState("");
-  const [editedStatus, setEditedStatus] = useState("");
+  const [editedAddress, setEditedAddress] = useState("");
 
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
 
   const [showAddPopup, setShowAddPopup] = useState(false);
-  const [newName, setNewName] = useState("");
+  const [newFName, setNewFName] = useState("");
+  const [newLName, setNewLName] = useState("");
+  const [newPhone, setNewPhone] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [newRole, setNewRole] = useState("");
-  const [newStatus, setNewStatus] = useState("");
+  const [newIdcard, setNewIdcard] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [newTelephone, setNewTelephone] = useState("");
+  const [newAddress, setNewAddress] = useState("");
+  // Fetch users from API
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get(
+          "https://congozi-backend.onrender.com/api/v1/users"
+        );
+        setUsers(response.data.data);
+      } catch (error) {
+        console.error("Failed to fetch users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   const toggleMenu = (userId) => {
     setSelectedMenu(selectedMenu === userId ? null : userId);
   };
 
-  const handleEditClick = (user) => {
-    setUserToEdit(user);
-    setEditedName(user.name);
-    setEditedEmail(user.email);
-    setEditedRole(user.role);
-    setEditedStatus(user.status);
-    setShowEditPopup(true);
-    setSelectedMenu(null);
-  };
-
-  const handleSaveUserEdit = () => {
-    console.log("Updated User:", {
-      name: editedName,
-      email: editedEmail,
-      role: editedRole,
-      status: editedStatus,
-    });
-    setShowEditPopup(false);
-  };
-
   const indexOfLastUser = currentPage * USERS_PER_PAGE;
   const indexOfFirstUser = indexOfLastUser - USERS_PER_PAGE;
-  const currentUsers = mockUsers.slice(indexOfFirstUser, indexOfLastUser);
-  const totalPages = Math.ceil(mockUsers.length / USERS_PER_PAGE);
+  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(users.length / USERS_PER_PAGE);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
     setSelectedMenu(null);
+  };
+
+  const handleEditClick = (user) => {
+    setUserToEdit(user);
+    setEditedFName(user.fName);
+    setEditedLName(user.lName);
+    setEditedIdcard(user.idCard);
+    setEditedPhone(user.phone);
+    setEditedEmail(user.email);
+    setEditedRole(user.role);
+    setEditedAddress(user.address);
+    setShowEditPopup(true);
+    setSelectedMenu(null);
+  };
+
+  const handleSaveUserEdit = async () => {
+    if (!userToEdit) return;
+
+    try {
+      const updatedUser = {
+        fName: editedFName,
+        lName: editedLName,
+        email: editedEmail,
+        phone: editedPhone,
+        idCard: editedIdcard,
+        role: editedRole,
+        address: editedAddress,
+      };
+
+      const response = await axios.put(
+        `https://congozi-backend.onrender.com/api/v1/users/${userToEdit._id}`,
+        updatedUser
+      );
+
+      console.log("User successfully updated:", response.data);
+
+      // Update the users list locally without refetching
+      const updatedUsers = users.map((user) =>
+        user._id === userToEdit._id ? { ...user, ...updatedUser } : user
+      );
+      setUsers(updatedUsers);
+      setShowEditPopup(false);
+      setUserToEdit(null);
+    } catch (error) {
+      console.error("Failed to update user:", error);
+    }
   };
 
   const handleDeleteClick = (user) => {
@@ -112,10 +116,26 @@ const AdminUsers = () => {
     setShowDeletePopup(true);
   };
 
-  const handleConfirmDelete = () => {
-    console.log("User Deleted:", userToDelete);
-    setShowDeletePopup(false);
-    setUserToDelete(null);
+  const handleConfirmDelete = async () => {
+    if (!userToDelete) return;
+
+    try {
+      await axios.delete(
+        `https://congozi-backend.onrender.com/api/v1/users/${userToDelete._id}`
+      );
+      console.log("User successfully deleted");
+
+      // Update the users list locally without refetching
+      const updatedUsers = users.filter(
+        (user) => user._id !== userToDelete._id
+      );
+      setUsers(updatedUsers);
+
+      setShowDeletePopup(false);
+      setUserToDelete(null);
+    } catch (error) {
+      console.error("Failed to delete user:", error);
+    }
   };
 
   const handleCancelDelete = () => {
@@ -124,23 +144,45 @@ const AdminUsers = () => {
   };
 
   // This function simulates saving the new user
-  const handleAddUser = () => {
-    console.log("New User Data:", {
-      name: newName,
-      email: newEmail,
-      role: newRole,
-      status: newStatus,
-      password: newPassword,
-      phone: newTelephone,
-    });
-    setShowAddPopup(false);
-    setNewName("");
-    setNewEmail("");
-    setNewRole("");
-    setNewStatus("");
-    setNewPassword("");
-    setNewTelephone("");
+  const handleAddUser = async () => {
+    try {
+      const newUser = {
+        fName: newFName,
+        lName: newLName,
+        phone: newPhone,
+        password: newPassword,
+        email: newEmail,
+        role: newRole,
+        address: newAddress,
+        idCard: newIdcard,
+      };
+
+      const response = await axios.post(
+        "https://congozi-backend.onrender.com/api/v1/users",
+        newUser
+      );
+
+      console.log("User successfully added:", response.data);
+
+      // Update the users list immediately with the new user
+      setUsers((prevUsers) => [...prevUsers, response.data.data]);
+
+      // Close the popup and reset the form
+      setShowAddPopup(false);
+      setNewFName("");
+      setNewEmail("");
+      setNewRole("");
+      setNewAddress("");
+      setNewPassword("");
+      setNewPhone("");
+      setNewIdcard("");
+      setNewLName("");
+    } catch (error) {
+      console.error("Failed to add user:", error);
+      alert("Failed to add user. Please check your input or server.");
+    }
   };
+
   return (
     <div className="md:px-6 py-6 px-1">
       <div className="flex justify-between items-center mb-6">
@@ -153,61 +195,51 @@ const AdminUsers = () => {
         </button>
       </div>
 
-      <div className="overflow-x-auto rounded-lg shadow border border-blue-900">
-        <table className="w-full text-left table-auto border">
+      <div className="overflow-x-auto rounded-lg shadow border border-gray-200">
+        <table className="w-full text-left table-auto">
           <thead className="bg-gray-100 text-gray-700">
             <tr>
               <th className="px-6 py-2">Name</th>
               <th className="px-6 py-2">Email</th>
+              <th className="px-6 py-2">Id Card</th>
+              <th className="px-6 py-2">Phone</th>
               <th className="px-6 py-2">Role</th>
-              <th className="px-6 py-2">Status</th>
+              <th className="px-6 py-2">Address</th>
               <th className="px-6 py-2 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
             {currentUsers.map((user) => (
-              <tr key={user.id} className="border-t hover:bg-gray-50">
-                <td className="px-6 py-2 whitespace-nowrap">{user.name}</td>
-                <td className="px-6 py-2 whitespace-nowrap">{user.email}</td>
-                <td className="px-6 py-2 whitespace-nowrap">{user.role}</td>
+              <tr key={user._id} className="border-t  hover:bg-gray-50">
                 <td className="px-6 py-2 whitespace-nowrap">
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      user.status === "Active"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-600"
-                    }`}
-                  >
-                    {user.status}
-                  </span>
+                  {user.fName} {user.lName}
                 </td>
+                <td className="px-6 py-2 whitespace-nowrap">{user.email}</td>
+                <td className="px-6 py-2 whitespace-nowrap">{user.idCard}</td>
+                <td className="px-6 py-2 whitespace-nowrap">{user.phone}</td>
+                <td className="px-6 py-2 whitespace-nowrap">{user.address}</td>
+                <td className="px-6 py-2 whitespace-nowrap">{user.role}</td>
                 <td className="px-6 py-2 text-right relative">
                   <button
-                    onClick={() => toggleMenu(user.id)}
+                    onClick={() => toggleMenu(user._id)}
                     className="p-2 hover:bg-gray-200 rounded-full"
                   >
                     <MdMoreHoriz size={22} />
                   </button>
-                  {selectedMenu === user.id && (
+                  {selectedMenu === user._id && (
                     <div className="absolute right-6 mt-2 w-40 bg-white border border-gray-300 rounded-md shadow-lg z-10">
                       <ul className="text-sm text-gray-700">
                         <li
-                          className="hover:bg-gray-100 px-4 py-1 cursor-pointer"
+                          className="hover:bg-gray-100 px-4 py-1 cursor-pointer text-blue-800"
                           onClick={() => handleEditClick(user)}
                         >
                           Edit
                         </li>
                         <li
-                          className="hover:bg-gray-100 px-4 py-1 cursor-pointer"
+                          className="hover:bg-gray-100 px-4 py-1 cursor-pointer text-red-500"
                           onClick={() => handleDeleteClick(user)}
                         >
                           Delete
-                        </li>
-
-                        <li className="hover:bg-gray-100 px-4 py-1 cursor-pointer">
-                          {user.status === "Inactive"
-                            ? "Activate"
-                            : "Deactivate"}
                         </li>
                       </ul>
                     </div>
@@ -250,45 +282,58 @@ const AdminUsers = () => {
         </button>
       </div>
 
-      {/* Edit User Popup */}
+      {/* Edit Popup */}
       {showEditPopup && (
         <EditUserPopup
           userToEdit={userToEdit}
-          editedName={editedName}
+          editedFName={editedFName}
+          editedLName={editedLName}
           editedEmail={editedEmail}
+          editedIdcard={editedIdcard}
+          editedPhone={editedPhone}
           editedRole={editedRole}
-          editedStatus={editedStatus}
-          setEditedName={setEditedName}
+          editedAddress={editedAddress}
+          setEditedFName={setEditedFName}
+          setEditedLName={setEditedLName}
+          setEditedPhone={setEditedPhone}
+          setEditedAddress={setEditedAddress}
           setEditedEmail={setEditedEmail}
           setEditedRole={setEditedRole}
-          setEditedStatus={setEditedStatus}
+          setEditedIdcard={setEditedIdcard}
           setShowEditPopup={setShowEditPopup}
           handleSaveUserEdit={handleSaveUserEdit}
         />
       )}
+      {/*Add new user */}
+      {showAddPopup && (
+        <AddUserPopup
+          newFName={newFName}
+          newLName={newLName}
+          newPhone={newPhone}
+          newEmail={newEmail}
+          newRole={newRole}
+          newAddress={newAddress}
+          newIdcard={newIdcard}
+          newPassword={newPassword}
+          setNewFName={setNewFName}
+          setNewLName={setNewLName}
+          setNewPhone={setNewPhone}
+          setNewEmail={setNewEmail}
+          setNewRole={setNewRole}
+          setNewAddress={setNewAddress}
+          setNewIdcard={setNewIdcard}
+          setNewPassword={setNewPassword}
+          setShowAddPopup={setShowAddPopup}
+          handleAddUser={handleAddUser}
+        />
+      )}
+
+      {/* Delete Popup */}
       {showDeletePopup && userToDelete && (
         <DeleteUserPopup
           user={userToDelete}
           onCancel={handleCancelDelete}
           onConfirm={handleConfirmDelete}
-        />
-      )}
-      {showAddPopup && (
-        <AddUserPopup
-          newName={newName}
-          newEmail={newEmail}
-          newRole={newRole}
-          newStatus={newStatus}
-          newPassword={newPassword}
-          newTelephone={newPassword}
-          setNewName={setNewName}
-          setNewEmail={setNewEmail}
-          setNewRole={setNewRole}
-          setNewStatus={setNewStatus}
-          setShowAddPopup={setShowAddPopup}
-          handleAddUser={handleAddUser}
-          setNewPassword={setNewPassword}
-          setNewTelephone={setNewTelephone}
         />
       )}
     </div>

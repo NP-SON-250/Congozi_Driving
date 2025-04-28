@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { MdMoreHoriz } from "react-icons/md";
-import { examData } from "../../../Data/morkData";
 import AddQuestionPopup from "./Other/Exams/AddQuestionPopup";
 import EditExamPopup from "./Other/Exams/EditExamPopup";
 import AddNewExamPopup from "./Other/Exams/AddNewExamPopup";
 import ViewQuestions from "./Other/Exams/ViewQuestions";
+import axios from "axios";
 
 const EXAMS_PER_PAGE = 4;
 
 const AdminExams = () => {
+  const [exams, setExams] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [editingExam, setEditingExam] = useState(null);
@@ -16,13 +17,37 @@ const AdminExams = () => {
   const [addQuestion, setAddQuestion] = useState(false);
   const [editedTitle, setEditedTitle] = useState("");
   const [editedFees, setEditedFees] = useState("");
-  const [editedStatus, setEditedStatus] = useState("");
   const [editedType, setEditedType] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [examToDelete, setExamToDelete] = useState(null);
+
+  const [viewingExam, setViewingExam] = useState(null);
   const [showAddExamPopup, setShowAddExamPopup] = useState(false);
-  const [exams, setExams] = useState(examData);
-  const [viewingExam, setViewingExam] = useState(null); 
+  const [selectedExam, setSelectedExam] = useState(null);
+
+  const handleAddQuestionClick = (exam) => {
+    setSelectedExam(exam); // set the exam object
+    setAddQuestion(true);
+    setSelectedMenu(null);
+  };
+
+  const fetchExams = async () => {
+    try {
+      const res = await axios.get(
+        "https://congozi-backend.onrender.com/api/v1/exams"
+      );
+      if (res.data) {
+        setExams(res.data.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch exams:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchExams();
+  }, []);
+
   const toggleMenu = (examId) => {
     setSelectedMenu(selectedMenu === examId ? null : examId);
   };
@@ -33,16 +58,24 @@ const AdminExams = () => {
     setSelectedMenu(null);
   };
 
-  const handleAddQuestionClick = () => {
-    setAddQuestion(true);
-    setSelectedMenu(null);
-  };
+  const handleDeleteExam = async () => {
+    if (!examToDelete) return;
 
-  const handleDeleteExam = () => {
-    const updatedExams = exams.filter((e) => e.id !== examToDelete.id);
-    setExams(updatedExams);
-    setExamToDelete(null);
-    setShowDeleteConfirm(false);
+    try {
+      const res = await axios.delete(
+        `https://congozi-backend.onrender.com/api/v1/exams/${examToDelete._id}`
+      );
+      if (res.data) {
+        const updatedExams = exams.filter((e) => e._id !== examToDelete._id);
+        setExams(updatedExams);
+        setExamToDelete(null);
+        setShowDeleteConfirm(false);
+      } else {
+        console.error("Failed to delete exam:", res.data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting exam:", error);
+    }
   };
 
   useEffect(() => {
@@ -62,6 +95,42 @@ const AdminExams = () => {
     setSelectedMenu(null);
   };
 
+  const handleSaveEdit = async () => {
+    if (!editingExam) return;
+
+    try {
+      const res = await axios.put(
+        `https://congozi-backend.onrender.com/api/v1/exams/${editingExam._id}`,
+        {
+          title: editedTitle,
+          fees: editedFees,
+          type: editedType,
+        }
+      );
+
+      if (res.data) {
+        // Update exams locally after successful update
+        const updatedExams = exams.map((exam) =>
+          exam._id === editingExam._id
+            ? {
+                ...exam,
+                title: editedTitle,
+                fees: editedFees,
+                type: editedType,
+              }
+            : exam
+        );
+        setExams(updatedExams);
+        setShowEditPopup(false);
+        setEditingExam(null);
+      } else {
+        console.error("Failed to update exam:", res.data.message);
+      }
+    } catch (error) {
+      console.error("Error updating exam:", error);
+    }
+  };
+
   return viewingExam ? (
     // When viewing questions, replace AdminExams content
     <ViewQuestions exam={viewingExam} onBack={() => setViewingExam(null)} />
@@ -76,51 +145,50 @@ const AdminExams = () => {
           Add New
         </button>
       </div>
-
       <div className="overflow-x-auto rounded-lg shadow border border-blue-900">
         <table className="w-full text-left table-auto">
           <thead className="bg-gray-100 text-gray-700">
             <tr>
               <th className="px-6 py-1 whitespace-nowrap">ID</th>
-              <th className="px-6 py-1 whitespace-nowrap">Access Code</th>
+              <th className="px-6 py-1 whitespace-nowrap">Number</th>
               <th className="px-6 py-1 whitespace-nowrap">Title</th>
               <th className="px-6 py-1 whitespace-nowrap">Fees</th>
-              <th className="px-6 py-1 whitespace-nowrap">Granted Users</th>
+              <th className="px-6 py-1 whitespace-nowrap">Type</th>
               <th className="px-6 py-1 whitespace-nowrap">Questions</th>
-              <th className="px-6 py-1 text-right whitespace-nowrap">Actions</th>
+              <th className="px-6 py-1 text-right whitespace-nowrap">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
             {currentExams.map((exam, index) => (
-              <tr key={index} className="border-t hover:bg-gray-50">
-                <td className="px-2 py-1 whitespace-nowrap">{exam.id}</td>
-                <td className="px-6 py-1 whitespace-nowrap">
-                  {exam.accessCode[0]?.code}
+              <tr key={exam._id} className="border-t hover:bg-gray-50">
+                <td className="px-2 py-1 whitespace-nowrap">
+                  {indexOfFirstExam + index + 1}
                 </td>
+                <td className="px-6 py-1 whitespace-nowrap">{exam.number}</td>
                 <td className="px-0 py-1 whitespace-nowrap">{exam.title}</td>
                 <td className="px-6 py-1 whitespace-nowrap">{exam.fees}</td>
-                <td className="px-6 py-1 whitespace-nowrap">
-                  {exam.accessCode[0]?.users.length}
-                </td>
+                <td className="px-6 py-1 whitespace-nowrap">{exam.type}</td>
                 <td className="px-6 py-1 whitespace-nowrap">
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      exam.questions.length >= 20
+                      exam.questions?.length >= 20
                         ? "bg-green-100 text-green-700"
                         : "bg-red-100 text-red-600"
                     }`}
                   >
-                    {exam.questions.length}
+                    {exam.questions?.length}
                   </span>
                 </td>
                 <td className="px-6 py-1 text-right relative">
                   <button
-                    onClick={() => toggleMenu(index)}
+                    onClick={() => toggleMenu(exam._id)}
                     className="p-2 hover:bg-gray-200 rounded-full"
                   >
                     <MdMoreHoriz size={22} />
                   </button>
-                  {selectedMenu === index && (
+                  {selectedMenu === exam._id && (
                     <div className="absolute right-6 mt-2 w-52 bg-white border border-gray-300 rounded-md shadow-lg z-10">
                       <ul className="text-sm text-blue-900">
                         <li
@@ -141,7 +209,7 @@ const AdminExams = () => {
                         </li>
                         {exam.questions.length < 20 && (
                           <li
-                            onClick={handleAddQuestionClick}
+                            onClick={() => handleAddQuestionClick(exam)}
                             className="hover:bg-gray-100 px-4 py-1 cursor-pointer"
                           >
                             Add {20 - exam.questions.length} Questions
@@ -202,29 +270,24 @@ const AdminExams = () => {
           editingExam={editingExam}
           editedTitle={editedTitle}
           editedFees={editedFees}
-          editedStatus={editedStatus}
           editedType={editedType}
           setEditedTitle={setEditedTitle}
           setEditedFees={setEditedFees}
-          setEditedStatus={setEditedStatus}
           setEditedType={setEditedType}
           setShowEditPopup={setShowEditPopup}
-          handleSaveEdit={() => {
-            console.log("Edited Exam Saved:", {
-              title: editedTitle,
-              fees: editedFees,
-              status: editedStatus,
-            });
-            setShowEditPopup(false);
-          }}
+          handleSaveEdit={handleSaveEdit}
         />
       )}
 
       {/* Add Questions Popup */}
-      <AddQuestionPopup
-        addQuestion={addQuestion}
-        setAddQuestion={setAddQuestion}
-      />
+      {addQuestion && (
+        <AddQuestionPopup
+          addQuestion={addQuestion}
+          setAddQuestion={setAddQuestion}
+          selectedExam={selectedExam}
+          refreshExams={fetchExams}
+        />
+      )}
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
@@ -254,10 +317,12 @@ const AdminExams = () => {
           </div>
         </div>
       )}
-
       {/* Add New Exam Popup */}
       {showAddExamPopup && (
-        <AddNewExamPopup setShowAddExamPopup={setShowAddExamPopup} />
+        <AddNewExamPopup
+          setShowAddExamPopup={setShowAddExamPopup}
+          onExamAdded={() => fetchExams()}
+        />
       )}
     </div>
   );

@@ -1,28 +1,66 @@
 import React, { useState } from "react";
 import { GoPaperclip } from "react-icons/go";
+import axios from "axios"; // <-- import axios here
 
-const AddQuestionPopup = ({ addQuestion, setAddQuestion}) => {
-  const [newQuestion, setNewQuestion] = useState("");
-  const [newMarks, setNewMarks] = useState("");
+const AddQuestionPopup = ({ setAddQuestion, selectedExam, fetchExams }) => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [formData, setFormData] = useState({
+    phrase: "",
+    marks: "",
+    image: null,
+  });
 
-  if (!addQuestion) return null;
+  if (!selectedExam) return null; // prevent crash if exam is missing
 
-  // Images
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
-    }
-  };
-
-  const handleClick = () => {
+  const handleFileTrigger = () => {
     document.getElementById("file-upload").click();
   };
 
+  const handleInputChange = (e) => {
+    const { name, value, files } = e.target;
+
+    if (name === "image") {
+      const file = files[0];
+      setFormData((prev) => ({ ...prev, image: file }));
+      if (file) {
+        const previewURL = URL.createObjectURL(file);
+        setSelectedImage(previewURL);
+      }
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      const data = new FormData();
+      data.append("phrase", formData.phrase);
+      data.append("marks", formData.marks);
+      if (formData.image) {
+        data.append("image", formData.image);
+      }
+
+      await axios.post(
+        `https://congozi-backend.onrender.com/api/v1/questions/${selectedExam._id}`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      // Success
+      setAddQuestion(false);
+      fetchExams(); // refresh exams list
+    } catch (error) {
+      console.error("Error adding question:", error);
+      alert("Failed to add question. Please try again.");
+    }
+  };
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[999]">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg relative">
         <h3 className="text-xl font-semibold mb-4">Add New Question</h3>
 
@@ -33,9 +71,10 @@ const AddQuestionPopup = ({ addQuestion, setAddQuestion}) => {
             </label>
             <input
               type="text"
-              value={newQuestion}
-              onChange={(e) => setNewQuestion(e.target.value)}
-              className="w-full border border-blue-900 opacity-20 rounded px-3 py-1 mt-1"
+              name="phrase"
+              value={formData.phrase}
+              onChange={handleInputChange}
+              className="w-full border border-blue-900 rounded px-3 py-1 mt-1"
             />
           </div>
           <div>
@@ -44,27 +83,29 @@ const AddQuestionPopup = ({ addQuestion, setAddQuestion}) => {
             </label>
             <input
               type="number"
-              value={newMarks}
-              onChange={(e) => setNewMarks(e.target.value)}
-              className="w-full border border-blue-900 opacity-20 rounded px-3 py-1 mt-1"
+              name="marks"
+              value={formData.marks}
+              onChange={handleInputChange}
+              className="w-full border border-blue-900 rounded px-3 py-1 mt-1"
             />
           </div>
           <div
             className="flex cursor-pointer lg:w-28 w-28 border-desired"
-            onClick={handleClick}
+            onClick={handleFileTrigger}
           >
             <input
               type="file"
               id="file-upload"
+              name="image"
               className="hidden"
               accept="image/*"
-              onChange={handleFileChange}
+              onChange={handleInputChange}
             />
             <GoPaperclip className="lg:w-6 lg:h-6 w-6 h-6 text-tblue mr-2" />
             {selectedImage ? (
               <img
                 src={selectedImage}
-                alt="Profile"
+                alt="Preview"
                 className="lg:w-6 lg:h-6 w-12 h-12 rounded-full object-cover ml-2"
               />
             ) : (
@@ -82,7 +123,10 @@ const AddQuestionPopup = ({ addQuestion, setAddQuestion}) => {
           >
             Cancel
           </button>
-          <button className="ml-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          <button
+            onClick={handleSave}
+            className="ml-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
             Save
           </button>
         </div>

@@ -45,19 +45,19 @@ const Register = () => {
     let newErrors = {};
 
     if (!/^1\d{15}$/.test(formData.idCard)) {
-      newErrors.idCard = <IoClose  size = {24}/>;
+      newErrors.idCard = <IoClose size={24} />;
     }
 
-    if (!/^\+2507\d{8}$/.test(formData.phone)) {
-      newErrors.phone = <IoClose  size = {24}/>;
+    if (!/^(072|073|078)\d{7}$/.test(formData.phone)) {
+      newErrors.phone = <IoClose size={24} />;
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = <IoClose  size = {24}/>;
+      newErrors.email = <IoClose size={24} />;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = <IoClose  size = {24}/>;
+      newErrors.confirmPassword = <IoClose size={24} />;
     }
 
     if (!agreedToTerms) {
@@ -84,7 +84,10 @@ const Register = () => {
     });
 
     try {
-      const res = await axios.post("https://congozi-backend.onrender.com/api/v1/users", data);
+      const res = await axios.post(
+        "https://congozi-backend.onrender.com/api/v1/users",
+        data
+      );
       notifySuccess(res.data.message || "Kwiyandikisha byagenze neza!");
     } catch (error) {
       const msg =

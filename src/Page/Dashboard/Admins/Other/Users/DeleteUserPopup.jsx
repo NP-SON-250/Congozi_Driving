@@ -6,7 +6,7 @@ const DeleteUserPopup = ({ user, onCancel, onConfirm }) => {
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
           Are you sure you want to delete{" "}
-          <span className="font-bold">{user.name}</span>?
+          <span className="font-bold">{user.fName} {" "}{user.lName}</span>?
         </h2>
         <div className="flex justify-around space-x-4">
           <button

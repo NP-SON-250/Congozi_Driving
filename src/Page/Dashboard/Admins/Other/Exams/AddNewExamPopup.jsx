@@ -1,13 +1,34 @@
 import React, { useState } from "react";
+import axios from "axios";
 
-const AddNewExamPopup = ({ setShowAddExamPopup }) => {
+const AddNewExamPopup = ({ setShowAddExamPopup, onExamAdded }) => {
   const [examTitle, setExamTitle] = useState("");
   const [examFees, setExamFees] = useState("");
+  const [examNumber, setExamNumber] = useState("");
+  const [examType, setExamType] = useState("");
 
-  const handleSave = () => {
-    // Logic for saving the new exam, for now, just logging
-    console.log("New Exam Added:", { examTitle, examFees });
-    setShowAddExamPopup(false); // Close the popup after saving
+  const handleSave = async () => {
+    try {
+      const newExam = {
+        number: examNumber,
+        title: examTitle,
+        fees: examFees,
+        type: examType,
+      };
+
+      const res = await axios.post(
+        "https://congozi-backend.onrender.com/api/v1/exams",
+        newExam
+      );
+
+      if (res.data) {
+        console.log("Exam Added Successfully:", res.data.data);
+        onExamAdded(res.data.data);
+        setShowAddExamPopup(false);
+      }
+    } catch (error) {
+      console.error("Error adding new exam:", error);
+    }
   };
 
   return (
@@ -17,6 +38,18 @@ const AddNewExamPopup = ({ setShowAddExamPopup }) => {
           Add New Exam
         </h2>
         <div className="space-y-4">
+          <div>
+            <label htmlFor="examNumber" className="block text-sm text-gray-700">
+              Exam Number
+            </label>
+            <input
+              type="number"
+              id="examNumber"
+              value={examNumber}
+              onChange={(e) => setExamNumber(e.target.value)}
+              className="w-full px-3 py-1 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+            />
+          </div>
           <div>
             <label htmlFor="examTitle" className="block text-sm text-gray-700">
               Exam Title
@@ -32,10 +65,13 @@ const AddNewExamPopup = ({ setShowAddExamPopup }) => {
           <div>
             <label className="text-sm font-medium text-gray-700">Type</label>
             <select
+              value={examType}
+              onChange={(e) => setExamType(e.target.value)}
               className="w-full border border-blue-900/20 rounded px-3 py-2 mt-1"
             >
-              <option value="Active">Learn</option>
-              <option value="Not Active">Test</option>
+              <option value="">---</option>
+              <option value="learn">learn</option>
+              <option value="test">test</option>
             </select>
           </div>
           <div>

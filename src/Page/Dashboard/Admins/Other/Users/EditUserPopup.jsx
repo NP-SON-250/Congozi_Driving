@@ -2,35 +2,76 @@ import React from "react";
 
 const EditUserPopup = ({
   userToEdit,
-  editedName,
+  editedFName,
+  editedLName,
+  editedAddress,
+  editedPhone,
   editedEmail,
   editedRole,
-  editedStatus,
-  setEditedName,
+  editedIdcard,
+  setEditedLName,
+  setEditedFName,
+  setEditedAddress,
+  setEditedPhone,
+  setEditedIdcard,
   setEditedEmail,
   setEditedRole,
-  setEditedStatus,
   setShowEditPopup,
   handleSaveUserEdit,
 }) => {
   if (!userToEdit) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[999]">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-xl font-semibold mb-4">Edit User</h2>
 
         <div className="space-y-3">
           <div>
-            <label className="block text-sm font-medium">Name</label>
+            <label className="block text-sm font-medium">Izina ryambere</label>
             <input
               type="text"
-              value={editedName}
-              onChange={(e) => setEditedName(e.target.value)}
+              value={editedFName}
+              onChange={(e) => setEditedFName(e.target.value)}
               className="w-full px-3 py-1 border rounded"
             />
           </div>
-
+          <div>
+            <label className="block text-sm font-medium">Izina ryakabiri</label>
+            <input
+              type="text"
+              value={editedLName}
+              onChange={(e) => setEditedLName(e.target.value)}
+              className="w-full px-3 py-1 border rounded"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium">Telefone</label>
+            <input
+              type="text"
+              value={editedPhone}
+              onChange={(e) => setEditedPhone(e.target.value)}
+              className="w-full px-3 py-1 border rounded"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium">Aderesi</label>
+            <input
+              type="text"
+              value={editedAddress}
+              onChange={(e) => setEditedAddress(e.target.value)}
+              className="w-full px-3 py-1 border rounded"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium">Irangamuntu</label>
+            <input
+              type="text"
+              value={editedIdcard}
+              onChange={(e) => setEditedIdcard(e.target.value)}
+              className="w-full px-3 py-1 border rounded"
+            />
+          </div>
           <div>
             <label className="block text-sm font-medium">Email</label>
             <input
@@ -48,21 +89,9 @@ const EditUserPopup = ({
               onChange={(e) => setEditedRole(e.target.value)}
               className="w-full px-3 py-2 border rounded"
             >
-              <option value="Student">Student</option>
-              <option value="Admin">Admin</option>
-              <option value="School">School</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium">Status</label>
-            <select
-              value={editedStatus}
-              onChange={(e) => setEditedStatus(e.target.value)}
-              className="w-full px-3 py-2 border rounded"
-            >
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
+              <option value="student">student</option>
+              <option value="admin">admin</option>
+              <option value="school">school</option>
             </select>
           </div>
         </div>
@@ -78,7 +107,7 @@ const EditUserPopup = ({
             onClick={handleSaveUserEdit}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
-            Save
+            Save Changes
           </button>
         </div>
       </div>
