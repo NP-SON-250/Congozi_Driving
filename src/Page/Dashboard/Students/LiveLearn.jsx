@@ -242,7 +242,7 @@ const LiveLearn = () => {
                       onClick={() => !examFinished && handleSelectQuestion(idx)}
                       disabled={examFinished}
                       className={`w-20 h-10 text-sm rounded-md flex justify-center items-center 
-                    ${isCurrent ? "bg-blue-500 text-white" : "bg-blue-500 text-white"}
+                    ${isCurrent ? "bg-blue-500 text-white" : ""}
                     ${
                       isInteracted
                         ? "bg-blue-500 text-white"
