@@ -31,7 +31,7 @@ const AutoTracking = () => {
         try {
           const token = localStorage.getItem("token");
           const response = await axios.get(
-            `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
+            `http://localhost:4900/api/v1/purchases/access/${examCode}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,

@@ -35,17 +35,14 @@ const SchoolsDashboard = () => {
           },
         };
 
-        const [
-          unpaidRes,
-          totalRes,
-          expiredRes,
-          waitingRes,
-        ] = await Promise.all([
-          axios.get("https://congozi-backend.onrender.com/api/v1/unpaidaccounts", config),
-          axios.get("https://congozi-backend.onrender.com/api/v1/totaluseraccounts", config),
-          axios.get("https://congozi-backend.onrender.com/api/v1/expiredaccounts", config),
-          axios.get("https://congozi-backend.onrender.com/api/v1/waittingaccounts", config),
-        ]);
+        const [unpaidRes, totalRes, expiredRes, waitingRes] = await Promise.all(
+          [
+            axios.get("http://localhost:4900/api/v1/unpaidaccounts", config),
+            axios.get("http://localhost:4900/api/v1/totaluseraccounts", config),
+            axios.get("http://localhost:4900/api/v1/expiredaccounts", config),
+            axios.get("http://localhost:4900/api/v1/waittingaccounts", config),
+          ]
+        );
 
         setUnpaidAccounts(unpaidRes.data?.data || []);
         setTotalAccounts(totalRes.data?.data || []);
@@ -65,15 +62,31 @@ const SchoolsDashboard = () => {
 
       {/* Cards Section */}
       <div className="grid md:grid-cols-3 grid-cols-1 w-full md:px-0 px-12 gap-12 md:pt-2 py-5 md:gap-12">
-        <StHomeCard bgColor="bg-blue-900" title="Total Accounts" count={totalAccounts.length} />
-        <StHomeCard bgColor="bg-[#F08080]" title="Expired Accounts" count={expiredAccounts.length} />
-        
+        <StHomeCard
+          bgColor="bg-blue-900"
+          title="Total Accounts"
+          count={totalAccounts.length}
+        />
+        <StHomeCard
+          bgColor="bg-[#F08080]"
+          title="Expired Accounts"
+          count={expiredAccounts.length}
+        />
+
         <Link to="/schools/unpaidaccounts" className="block w-full">
-          <StHomeCard bgColor="bg-[#FACC2E]" title="Unpaid Accounts" count={unpaidAccounts.length} />
+          <StHomeCard
+            bgColor="bg-[#FACC2E]"
+            title="Unpaid Accounts"
+            count={unpaidAccounts.length}
+          />
         </Link>
 
         <Link to="/schools/waitingaccounts" className="block w-full">
-          <StHomeCard bgColor="bg-blue-200" title="Waiting Accounts" count={waitingAccounts.length} />
+          <StHomeCard
+            bgColor="bg-blue-200"
+            title="Waiting Accounts"
+            count={waitingAccounts.length}
+          />
         </Link>
       </div>
 

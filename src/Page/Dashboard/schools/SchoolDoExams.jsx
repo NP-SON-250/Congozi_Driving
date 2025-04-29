@@ -25,7 +25,7 @@ const SchoolDoExams = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/purchases/complete",
+        "http://localhost:4900/api/v1/purchases/complete",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -42,8 +42,6 @@ const SchoolDoExams = () => {
     fetchData();
   }, []);
 
-
-
   useEffect(() => {
     const updateAccountsPerPage = () => {
       setAccountsPerPage(window.innerWidth >= 768 ? 6 : 2);
@@ -56,9 +54,7 @@ const SchoolDoExams = () => {
   const filteredAccounts = account.data.filter(
     (account) =>
       (validIn === "" ||
-        account.itemId.validIn
-          .toLowerCase()
-          .includes(validIn.toLowerCase())) &&
+        account.itemId.validIn.toLowerCase().includes(validIn.toLowerCase())) &&
       (fees === "" || account.itemId.fees.toString().includes(fees)) &&
       (searchTerm === "" ||
         account.itemId.validIn
@@ -78,11 +74,11 @@ const SchoolDoExams = () => {
 
   const handleViewExams = (account) => {
     if (account.accessCode) {
-        const accessCode = account.accessCode;
-        navigate(`/schools/accessableexams?accessCode=${accessCode}`);
-      } else {
-        console.error("Nta code yo kukwereka ibizamini ufite.");
-      }
+      const accessCode = account.accessCode;
+      navigate(`/schools/accessableexams?accessCode=${accessCode}`);
+    } else {
+      console.error("Nta code yo kukwereka ibizamini ufite.");
+    }
   };
 
   return (
@@ -131,13 +127,13 @@ const SchoolDoExams = () => {
           <div className="grid md:grid-cols-3 w-full gap-4 md:gap-3 py-1">
             {currentAccounts.map((account, index) => {
               const buttonColor =
-              account.itemId.validIn >= 30 ? "bg-green-500" : "bg-yellow-500";
+                account.itemId.validIn >= 30 ? "bg-green-500" : "bg-yellow-500";
               return (
                 <AccountCard
                   key={index}
-                  title={`Account ${currentPage * accountsPerPage + index + 1}: ${
-                    account.itemId.title
-                  }`}
+                  title={`Account ${
+                    currentPage * accountsPerPage + index + 1
+                  }: ${account.itemId.title}`}
                   fees={account.itemId.fees}
                   validIn={account.itemId.validIn}
                   onPurchase={() => handleViewExams(account)}

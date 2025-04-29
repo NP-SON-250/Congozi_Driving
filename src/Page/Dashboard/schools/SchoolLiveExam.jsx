@@ -35,7 +35,7 @@ const SchoolLiveExam = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
+          `http://localhost:4900/api/v1/exams/${examId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -165,7 +165,7 @@ const SchoolLiveExam = () => {
                       disabled={examFinished}
                       className={`w-20 h-10 text-sm rounded-md flex justify-center items-center 
                       ${
-                       isAnswered
+                        isAnswered
                           ? "bg-blue-500 text-white"
                           : "bg-white border"
                       } 

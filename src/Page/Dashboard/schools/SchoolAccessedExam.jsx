@@ -30,7 +30,7 @@ const SchoolAccessedExam = () => {
         try {
           const token = localStorage.getItem("token");
           const response = await axios.get(
-            `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
+            `http://localhost:4900/api/v1/exams/${examId}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -66,7 +66,6 @@ const SchoolAccessedExam = () => {
       alert("Invalid exam type.");
     }
   };
-  
 
   const handleShowContinueCard = () => {
     setShowContinueCard(true);
@@ -181,7 +180,7 @@ const SchoolAccessedExam = () => {
                         </tr>
                         <tr>
                           <td className="border border-gray-400 px-1">
-                          School Owner
+                            School Owner
                           </td>
                           <td className="border border-gray-400 px-1">
                             {userName?.fName} {userName?.lName}
@@ -189,7 +188,7 @@ const SchoolAccessedExam = () => {
                         </tr>
                         <tr>
                           <td className="border border-gray-400 px-1">
-                          School Address
+                            School Address
                           </td>
                           <td className="border border-gray-400 px-1">
                             {userName?.address}
@@ -208,22 +207,22 @@ const SchoolAccessedExam = () => {
                   </tbody>
                 </table>
                 <div className="flex md:flex-row flex-col justify-center w-full items-center gap-4 md:py-2 py-6">
-              <p>Are you ready to start the exam?</p>
-              <div className="flex gap-6">
-                <button
-                  className="bg-blue-500 text-white px-4 py-2 md:w-[100px] w-[80px] rounded-full"
-                  onClick={handleShowContinueCard}
-                >
-                  Yes
-                </button>
-                <button
-                  className="bg-yellow-500 text-white px-4 py-2 md:w-[200px] w-[160px] rounded-full"
-                  onClick={handleNotReady}
-                >
-                  I'm Not Ready
-                </button>
-              </div>
-            </div>
+                  <p>Are you ready to start the exam?</p>
+                  <div className="flex gap-6">
+                    <button
+                      className="bg-blue-500 text-white px-4 py-2 md:w-[100px] w-[80px] rounded-full"
+                      onClick={handleShowContinueCard}
+                    >
+                      Yes
+                    </button>
+                    <button
+                      className="bg-yellow-500 text-white px-4 py-2 md:w-[200px] w-[160px] rounded-full"
+                      onClick={handleNotReady}
+                    >
+                      I'm Not Ready
+                    </button>
+                  </div>
+                </div>
               </div>
             ) : (
               <p className="text-red-500 text-center">Exam not found</p>

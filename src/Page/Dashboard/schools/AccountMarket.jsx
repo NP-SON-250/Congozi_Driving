@@ -33,7 +33,7 @@ const SchoolDemo = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/accounts",
+        "http://localhost:4900/api/v1/accounts",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -91,7 +91,7 @@ const SchoolDemo = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${selectedAccount._id}`,
+        `http://localhost:4900/api/v1/purchases/${selectedAccount._id}`,
         {},
         {
           headers: {
@@ -110,11 +110,11 @@ const SchoolDemo = () => {
     }
   };
   const handlePayNowClick = async () => {
-    console.log(selectedAccount._id)
+    console.log(selectedAccount._id);
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/purchases/paid/${selectedAccount._id}`,
+        `http://localhost:4900/api/v1/purchases/paid/${selectedAccount._id}`,
         {},
         {
           headers: {
@@ -187,17 +187,17 @@ const SchoolDemo = () => {
               account.validIn >= 30 ? "bg-green-500" : "bg-yellow-500";
             return (
               <AccountCard
-                  key={index}
-                  title={`Account ${currentPage * accountsPerPage + index + 1}: ${
-                    account.title
-                  }`}
-                  fees={account.fees}
-                  validIn={account.validIn}
-                  onPurchase={() => handlePurchaseClick(account)}
-                  icon={<BsCart />}
-                  button={"Purchase"}
-                  buttonColor={buttonColor}
-                />
+                key={index}
+                title={`Account ${currentPage * accountsPerPage + index + 1}: ${
+                  account.title
+                }`}
+                fees={account.fees}
+                validIn={account.validIn}
+                onPurchase={() => handlePurchaseClick(account)}
+                icon={<BsCart />}
+                button={"Purchase"}
+                buttonColor={buttonColor}
+              />
             );
           })}
         </div>
@@ -325,8 +325,9 @@ const SchoolDemo = () => {
                       placeholder="ex: 0789xxxxxxx"
                       className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
                     />
-                    <button className="bg-green-500 text-white px-4 py-2 rounded mt-4 w-full"
-                    onClick={handlePayNowClick}
+                    <button
+                      className="bg-green-500 text-white px-4 py-2 rounded mt-4 w-full"
+                      onClick={handlePayNowClick}
                     >
                       Ishyura {selectedAccount.fees} RWF
                     </button>

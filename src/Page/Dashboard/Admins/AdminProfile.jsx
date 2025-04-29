@@ -24,9 +24,9 @@ const AdminProfile = () => {
         setEmail(parsedUser.email || "");
         setFName(parsedUser.fName || "");
         setLName(parsedUser.lName || "");
-        setAddress(parsedUser.address || ""); 
-        setTelephone(parsedUser.phone || ""); 
-        setProfileImage(parsedUser.profile || null); 
+        setAddress(parsedUser.address || "");
+        setTelephone(parsedUser.phone || "");
+        setProfileImage(parsedUser.profile || null);
         setOriginalData({
           profile: parsedUser.profile || null,
           email: parsedUser.email || "",
@@ -52,20 +52,20 @@ const AdminProfile = () => {
   // Save updated profile data
   const handleSave = async () => {
     const newData = new FormData();
-    newData.append('profile', profileImage);
-    newData.append('email', email);
-    newData.append('fName', fName);
-    newData.append('lName', lName);
-    newData.append('address', address);
-    newData.append('phone', telephone);
+    newData.append("profile", profileImage);
+    newData.append("email", email);
+    newData.append("fName", fName);
+    newData.append("lName", lName);
+    newData.append("address", address);
+    newData.append("phone", telephone);
 
     try {
       const response = await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/users/${userId}`,
+        `http://localhost:4900/api/v1/users/${userId}`,
         newData,
         {
           headers: {
-            'Content-Type': 'multipart/form-data', 
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -90,7 +90,6 @@ const AdminProfile = () => {
       setMessageType("error");
     }
   };
-  
 
   return (
     <div className="flex items-top justify-center">
@@ -118,7 +117,8 @@ const AdminProfile = () => {
             src={
               profileImage instanceof File
                 ? URL.createObjectURL(profileImage) // Generate URL only if profileImage is a file object
-                : profileImage || "https://res.cloudinary.com/da12yf0am/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1740671685/SBS%20Images/file_limbge.webp" // Fallback if no image is selected
+                : profileImage ||
+                  "https://res.cloudinary.com/da12yf0am/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1740671685/SBS%20Images/file_limbge.webp" // Fallback if no image is selected
             }
             alt="Profile"
             className="w-full h-full object-cover rounded-full border border-gray-300"

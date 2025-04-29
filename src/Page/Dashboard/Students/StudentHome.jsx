@@ -45,12 +45,12 @@ const StudentHome = () => {
           passedRes,
           failedRes,
         ] = await Promise.all([
-          axios.get("https://congozi-backend.onrender.com/api/v1/unpaidexams", config),
-          axios.get("https://congozi-backend.onrender.com/api/v1/totaluserexams", config),
-          axios.get("https://congozi-backend.onrender.com/api/v1/expiredexams", config),
-          axios.get("https://congozi-backend.onrender.com/api/v1/waittingexams", config),
-          axios.get("https://congozi-backend.onrender.com/api/v1/passedexams", config),
-          axios.get("https://congozi-backend.onrender.com/api/v1/failledexams", config),
+          axios.get("http://localhost:4900/api/v1/unpaidexams", config),
+          axios.get("http://localhost:4900/api/v1/totaluserexams", config),
+          axios.get("http://localhost:4900/api/v1/expiredexams", config),
+          axios.get("http://localhost:4900/api/v1/waittingexams", config),
+          axios.get("http://localhost:4900/api/v1/passedexams", config),
+          axios.get("http://localhost:4900/api/v1/failledexams", config),
         ]);
 
         setUnpaidExams(unpaidRes.data?.data || []);
@@ -69,25 +69,48 @@ const StudentHome = () => {
 
   return (
     <div className="flex flex-col justify-center items-start md:px-5 gap-2 bg-white md:p-2">
-      <WelcomeDear userData={userData} /> {/* Pass userData as a prop if needed */}
-
+      <WelcomeDear userData={userData} />{" "}
+      {/* Pass userData as a prop if needed */}
       {/* Cards Section */}
       <div className="grid md:grid-cols-3 grid-cols-1 w-full md:px-0 px-12 gap-12 md:pt-2 py-5 md:gap-12">
-        <StHomeCard bgColor="bg-blue-900" title="Total Exams" count={totalExams.length} />
-        <StHomeCard bgColor="bg-red-700" title="Expired Exams" count={expiredExams.length} />
-        
+        <StHomeCard
+          bgColor="bg-blue-900"
+          title="Total Exams"
+          count={totalExams.length}
+        />
+        <StHomeCard
+          bgColor="bg-red-700"
+          title="Expired Exams"
+          count={expiredExams.length}
+        />
+
         <Link to="/students/unpaidexams" className="block w-full">
-          <StHomeCard bgColor="bg-yellow-700" title="Unpaid Exams" count={unpaidExams.length} />
+          <StHomeCard
+            bgColor="bg-yellow-700"
+            title="Unpaid Exams"
+            count={unpaidExams.length}
+          />
         </Link>
 
         <Link to="/students/waitingexams" className="block w-full">
-          <StHomeCard bgColor="bg-blue-700" title="Waiting Exams" count={waitingExams.length} />
+          <StHomeCard
+            bgColor="bg-blue-700"
+            title="Waiting Exams"
+            count={waitingExams.length}
+          />
         </Link>
 
-        <StHomeCard bgColor="bg-green-700" title="Passed Exams" count={passedExams.length} />
-        <StHomeCard bgColor="bg-orange-600" title="Failed Exams" count={failedExams.length} />
+        <StHomeCard
+          bgColor="bg-green-700"
+          title="Passed Exams"
+          count={passedExams.length}
+        />
+        <StHomeCard
+          bgColor="bg-orange-600"
+          title="Failed Exams"
+          count={failedExams.length}
+        />
       </div>
-
       <img src={Image} alt="" className="w-[140px] md:ml-[400px] ml-28" />
     </div>
   );

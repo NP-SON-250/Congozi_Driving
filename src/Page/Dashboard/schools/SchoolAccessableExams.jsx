@@ -26,7 +26,7 @@ const SchoolAccessableExams = () => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("https://congozi-backend.onrender.com/api/v1/exams", {
+      const response = await axios.get("http://localhost:4900/api/v1/exams", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -159,9 +159,7 @@ const SchoolAccessableExams = () => {
       {totalPages > 1 && (
         <div className="flex justify-around md:gap-[900px] gap-[280px] md:pb-0 pb-10">
           <button
-            className={`text-blue-900 ${
-              currentPage === 0 ? "opacity-50" : ""
-            }`}
+            className={`text-blue-900 ${currentPage === 0 ? "opacity-50" : ""}`}
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
             disabled={currentPage === 0}
           >

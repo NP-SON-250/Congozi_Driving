@@ -36,7 +36,7 @@ const ViewQuestions = ({ exam, onBack }) => {
   const fetchQuestions = async () => {
     try {
       const res = await axios.get(
-        `https://congozi-backend.onrender.com/api/v1/questions/${exam._id}`
+        `http://localhost:4900/api/v1/questions/${exam._id}`
       );
       if (res.data && res.data.data) {
         setQuestion(res.data.data);

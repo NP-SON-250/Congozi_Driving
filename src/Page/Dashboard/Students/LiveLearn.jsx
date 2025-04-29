@@ -33,7 +33,7 @@ const LiveLearn = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
+          `http://localhost:4900/api/v1/purchases/access/${examCode}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -53,7 +53,7 @@ const LiveLearn = () => {
         const examId = paidExam?.examId || paidExam?._id;
         if (!examId) return;
         const res = await axios.get(
-          `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
+          `http://localhost:4900/api/v1/exams/${examId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -137,7 +137,7 @@ const LiveLearn = () => {
 
       // Fetch the list of purchased exams for the current user
       const purchaseRes = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/purchases/user",
+        "http://localhost:4900/api/v1/purchases/user",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -152,7 +152,7 @@ const LiveLearn = () => {
       if (examPurchased) {
         // If the exam is purchased, fetch the test exam details
         const res = await axios.get(
-          `https://congozi-backend.onrender.com/api/v1/exams/test/${number}`,
+          `http://localhost:4900/api/v1/exams/test/${number}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -180,7 +180,7 @@ const LiveLearn = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${testExam._id}`,
+        `http://localhost:4900/api/v1/purchases/${testExam._id}`,
         {},
         {
           headers: {
@@ -220,16 +220,15 @@ const LiveLearn = () => {
                 Ibisubizo by'ukuri biri mu ibara ry'icyatsi
               </h1>
               <DescriptionCard
-              questions={examQuestions.length}
-              total20 ={examQuestions.length*1}
-              total100 ={examQuestions.length*5}
-              pass20={(12 / 20 * examQuestions.length).toFixed(2)}
-              pass100={(60/20* examQuestions.length).toFixed(2) }
-              number={examToDo?.number}
-              type={examToDo?.type}
-              timeLeft={formatTime(timeLeft)}
-              access={examCode}
-              
+                questions={examQuestions.length}
+                total20={examQuestions.length * 1}
+                total100={examQuestions.length * 5}
+                pass20={((12 / 20) * examQuestions.length).toFixed(2)}
+                pass100={((60 / 20) * examQuestions.length).toFixed(2)}
+                number={examToDo?.number}
+                type={examToDo?.type}
+                timeLeft={formatTime(timeLeft)}
+                access={examCode}
               />
 
               <div className="flex flex-wrap justify-start py-1 md:gap-4 gap-2">
@@ -245,7 +244,9 @@ const LiveLearn = () => {
                       className={`w-20 h-10 text-sm rounded-md flex justify-center items-center 
                     ${isCurrent ? "bg-blue-500 text-white" : ""}
                     ${
-                      isInteracted ? "bg-blue-500 text-white" : "bg-white border"
+                      isInteracted
+                        ? "bg-blue-500 text-white"
+                        : "bg-white border"
                     }
                     ${examFinished ? "opacity-50 cursor-not-allowed" : ""}
                     `}

@@ -31,7 +31,7 @@ const SchoolWaiting = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/purchases/complete",
+        "http://localhost:4900/api/v1/purchases/complete",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -112,8 +112,10 @@ const SchoolWaiting = () => {
 
         {soonToExpireAccounts.length > 0 && (
           <div className="w-[90%] bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md mb-3">
-            ⚠️ <strong>Heads up!</strong> You have {soonToExpireAccounts.length} account
-            {soonToExpireAccounts.length > 1 ? "s" : ""} expiring within 1 day. Make sure to use them in time!
+            ⚠️ <strong>Heads up!</strong> You have {soonToExpireAccounts.length}{" "}
+            account
+            {soonToExpireAccounts.length > 1 ? "s" : ""} expiring within 1 day.
+            Make sure to use them in time!
           </div>
         )}
 

@@ -19,13 +19,13 @@ const StudentWaiting = () => {
   const location = useLocation();
   const { accessCode } = queryString.parse(location.search);
   const [exam, setExam] = useState({ data: [] });
-  
+
   // Fetch paid exams
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/purchases/complete",
+        "http://localhost:4900/api/v1/purchases/complete",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -138,7 +138,7 @@ const StudentWaiting = () => {
                   .toLowerCase()
                   .includes("learn");
                 const buttonColor = isLearn ? "bg-yellow-500" : "bg-green-500";
-                const buttonText = isLearn ? "Learn Exam" : "Do Exam"
+                const buttonText = isLearn ? "Learn Exam" : "Do Exam";
                 return (
                   <ExamsCard
                     key={index}

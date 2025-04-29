@@ -16,26 +16,29 @@ const SchoolDemo = () => {
 
   const [account, setAccount] = useState({ data: [] });
   const [userName, setUserName] = useState("");
-    // Get user info from localStorage
-    useEffect(() => {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser && storedUser !== "undefined") {
-        try {
-          setUserName(JSON.parse(storedUser));
-        } catch (err) {
-          console.error("Failed to parse stored user:", err);
-        }
+  // Get user info from localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser && storedUser !== "undefined") {
+      try {
+        setUserName(JSON.parse(storedUser));
+      } catch (err) {
+        console.error("Failed to parse stored user:", err);
       }
-    }, []);
-    // Fetch all accounts
+    }
+  }, []);
+  // Fetch all accounts
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("https://congozi-backend.onrender.com/api/v1/accounts", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "http://localhost:4900/api/v1/accounts",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setAccount(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);

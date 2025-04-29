@@ -38,7 +38,7 @@ const StudentExams = () => {
           },
         };
         const response = await axios.get(
-          "https://congozi-backend.onrender.com/api/v1/purchases/user",
+          "http://localhost:4900/api/v1/purchases/user",
           config
         );
         const result = response.data?.data;
@@ -166,9 +166,7 @@ const StudentExams = () => {
           </button>
           <button
             className={`px-4 py-2 text-blue-900 rounded ${
-              currentPage === totalPages
-                ? "opacity-50 cursor-not-allowed"
-                : ""
+              currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
             }`}
             onClick={() =>
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))
@@ -197,10 +195,9 @@ const StudentExams = () => {
                 </h2>
                 <p className="mt-0 text-start text-white px-6">
                   Your Exam {selectedExam.itemId?.number} for{" "}
-                  {selectedExam.itemId?.type} has been successfully
-                  purchased! Please make payment for your bill (
-                  {selectedExam.itemId?.fees} RWF) to get exam access
-                  code.
+                  {selectedExam.itemId?.type} has been successfully purchased!
+                  Please make payment for your bill ({selectedExam.itemId?.fees}{" "}
+                  RWF) to get exam access code.
                 </p>
                 <div className="flex justify-center p-6 mt-12 gap-6">
                   <button
@@ -238,8 +235,8 @@ const StudentExams = () => {
                       <input type="radio" name="payment" /> Ikarita ya Banki
                     </li>
                     <li>
-                      <input type="radio" name="payment" /> Amafaranga mu ntoki /
-                      Ejenti
+                      <input type="radio" name="payment" /> Amafaranga mu ntoki
+                      / Ejenti
                     </li>
                     <li>
                       <input type="radio" name="payment" /> Konti za banki

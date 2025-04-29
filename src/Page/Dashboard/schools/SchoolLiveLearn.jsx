@@ -26,7 +26,7 @@ const SchoolLiveLearn = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
+          `http://localhost:4900/api/v1/exams/${examId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const examData = res.data.data;
@@ -116,16 +116,15 @@ const SchoolLiveLearn = () => {
                 Ibisubizo by'ukuri biri mu ibara ry'icyatsi
               </h1>
               <DescriptionCard
-              questions={examQuestions.length}
-              total20 ={examQuestions.length*1}
-              total100 ={examQuestions.length*5}
-              pass20={(12 / 20 * examQuestions.length).toFixed(2)}
-              pass100={(60/20* examQuestions.length).toFixed(2) }
-              number={examToDo?.number}
-              type={examToDo?.type}
-              timeLeft={formatTime(timeLeft)}
-              access={examId}
-              
+                questions={examQuestions.length}
+                total20={examQuestions.length * 1}
+                total100={examQuestions.length * 5}
+                pass20={((12 / 20) * examQuestions.length).toFixed(2)}
+                pass100={((60 / 20) * examQuestions.length).toFixed(2)}
+                number={examToDo?.number}
+                type={examToDo?.type}
+                timeLeft={formatTime(timeLeft)}
+                access={examId}
               />
 
               <div className="flex flex-wrap justify-start py-1 md:gap-4 gap-2">
@@ -168,10 +167,7 @@ const SchoolLiveLearn = () => {
                       {currentQuestion.options.map((option, index) => {
                         const label = ["a", "b", "c", "d"][index];
                         return (
-                          <div
-                            key={index}
-                            className="flex items-center gap-2"
-                          >
+                          <div key={index} className="flex items-center gap-2">
                             <label
                               htmlFor={`option-${index}`}
                               className={`cursor-pointer ${

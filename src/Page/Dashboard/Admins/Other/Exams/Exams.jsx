@@ -23,9 +23,7 @@ const Exams = () => {
     // Fetch exams from API
     const fetchExams = async () => {
       try {
-        const res = await axios.get(
-          "https://congozi-backend.onrender.com/api/v1/exams"
-        );
+        const res = await axios.get("http://localhost:4900/api/v1/exams");
         if (res.data) {
           setExams(res.data.data);
         }
@@ -57,7 +55,7 @@ const Exams = () => {
 
     try {
       const res = await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/exams/${examToDelete._id}`
+        `http://localhost:4900/api/v1/exams/${examToDelete._id}`
       );
       if (res.data) {
         const updatedExams = exams.filter((e) => e._id !== examToDelete._id);
@@ -94,7 +92,7 @@ const Exams = () => {
 
     try {
       const res = await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/exams/${editingExam._id}`,
+        `http://localhost:4900/api/v1/exams/${editingExam._id}`,
         {
           title: editedTitle,
           fees: editedFees,

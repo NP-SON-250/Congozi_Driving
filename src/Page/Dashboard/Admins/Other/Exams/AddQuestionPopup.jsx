@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { GoPaperclip } from "react-icons/go";
 import axios from "axios"; // <-- import axios here
 
-const AddQuestionPopup = ({ setAddQuestion, selectedExam, fetchExams }) => {
+const AddQuestionPopup = ({ setAddQuestion, selectedExam, refreshQuestions }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [formData, setFormData] = useState({
     phrase: "",
@@ -39,9 +39,9 @@ const AddQuestionPopup = ({ setAddQuestion, selectedExam, fetchExams }) => {
       if (formData.image) {
         data.append("image", formData.image);
       }
-
+  
       await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/questions/${selectedExam._id}`,
+        `http://localhost:4900/api/v1/questions/${selectedExam._id}`,
         data,
         {
           headers: {
@@ -49,15 +49,18 @@ const AddQuestionPopup = ({ setAddQuestion, selectedExam, fetchExams }) => {
           },
         }
       );
-
-      // Success
+  
+      // Refresh and close
+      if (typeof refreshQuestions === "function") {
+        await refreshQuestions(); // wait for refresh to complete if async
+      }
       setAddQuestion(false);
-      fetchExams(); // refresh exams list
     } catch (error) {
       console.error("Error adding question:", error);
       alert("Failed to add question. Please try again.");
     }
   };
+  
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[999]">
