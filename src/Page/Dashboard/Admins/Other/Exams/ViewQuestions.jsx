@@ -136,7 +136,7 @@ const ViewQuestions = ({ exam, onBack }) => {
       ) : (
         <>
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Questions for: {exam.id}</h2>
+            <h2 className="text-xl font-semibold">Questions for: {exam.phrase}</h2>
             <button
               onClick={onBack}
               title="Back to exams"
