@@ -48,9 +48,18 @@ const AdminDashboard = () => {
         };
 
         const [userRes, examRes, paymentRes] = await Promise.all([
-          axios.get("http://localhost:4900/api/v1/users", config),
-          axios.get("http://localhost:4900/api/v1/exams", config),
-          axios.get("http://localhost:4900/api/v1/purchases", config),
+          axios.get(
+            "https://congozi-backend.onrender.com/api/v1/users",
+            config
+          ),
+          axios.get(
+            "https://congozi-backend.onrender.com/api/v1/exams",
+            config
+          ),
+          axios.get(
+            "https://congozi-backend.onrender.com/api/v1/purchases",
+            config
+          ),
         ]);
 
         setTotalExams(examRes.data?.data || []);

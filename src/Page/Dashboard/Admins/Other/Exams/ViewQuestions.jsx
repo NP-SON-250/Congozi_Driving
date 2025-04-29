@@ -32,7 +32,7 @@ const ViewQuestions = ({ exam, onBack }) => {
   const fetchQuestions = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:4900/api/v1/questions/${exam._id}`
+        `https://congozi-backend.onrender.com/api/v1/questions/${exam._id}`
       );
       if (res.data && res.data.data) {
         setQuestions(res.data.data);
@@ -89,7 +89,7 @@ const ViewQuestions = ({ exam, onBack }) => {
       }
 
       await axios.put(
-        `http://localhost:4900/api/v1/questions/${questionToEdit._id}`,
+        `https://congozi-backend.onrender.com/api/v1/questions/${questionToEdit._id}`,
         formData,
         {
           headers: {
@@ -109,7 +109,7 @@ const ViewQuestions = ({ exam, onBack }) => {
   const handleSaveOptions = async (questionId, newOptions) => {
     try {
       const res = await axios.post(
-        `http://localhost:4900/api/v1/options/${questionId}`,
+        `https://congozi-backend.onrender.com/api/v1/options/${questionId}`,
         { options: newOptions }
       );
 
@@ -125,7 +125,7 @@ const ViewQuestions = ({ exam, onBack }) => {
     if (!questionToDelete) return;
     try {
       await axios.delete(
-        `http://localhost:4900/api/v1/questions/${questionToDelete._id}`
+        `https://congozi-backend.onrender.com/api/v1/questions/${questionToDelete._id}`
       );
       console.log("Question deleted successfully");
       setQuestionToDelete(null);

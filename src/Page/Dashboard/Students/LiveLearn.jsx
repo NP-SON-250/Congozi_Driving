@@ -33,7 +33,7 @@ const LiveLearn = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `http://localhost:4900/api/v1/purchases/access/${examCode}`,
+          `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -53,7 +53,7 @@ const LiveLearn = () => {
         const examId = paidExam?.examId || paidExam?._id;
         if (!examId) return;
         const res = await axios.get(
-          `http://localhost:4900/api/v1/exams/${examId}`,
+          `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -137,7 +137,7 @@ const LiveLearn = () => {
 
       // Fetch the list of purchased exams for the current user
       const purchaseRes = await axios.get(
-        "http://localhost:4900/api/v1/purchases/user",
+        "https://congozi-backend.onrender.com/api/v1/purchases/user",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -152,7 +152,7 @@ const LiveLearn = () => {
       if (examPurchased) {
         // If the exam is purchased, fetch the test exam details
         const res = await axios.get(
-          `http://localhost:4900/api/v1/exams/test/${number}`,
+          `https://congozi-backend.onrender.com/api/v1/exams/test/${number}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -180,7 +180,7 @@ const LiveLearn = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `http://localhost:4900/api/v1/purchases/${testExam._id}`,
+        `https://congozi-backend.onrender.com/api/v1/purchases/${testExam._id}`,
         {},
         {
           headers: {

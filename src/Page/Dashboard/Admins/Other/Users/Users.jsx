@@ -28,7 +28,9 @@ const Users = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:4900/api/v1/users");
+        const response = await axios.get(
+          "https://congozi-backend.onrender.com/api/v1/users"
+        );
         setUsers(response.data.data);
       } catch (error) {
         console.error("Failed to fetch users:", error);
@@ -80,7 +82,7 @@ const Users = () => {
       };
 
       const response = await axios.put(
-        `http://localhost:4900/api/v1/users/${userToEdit._id}`,
+        `https://congozi-backend.onrender.com/api/v1/users/${userToEdit._id}`,
         updatedUser
       );
 
@@ -108,7 +110,7 @@ const Users = () => {
 
     try {
       await axios.delete(
-        `http://localhost:4900/api/v1/users/${userToDelete._id}`
+        `https://congozi-backend.onrender.com/api/v1/users/${userToDelete._id}`
       );
       console.log("User successfully deleted");
 
