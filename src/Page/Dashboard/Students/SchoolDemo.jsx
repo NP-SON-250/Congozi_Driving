@@ -15,18 +15,7 @@ const SchoolDemo = () => {
   const [paymentStep, setPaymentStep] = useState("confirmation");
 
   const [account, setAccount] = useState({ data: [] });
-  const [userName, setUserName] = useState("");
-  // Get user info from localStorage
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser && storedUser !== "undefined") {
-      try {
-        setUserName(JSON.parse(storedUser));
-      } catch (err) {
-        console.error("Failed to parse stored user:", err);
-      }
-    }
-  }, []);
+
   // Fetch all accounts
   const fetchData = async () => {
     try {
@@ -80,10 +69,6 @@ const SchoolDemo = () => {
   const handlePurchaseClick = (account) => {
     setSelectedAccount(account);
     setPaymentStep("confirmation");
-  };
-
-  const handleProceedToPayment = () => {
-    setPaymentStep("payment");
   };
 
   const closePopup = () => {

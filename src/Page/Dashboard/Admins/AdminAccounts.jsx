@@ -1,22 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MdMoreHoriz } from "react-icons/md";
-import { accountData } from "../../../Data/morkData"; // your provided accountData
-import AddNewAccountPopup from "./Other/Accounts/AddNewAccountPopup"; // Updated import
-import EditAccountPopup from "./Other/Accounts/EditAccountPopup"; // Import EditAccountPopup
+import axios from "axios";
+import AddNewAccountPopup from "./Other/Accounts/AddNewAccountPopup";
+import EditAccountPopup from "./Other/Accounts/EditAccountPopup";
 
 const EXAMS_PER_PAGE = 4;
 
 const AdminAccounts = () => {
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [accounts, setAccounts] = useState(accountData); // Replacing examData with accountData
+  const [accounts, setAccounts] = useState([]);
   const [showAddAccountPopup, setShowAddAccountPopup] = useState(false);
-  const [accountToEdit, setAccountToEdit] = useState(null); // State for editing account
-  const [accountToDelete, setAccountToDelete] = useState(null); // State for the account to delete
-  const [editedTitle, setEditedTitle] = useState(""); // State for edited title
-  const [editedFees, setEditedFees] = useState(""); // State for edited fees
-  const [editedValid, setEditedValid] = useState(""); // State for edited valid status
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // State to show delete confirmation
+  const [accountToEdit, setAccountToEdit] = useState(null);
+  const [accountToDelete, setAccountToDelete] = useState(null);
+  const [editedTitle, setEditedTitle] = useState("");
+  const [editedFees, setEditedFees] = useState("");
+  const [editedValidIn, setEditedValidIn] = useState("");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  useEffect(() => {
+    fetchAccounts();
+  }, []);
+
+  const fetchAccounts = async () => {
+    try {
+      const response = await axios.get(
+        "https://congozi-backend.onrender.com/api/v1/accounts"
+      );
+      setAccounts(response.data.data || []);
+    } catch (error) {
+      console.error("Failed to fetch accounts:", error);
+      setAccounts([]);
+    }
+  };
 
   const toggleMenu = (accountId) => {
     setSelectedMenu(selectedMenu === accountId ? null : accountId);
@@ -26,41 +42,57 @@ const AdminAccounts = () => {
     setAccountToEdit(account);
     setEditedTitle(account.title);
     setEditedFees(account.fees);
-    setEditedValid(account.valid);
+    setEditedValidIn(account.validIn);
     setSelectedMenu(null);
   };
 
   const handleDeleteClick = (account) => {
     setAccountToDelete(account);
-    setShowDeleteConfirm(true); // Show the delete confirmation popup
+    setShowDeleteConfirm(true);
     setSelectedMenu(null);
   };
 
-  const handleDeleteAccount = () => {
-    const updatedAccounts = accounts.filter((account) => account.id !== accountToDelete.id);
-    setAccounts(updatedAccounts);
-    setShowDeleteConfirm(false); // Close the delete confirmation popup
-    setAccountToDelete(null); // Reset account to delete
+  const handleDeleteAccount = async () => {
+    try {
+      await axios.delete(
+        `https://congozi-backend.onrender.com/api/v1/accounts/${accountToDelete._id}`
+      );
+      fetchAccounts();
+    } catch (error) {
+      console.error("Failed to delete account:", error);
+    }
+    setShowDeleteConfirm(false);
+    setAccountToDelete(null);
   };
 
   const handleCancelDelete = () => {
-    setShowDeleteConfirm(false); // Close the delete confirmation popup
-    setAccountToDelete(null); // Reset account to delete
+    setShowDeleteConfirm(false);
+    setAccountToDelete(null);
   };
 
-  const handleSaveEdit = () => {
-    const updatedAccounts = accounts.map((account) =>
-      account.id === accountToEdit.id
-        ? { ...accountToEdit, title: editedTitle, fees: editedFees, valid: editedValid }
-        : account
-    );
-    setAccounts(updatedAccounts);
-    setAccountToEdit(null); // Close the popup
+  const handleSaveEdit = async () => {
+    try {
+      await axios.put(
+        `https://congozi-backend.onrender.com/api/v1/accounts/${accountToEdit._id}`,
+        {
+          title: editedTitle,
+          fees: editedFees,
+          validIn: editedValidIn,
+        }
+      );
+      fetchAccounts();
+      setAccountToEdit(null);
+    } catch (error) {
+      console.error("Failed to update account:", error);
+    }
   };
 
   const indexOfLastAccount = currentPage * EXAMS_PER_PAGE;
   const indexOfFirstAccount = indexOfLastAccount - EXAMS_PER_PAGE;
-  const currentAccounts = accounts.slice(indexOfFirstAccount, indexOfLastAccount);
+  const currentAccounts = accounts.slice(
+    indexOfFirstAccount,
+    indexOfLastAccount
+  );
   const totalPages = Math.ceil(accounts.length / EXAMS_PER_PAGE);
 
   const handlePageChange = (pageNumber) => {
@@ -87,19 +119,25 @@ const AdminAccounts = () => {
               <th className="px-6 py-1 whitespace-nowrap">ID</th>
               <th className="px-6 py-1 whitespace-nowrap">Title</th>
               <th className="px-6 py-1 whitespace-nowrap">Fees</th>
-              <th className="px-6 py-1 whitespace-nowrap">Valid</th>
-              <th className="px-6 py-1 whitespace-nowrap">Exams Count</th>
-              <th className="px-6 py-1 text-right whitespace-nowrap">Actions</th>
+              <th className="px-6 py-1 whitespace-nowrap">Valid Time</th>
+              <th className="px-6 py-1 whitespace-nowrap">Granted Exams</th>
+              <th className="px-6 py-1 text-right whitespace-nowrap">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
             {currentAccounts.map((account, index) => (
-              <tr key={index} className="border-t hover:bg-gray-50">
-                <td className="px-6 py-1 whitespace-nowrap">{account.id}</td>
+              <tr key={account._id} className="border-t hover:bg-gray-50">
+                <td className="px-6 py-1 whitespace-nowrap">
+                  {indexOfFirstAccount + index + 1}
+                </td>
                 <td className="px-6 py-1 whitespace-nowrap">{account.title}</td>
                 <td className="px-6 py-1 whitespace-nowrap">{account.fees}</td>
-                <td className="px-6 py-1 whitespace-nowrap">{account.valid}</td>
-                <td className="px-6 py-1 whitespace-nowrap">{account.exams.length}</td>
+                <td className="px-6 py-1 whitespace-nowrap">
+                  {account.validIn} Days
+                </td>
+                <td className="px-6 py-1 whitespace-nowrap text-center">All</td>
                 <td className="px-6 py-1 text-right relative">
                   <button
                     onClick={() => toggleMenu(index)}
@@ -145,11 +183,9 @@ const AdminAccounts = () => {
         >
           Previous
         </button>
-
         <span className="text-gray-700 font-medium">
           Page {currentPage} of {totalPages}
         </span>
-
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
@@ -165,7 +201,10 @@ const AdminAccounts = () => {
 
       {/* Add New Account Popup */}
       {showAddAccountPopup && (
-        <AddNewAccountPopup setShowAddAccountPopup={setShowAddAccountPopup} />
+        <AddNewAccountPopup
+          setShowAddAccountPopup={setShowAddAccountPopup}
+          onAccountAdded={fetchAccounts}
+        />
       )}
 
       {/* Edit Account Popup */}
@@ -174,10 +213,10 @@ const AdminAccounts = () => {
           accountToEdit={accountToEdit}
           editedTitle={editedTitle}
           editedFees={editedFees}
-          editedValid={editedValid}
+          editedValidIn={editedValidIn}
           setEditedTitle={setEditedTitle}
           setEditedFees={setEditedFees}
-          setEditedValid={setEditedValid}
+          setEditedValidIn={setEditedValidIn}
           setShowEditPopup={setAccountToEdit}
           handleSaveEdit={handleSaveEdit}
         />

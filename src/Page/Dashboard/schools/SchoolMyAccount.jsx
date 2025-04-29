@@ -9,6 +9,7 @@ const SchoolMyAccount = () => {
   const [fName, setFName] = useState("");
   const [lName, setLName] = useState("");
   const [address, setAddress] = useState("");
+  A;
   const [telephone, setTelephone] = useState("");
   const [userId, setUserId] = useState(null);
   const [originalData, setOriginalData] = useState({});

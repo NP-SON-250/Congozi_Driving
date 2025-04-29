@@ -12,20 +12,8 @@ const StudentHome = () => {
   const [waitingExams, setWaitingExams] = useState([]);
   const [passedExams, setPassedExams] = useState([]);
   const [failedExams, setFailedExams] = useState([]);
-  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    // Load user data from localStorage if available
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUserData(parsedUser); // Set the user data to state
-      } catch (err) {
-        console.error("Failed to load user data:", err);
-      }
-    }
-
     // Fetch exam data once the component is mounted
     const token = localStorage.getItem("token");
 
@@ -87,9 +75,7 @@ const StudentHome = () => {
 
   return (
     <div className="flex flex-col justify-center items-start md:px-5 gap-2 bg-white md:p-2">
-      <WelcomeDear userData={userData} />{" "}
-      {/* Pass userData as a prop if needed */}
-      {/* Cards Section */}
+      <WelcomeDear />
       <div className="grid md:grid-cols-3 grid-cols-1 w-full md:px-0 px-12 gap-12 md:pt-2 py-5 md:gap-12">
         <StHomeCard
           bgColor="bg-blue-900"

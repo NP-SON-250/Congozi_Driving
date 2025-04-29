@@ -1,14 +1,26 @@
+import axios from "axios";
 import React, { useState } from "react";
 
-const AddNewAccountPopup = ({ setShowAddAccountPopup }) => {
+const AddNewAccountPopup = ({ setShowAddAccountPopup, onAccountAdded }) => {
   const [accountTitle, setAccountTitle] = useState("");
   const [accountFees, setAccountFees] = useState("");
-  const [accountValid, setAccountValid] = useState("");
+  const [accountValidIn, setAccountValidIn] = useState("");
 
-  const handleSave = () => {
-    // Logic for saving the new account, for now, just logging
-    console.log("New Account Added:", { accountTitle, accountFees, accountValid });
-    setShowAddAccountPopup(false); // Close the popup after saving
+  const handleSave = async () => {
+    try {
+      const response = await axios.post(
+        "https://congozi-backend.onrender.com/api/v1/accounts",
+        {
+          title: accountTitle,
+          fees: accountFees,
+          validIn: accountValidIn,
+        }
+      );
+      onAccountAdded();
+      setShowAddAccountPopup(false);
+    } catch (error) {
+      console.error("Failed to create account:", error);
+    }
   };
 
   return (
@@ -19,7 +31,10 @@ const AddNewAccountPopup = ({ setShowAddAccountPopup }) => {
         </h2>
         <div className="space-y-4">
           <div>
-            <label htmlFor="accountTitle" className="block text-sm text-gray-700">
+            <label
+              htmlFor="accountTitle"
+              className="block text-sm text-gray-700"
+            >
               Account Title
             </label>
             <input
@@ -31,21 +46,26 @@ const AddNewAccountPopup = ({ setShowAddAccountPopup }) => {
             />
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-700">Valid Period</label>
+            <label className="text-sm font-medium text-gray-700">
+              Valid Period (days)
+            </label>
             <input
-              type="text"
+              type="number"
               id="accountValid"
-              value={accountValid}
-              onChange={(e) => setAccountValid(e.target.value)}
+              value={accountValidIn}
+              onChange={(e) => setAccountValidIn(e.target.value)}
               className="w-full px-3 py-1 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
             />
           </div>
           <div>
-            <label htmlFor="accountFees" className="block text-sm text-gray-700">
+            <label
+              htmlFor="accountFees"
+              className="block text-sm text-gray-700"
+            >
               Account Fees
             </label>
             <input
-              type="text"
+              type="number"
               id="accountFees"
               value={accountFees}
               onChange={(e) => setAccountFees(e.target.value)}

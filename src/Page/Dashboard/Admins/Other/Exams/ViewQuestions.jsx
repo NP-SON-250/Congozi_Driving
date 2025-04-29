@@ -46,7 +46,7 @@ const ViewQuestions = ({ exam, onBack }) => {
     fetchQuestions();
   }, [exam]);
 
-  const totalPages = Math.ceil(questions.length / questionsPerPage); // ✅ updated to use fetched questions
+  const totalPages = Math.ceil(questions.length / questionsPerPage);
   const startIndex = (currentPage - 1) * questionsPerPage;
   const currentQuestions = questions.slice(
     startIndex,
@@ -77,17 +77,14 @@ const ViewQuestions = ({ exam, onBack }) => {
   };
 
   const handleSaveQuestionEdit = async () => {
-    if (!questionToEdit) return;
+    const formData = new FormData();
+    formData.append("marks", editedMarks);
+    formData.append("phrase", editedPhrase);
+    if (editedImage instanceof File) {
+      formData.append("image", editedImage);
+    }
+
     try {
-      let formData = new FormData();
-      formData.append("marks", editedMarks);
-      formData.append("phrase", editedPhrase);
-
-      // Only append image if a new one was selected
-      if (editedImage) {
-        formData.append("image", editedImage);
-      }
-
       await axios.put(
         `https://congozi-backend.onrender.com/api/v1/questions/${questionToEdit._id}`,
         formData,
@@ -97,25 +94,17 @@ const ViewQuestions = ({ exam, onBack }) => {
           },
         }
       );
-
-      console.log("Question updated successfully");
       setShowEditPopup(false);
-      fetchQuestions(); // ✅ Refresh the updated questions
+      fetchQuestions();
     } catch (error) {
-      console.error("Failed to update question:", error);
+      console.error("Error saving edited question:", error);
     }
   };
 
-  const handleSaveOptions = async (questionId, newOptions) => {
+  const handleSaveOptions = async () => {
     try {
-      const res = await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/options/${questionId}`,
-        { options: newOptions }
-      );
-
-      console.log("Options added successfully:", res.data);
       setQuestionToAddOption(null);
-      fetchQuestions(); // Refresh questions so we can see the newly added options
+      fetchQuestions();
     } catch (error) {
       console.error("Failed to add options:", error);
     }
@@ -286,6 +275,7 @@ const ViewQuestions = ({ exam, onBack }) => {
           question={questionToAddOption}
           onClose={() => setQuestionToAddOption(null)}
           onSave={handleSaveOptions}
+          refreshOptions={fetchQuestions}
         />
       )}
 

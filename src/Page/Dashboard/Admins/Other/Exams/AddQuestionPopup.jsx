@@ -56,7 +56,7 @@ const AddQuestionPopup = ({
 
       // Refresh and close
       if (typeof refreshQuestions === "function") {
-        await refreshQuestions(); // wait for refresh to complete if async
+        await refreshQuestions();
       }
       setAddQuestion(false);
     } catch (error) {

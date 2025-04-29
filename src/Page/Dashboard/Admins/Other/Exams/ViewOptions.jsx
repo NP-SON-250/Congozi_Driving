@@ -1,41 +1,77 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoReturnUpBack } from "react-icons/io5";
 import { MdMoreHoriz } from "react-icons/md";
 import EditOptionPopup from "./EditOptionPopup";
 import DeleteOptionPopup from "./DeleteOptionPopup";
+import axios from "axios";
 
-const ViewOptions = ({ question, onBack, onEdit, onDelete }) => {
+const ViewOptions = ({ question, onBack }) => {
   const [selectedMenu, setSelectedMenu] = useState(null);
-  const [optionToEdit, setOptionToEdit] = useState(null);
+  const [optionToEdit, setOptionToEdit] = useState(false);
   const [editedOptionText, setEditedOptionText] = useState("");
   const [editedIsCorrect, setEditedIsCorrect] = useState(false);
   const [optionToDelete, setOptionToDelete] = useState(null);
+
+  const [options, setOptions] = useState([]);
 
   const toggleMenu = (index) => {
     setSelectedMenu(selectedMenu === index ? null : index);
   };
 
-  const handleSaveEditedOption = () => {
-    console.log("Updated Option:", {
-      original: optionToEdit,
-      updated: {
-        text: editedOptionText,
-        isCorrect: editedIsCorrect,
-      },
-    });
-    setOptionToEdit(null);
+  const fetchOptions = async () => {
+    try {
+      const res = await axios.get(
+        `https://congozi-backend.onrender.com/api/v1/options/${question._id}`
+      );
+      if (res.data && res.data.data) {
+        setOptions(res.data.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch options:", error);
+    }
   };
 
-  const handleDeleteOption = () => {
-    console.log("Deleting option:", optionToDelete);
-    setOptionToDelete(null);
+  useEffect(() => {
+    fetchOptions();
+  }, [question]);
+
+  const handleSaveEditedOption = async () => {
+    if (!optionToEdit) return;
+
+    try {
+      await axios.put(
+        `https://congozi-backend.onrender.com/api/v1/options/${optionToEdit._id}`,
+        {
+          text: editedOptionText,
+          isCorrect: editedIsCorrect,
+        }
+      );
+      setOptionToEdit(false);
+      fetchOptions();
+    } catch (error) {
+      console.error("Failed to update option:", error);
+    }
+  };
+
+  const handleDeleteOption = async () => {
+    if (!optionToDelete) return;
+
+    try {
+      await axios.delete(
+        `https://congozi-backend.onrender.com/api/v1/options/${optionToDelete._id}`
+      );
+      setOptionToDelete(null);
+      fetchOptions();
+    } catch (error) {
+      console.error("Failed to delete option:", error);
+    }
   };
 
   return (
     <div className="md:px-6 py-6 px-1">
       <div className="flex justify-between items-center mb-4">
         <h2 className="md:text-xl text-sm font-semibold">
-          Question: {question.questionPhrase}
+          Question: {question.phrase}
         </h2>
         <button
           onClick={onBack}
@@ -58,25 +94,24 @@ const ViewOptions = ({ question, onBack, onEdit, onDelete }) => {
             </tr>
           </thead>
           <tbody>
-            {question.options.map((option, index) => (
+            {options.map((option, index) => (
               <tr key={index} className="border-t hover:bg-gray-50 relative">
                 <td className="px-6 py-1 whitespace-nowrap">{option.text}</td>
                 <td className="px-6 py-1 whitespace-nowrap">
                   {option.isCorrect ? "True" : "False"}
                 </td>
-                <td className="px-6 py-1 text-right relative">
+                <td className="px-6 py-1 text-right">
                   <button
                     onClick={() => toggleMenu(index)}
                     className="p-2 hover:bg-gray-200 rounded-full"
                   >
-                    <MdMoreHoriz size={22} />
+                    <MdMoreHoriz size={20} />
                   </button>
-
                   {selectedMenu === index && (
-                    <div className="absolute right-4 top-10 w-40 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                    <div className="absolute right-6 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg z-10">
                       <ul className="text-sm text-blue-900">
                         <li
-                          className="hover:bg-gray-100 px-4 py-2 cursor-pointer"
+                          className="hover:bg-gray-100 px-4 py-1 cursor-pointer"
                           onClick={() => {
                             setOptionToEdit(option);
                             setEditedOptionText(option.text);
@@ -86,11 +121,8 @@ const ViewOptions = ({ question, onBack, onEdit, onDelete }) => {
                           Edit
                         </li>
                         <li
-                          className="hover:bg-gray-100 text-red-500 px-4 py-2 cursor-pointer"
-                          onClick={() => {
-                            setOptionToDelete(option);
-                            setSelectedMenu(null);
-                          }}
+                          className="hover:bg-gray-100 text-red-500 px-4 py-1 cursor-pointer"
+                          onClick={() => setOptionToDelete(option)}
                         >
                           Delete
                         </li>
@@ -103,14 +135,17 @@ const ViewOptions = ({ question, onBack, onEdit, onDelete }) => {
           </tbody>
         </table>
       </div>
+
+      {/* Popups */}
       {optionToEdit && (
         <EditOptionPopup
-          optionText={editedOptionText}
+          option={optionToEdit}
+          editedText={editedOptionText}
           isCorrect={editedIsCorrect}
-          setOptionText={setEditedOptionText}
+          setEditedText={setEditedOptionText}
           setIsCorrect={setEditedIsCorrect}
+          onClose={() => setOptionToEdit(false)}
           onSave={handleSaveEditedOption}
-          onCancel={() => setOptionToEdit(null)}
         />
       )}
 

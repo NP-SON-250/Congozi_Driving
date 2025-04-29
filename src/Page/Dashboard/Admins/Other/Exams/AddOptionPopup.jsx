@@ -1,24 +1,41 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 const AddOptionPopup = ({ question, onClose, onSave }) => {
-  const [option, setOption] = useState({ text: "", isCorrect: "false" });
+  const [optionText, setOptionText] = useState("");
+  const [isCorrect, setIsCorrect] = useState("false");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleOptionChange = (value) => {
-    setOption({ ...option, text: value });
-  };
+  const handleSubmit = async () => {
+    if (!optionText.trim()) {
+      alert("Option text cannot be empty.");
+      return;
+    }
 
-  const handleIsCorrectChange = (value) => {
-    setOption({ ...option, isCorrect: value });
-  };
+    const payload = {
+      text: optionText.trim(),
+      isCorrect: isCorrect === "true",
+    };
 
-  const handleSubmit = () => {
-    if (option.text.trim() !== "") {
-      const filledOption = {
-        ...option,
-        isCorrect: option.isCorrect === "true",
-      };
-      onSave(question._id, [filledOption]); // Send option as an array for consistency with backend
+    try {
+      setIsLoading(true);
+
+      const response = await axios.post(
+        `https://congozi-backend.onrender.com/api/v1/options/${question._id}`,
+        payload
+      );
+
+      // Trigger refresh with the newly added option
+      onSave(question._id, response.data.Option);
       onClose();
+    } catch (error) {
+      console.error("Failed to add options:", error);
+      alert(
+        error?.response?.data?.message ||
+          "Failed to add option. Please try again."
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -31,13 +48,13 @@ const AddOptionPopup = ({ question, onClose, onSave }) => {
           <input
             type="text"
             placeholder="Option text"
-            value={option.text}
-            onChange={(e) => handleOptionChange(e.target.value)}
+            value={optionText}
+            onChange={(e) => setOptionText(e.target.value)}
             className="w-full border p-2 rounded-md mb-2"
           />
           <select
-            value={option.isCorrect}
-            onChange={(e) => handleIsCorrectChange(e.target.value)}
+            value={isCorrect}
+            onChange={(e) => setIsCorrect(e.target.value)}
             className="w-full border p-2 rounded-md"
           >
             <option value="false">False</option>
@@ -48,15 +65,17 @@ const AddOptionPopup = ({ question, onClose, onSave }) => {
         <div className="flex justify-around gap-3">
           <button
             onClick={onClose}
+            disabled={isLoading}
             className="px-4 py-2 bg-red-300 text-gray-800 rounded hover:bg-red-400"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
+            disabled={isLoading}
             className="ml-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
-            Save
+            {isLoading ? "Saving..." : "Save"}
           </button>
         </div>
       </div>

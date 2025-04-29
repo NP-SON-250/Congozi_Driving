@@ -1,203 +1,75 @@
-import React, { useState } from "react";
-import { MdMoreHoriz } from "react-icons/md";
-import EditPaymentPopup from "./Other/Payments/EditPaymentPopup";
-import DeletePaymentPopup from "./Other/Payments/DeletePaymentPopup";
-
-const mockPayments = [
-  {
-    id: 1,
-    payer: "John Doe",
-    amount: "$200",
-    date: "2025-03-10",
-    status: "Completed",
-  },
-  {
-    id: 2,
-    payer: "Jane Smith",
-    amount: "$150",
-    date: "2025-03-12",
-    status: "Pending",
-  },
-  {
-    id: 3,
-    payer: "Robert Joe",
-    amount: "$180",
-    date: "2025-03-15",
-    status: "Completed",
-  },
-  {
-    id: 4,
-    payer: "Alexis HAKIZIMANA",
-    amount: "$220",
-    date: "2025-03-16",
-    status: "Failed",
-  },
-  {
-    id: 5,
-    payer: "Katushabe Geofrey",
-    amount: "$210",
-    date: "2025-03-17",
-    status: "Completed",
-  },
-  {
-    id: 6,
-    payer: "Linda Brown",
-    amount: "$160",
-    date: "2025-03-18",
-    status: "Pending",
-  },
-  {
-    id: 7,
-    payer: "Alexis HAKIZIMANA",
-    amount: "$220",
-    date: "2025-03-16",
-    status: "Failed",
-  },
-  {
-    id: 8,
-    payer: "Katushabe Geofrey",
-    amount: "$210",
-    date: "2025-03-17",
-    status: "Completed",
-  },
-  {
-    id: 9,
-    payer: "Linda Brown",
-    amount: "$160",
-    date: "2025-03-18",
-    status: "Pending",
-  },
-  {
-    id: 10,
-    payer: "Alexis HAKIZIMANA",
-    amount: "$220",
-    date: "2025-03-16",
-    status: "Failed",
-  },
-  {
-    id: 11,
-    payer: "Katushabe Geofrey",
-    amount: "$210",
-    date: "2025-03-17",
-    status: "Completed",
-  },
-  {
-    id: 12,
-    payer: "Linda Brown",
-    amount: "$160",
-    date: "2025-03-18",
-    status: "Pending",
-  },
-  {
-    id: 13,
-    payer: "Alexis HAKIZIMANA",
-    amount: "$220",
-    date: "2025-03-16",
-    status: "Failed",
-  },
-  {
-    id: 14,
-    payer: "Katushabe Geofrey",
-    amount: "$210",
-    date: "2025-03-17",
-    status: "Completed",
-  },
-  {
-    id: 15,
-    payer: "Linda Brown",
-    amount: "$160",
-    date: "2025-03-18",
-    status: "Pending",
-  },
-];
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const PAYMENTS_PER_PAGE = 4;
 
 const AdminsPayments = () => {
-  const [selectedMenu, setSelectedMenu] = useState(null);
+  const [payments, setPayments] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [showEditPopup, setShowEditPopup] = useState(false);
-  const [paymentToEdit, setPaymentToEdit] = useState(null);
+  useEffect(() => {
+    const fetchPayments = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const res = await axios.get(
+          "https://congozi-backend.onrender.com/api/v1/purchases/",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data = res.data;
+        const mapped = data.data.map((item) => ({
+          id: item._id,
+          payer: item.purchasedBy
+            ? `${item.purchasedBy.fName} ${item.purchasedBy.lName}`
+            : "Anonymous",
+          amount: `RWF ${item.amount}`,
+          startedOn: new Date(item.startDate).toISOString().split("T")[0],
+          expiresOn: item.endDate
+            ? new Date(item.endDate).toISOString().split("T")[0]
+            : "No expires",
+          purchasedItem: item.itemType,
 
-  const [editedPayer, setEditedPayer] = useState("");
-  const [editedAmount, setEditedAmount] = useState("");
-  const [editedDate, setEditedDate] = useState("");
-  const [editedStatus, setEditedStatus] = useState("");
-
-  const [showDeletePopup, setShowDeletePopup] = useState(false);
-  const [paymentToDelete, setPaymentToDelete] = useState(null);
-
-  const toggleMenu = (paymentId) => {
-    setSelectedMenu(selectedMenu === paymentId ? null : paymentId);
-  };
+          status: item.status === "complete" ? "Completed" : "Pending",
+        }));
+        setPayments(mapped);
+      } catch (err) {
+        console.error("Failed to fetch payments:", err);
+      }
+    };
+    fetchPayments();
+  }, []);
 
   const indexOfLastPayment = currentPage * PAYMENTS_PER_PAGE;
   const indexOfFirstPayment = indexOfLastPayment - PAYMENTS_PER_PAGE;
-  const currentPayments = mockPayments.slice(
+  const currentPayments = payments.slice(
     indexOfFirstPayment,
     indexOfLastPayment
   );
-  const totalPages = Math.ceil(mockPayments.length / PAYMENTS_PER_PAGE);
+  const totalPages = Math.ceil(payments.length / PAYMENTS_PER_PAGE);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
-    setSelectedMenu(null);
   };
 
-  const handleEditClick = (payment) => {
-    setPaymentToEdit(payment);
-    setEditedPayer(payment.payer);
-    setEditedAmount(payment.amount);
-    setEditedDate(payment.date);
-    setEditedStatus(payment.status);
-    setShowEditPopup(true);
-    setSelectedMenu(null);
-  };
-
-  const handleSavePaymentEdit = () => {
-    console.log("Updated Payment:", {
-      payer: editedPayer,
-      amount: editedAmount,
-      date: editedDate,
-      status: editedStatus,
-    });
-    setShowEditPopup(false);
-  };
-
-  const handleDeleteClick = (payment) => {
-    setPaymentToDelete(payment);
-    setShowDeletePopup(true);
-  };
-
-  const handleCancelDelete = () => {
-    setPaymentToDelete(null);
-    setShowDeletePopup(false);
-  };
-
-  const handleConfirmDelete = () => {
-    console.log("Payment Deleted:", paymentToDelete);
-
-    setShowDeletePopup(false);
-    setPaymentToDelete(null);
-  };
   return (
     <div className="md:px-6 py-6 px-1">
-      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Manage All Payments</h2>
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto rounded-lg shadow border border-blue-900">
-        <table className="w-full text-left table-auto ">
+        <table className="w-full text-left table-auto">
           <thead className="bg-gray-100 text-gray-700">
             <tr>
-              <th className="px-6 py-1">Payer</th>
-              <th className="px-6 py-1">Amount</th>
-              <th className="px-6 py-1">Date</th>
-              <th className="px-6 py-1">Status</th>
-              <th className="px-6 py-1 text-right">Actions</th>
+              <th className="px-6 py-1 whitespace-nowrap">Payer</th>
+              <th className="px-6 py-1 whitespace-nowrap">Amount</th>
+              <th className="px-6 py-1 whitespace-nowrap">Purchased Item</th>
+              <th className="px-6 py-1 whitespace-nowrap">Paid On</th>
+              <th className="px-6 py-1 whitespace-nowrap">Expires On</th>
+              <th className="px-6 py-1 whitespace-nowrap">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -207,51 +79,25 @@ const AdminsPayments = () => {
                 <td className="px-6 py-1 whitespace-nowrap">
                   {payment.amount}
                 </td>
-                <td className="px-6 py-1 whitespace-nowrap">{payment.date}</td>
+                <td className="px-6 py-1 whitespace-nowrap text-center">
+                  {payment.purchasedItem}
+                </td>
+                <td className="px-6 py-1 whitespace-nowrap">
+                  {payment.startedOn}
+                </td>
+                <td className="px-6 py-1 whitespace-nowrap">
+                  {payment.expiresOn}
+                </td>
                 <td className="px-6 py-1 whitespace-nowrap">
                   <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${
                       payment.status === "Completed"
-                        ? "bg-green-100 text-green-700"
-                        : payment.status === "Pending"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : "bg-red-100 text-red-600"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-yellow-100 text-yellow-800"
                     }`}
                   >
                     {payment.status}
                   </span>
-                </td>
-                <td className="px-6 py-1 text-right relative">
-                  <button
-                    onClick={() => toggleMenu(payment.id)}
-                    className="p-2 hover:bg-gray-200 rounded-full"
-                  >
-                    <MdMoreHoriz size={22} />
-                  </button>
-                  {selectedMenu === payment.id && (
-                    <div className="absolute right-6 mt-2 w-40 bg-white border border-gray-300 rounded-md shadow-lg z-10">
-                      <ul className="text-sm text-gray-700">
-                        <li
-                          className="hover:bg-gray-100 px-4 py-1 cursor-pointer"
-                          onClick={() => handleEditClick(payment)}
-                        >
-                          Edit
-                        </li>
-                        <li
-                          className="hover:bg-gray-100 px-4 py-1 cursor-pointer"
-                          onClick={() => handleDeleteClick(payment)}
-                        >
-                          Delete
-                        </li>
-                        <li className="hover:bg-gray-100 px-4 py-1 cursor-pointer">
-                          {payment.status === "Pending"
-                            ? "Request to Approve"
-                            : ""}
-                          {payment.status === "Failed" ? "Restart" : ""}
-                        </li>
-                      </ul>
-                    </div>
-                  )}
                 </td>
               </tr>
             ))}
@@ -259,58 +105,36 @@ const AdminsPayments = () => {
         </table>
       </div>
 
-      {/* Pagination Controls */}
-      <div className="flex justify-center items-center mt-6 space-x-4">
+      {/* Pagination */}
+      <div className="flex justify-center items-center gap-4 mt-4">
         <button
-          onClick={() => handlePageChange(currentPage - 1)}
+          onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
           disabled={currentPage === 1}
-          className={`px-4 py-2 rounded ${
+          className={`px-4 py-1 rounded ${
             currentPage === 1
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "bg-blue-600 text-white hover:bg-blue-700"
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-blue-500 text-white hover:bg-blue-600"
           }`}
         >
           Previous
         </button>
-
-        <span className="text-gray-700 font-medium">
-          Page {currentPage} of {totalPages}
+        <span className="text-sm text-gray-700">
+          {currentPage} of {totalPages}
         </span>
-
         <button
-          onClick={() => handlePageChange(currentPage + 1)}
+          onClick={() =>
+            handlePageChange(Math.min(currentPage + 1, totalPages))
+          }
           disabled={currentPage === totalPages}
-          className={`px-4 py-2 rounded ${
+          className={`px-4 py-1 rounded ${
             currentPage === totalPages
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "bg-blue-600 text-white hover:bg-blue-700"
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-blue-500 text-white hover:bg-blue-600"
           }`}
         >
           Next
         </button>
       </div>
-      {showEditPopup && (
-        <EditPaymentPopup
-          paymentToEdit={paymentToEdit}
-          editedPayer={editedPayer}
-          editedAmount={editedAmount}
-          editedDate={editedDate}
-          editedStatus={editedStatus}
-          setEditedPayer={setEditedPayer}
-          setEditedAmount={setEditedAmount}
-          setEditedDate={setEditedDate}
-          setEditedStatus={setEditedStatus}
-          setShowEditPopup={setShowEditPopup}
-          handleSavePaymentEdit={handleSavePaymentEdit}
-        />
-      )}
-      {showDeletePopup && paymentToDelete && (
-        <DeletePaymentPopup
-          payment={paymentToDelete}
-          onCancel={handleCancelDelete}
-          onConfirm={handleConfirmDelete}
-        />
-      )}
     </div>
   );
 };

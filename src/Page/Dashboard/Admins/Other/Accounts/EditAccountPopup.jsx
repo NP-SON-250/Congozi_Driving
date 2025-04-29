@@ -4,10 +4,10 @@ const EditAccountPopup = ({
   accountToEdit,
   editedTitle,
   editedFees,
-  editedValid,
+  editedValidIn,
   setEditedTitle,
   setEditedFees,
-  setEditedValid,
+  setEditedValidIn,
   setShowEditPopup,
   handleSaveEdit,
 }) => {
@@ -42,8 +42,8 @@ const EditAccountPopup = ({
             <label className="text-sm font-medium text-gray-700">Valid</label>
             <input
               type="text"
-              value={editedValid}
-              onChange={(e) => setEditedValid(e.target.value)}
+              value={editedValidIn}
+              onChange={(e) => setEditedValidIn(e.target.value)}
               className="w-full border border-blue-900/20 rounded px-3 py-1 mt-1"
             />
           </div>

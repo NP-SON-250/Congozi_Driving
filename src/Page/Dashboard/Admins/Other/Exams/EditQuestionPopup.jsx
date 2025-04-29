@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { FaPaperclip } from "react-icons/fa";
 
 const EditQuestionPopup = ({
@@ -13,28 +13,34 @@ const EditQuestionPopup = ({
   handleSaveEdit,
 }) => {
   const fileInputRef = useRef(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  useEffect(() => {
+    // Load existing image if available
+    if (questionToEdit?.image && !editedImage) {
+      setImagePreview(questionToEdit.image);
+    }
+
+    // If editedImage is a File, generate a preview
+    if (editedImage instanceof File) {
+      const previewURL = URL.createObjectURL(editedImage);
+      setImagePreview(previewURL);
+
+      // Clean up the object URL when component unmounts or image changes
+      return () => URL.revokeObjectURL(previewURL);
+    }
+  }, [editedImage, questionToEdit]);
 
   const handleEditInputChange = (e) => {
-    const { name, value, files } = e.target;
-  
-    if (name === "image") {
-      const file = files[0];
-      setEditedImage(file);
-      if (file) {
-        const previewURL = URL.createObjectURL(file);
-        setEditedImagePreview(previewURL);
-      }
-    } else {
-      if (name === "marks") setEditedMarks(value);
-      if (name === "phrase") setEditedPhrase(value);
-    }
+    const { name, value } = e.target;
+    if (name === "marks") setEditedMarks(value);
+    if (name === "phrase") setEditedPhrase(value);
   };
-  
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setEditedImage(imageUrl);
+      setEditedImage(file);
     }
   };
 
@@ -54,8 +60,9 @@ const EditQuestionPopup = ({
             <label className="block text-sm font-medium">Marks</label>
             <input
               type="number"
+              name="marks"
               value={editedMarks}
-              onChange={(e) => setEditedMarks(e.target.value)}
+              onChange={handleEditInputChange}
               className="w-full px-3 py-1 border rounded"
             />
           </div>
@@ -63,8 +70,9 @@ const EditQuestionPopup = ({
           <div>
             <label className="block text-sm font-medium">Question Phrase</label>
             <textarea
+              name="phrase"
               value={editedPhrase}
-              onChange={(e) => setEditedPhrase(e.target.value)}
+              onChange={handleEditInputChange}
               className="w-full px-3 py-1 border rounded"
             />
           </div>
@@ -72,14 +80,14 @@ const EditQuestionPopup = ({
           <div>
             <label className="block text-sm font-medium mb-1">Image</label>
             <div
-              className="flex cursor-pointer px-3 py-2 rounded items-center gap-3"
+              className="flex cursor-pointer px-3 py-2 border rounded items-center gap-3"
               onClick={handleImageClick}
             >
               <FaPaperclip className="text-blue-600" />
-              {editedImage ? (
+              {imagePreview ? (
                 <img
-                  src={editedImage}
-                  alt="Question"
+                  src={imagePreview}
+                  alt="Preview"
                   className="w-12 h-12 rounded-full object-cover"
                 />
               ) : (

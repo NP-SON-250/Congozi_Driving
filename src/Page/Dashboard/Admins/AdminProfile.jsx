@@ -70,13 +70,16 @@ const AdminProfile = () => {
         }
       );
 
-      setMessage("Profile updated successfully.");
-      setMessageType("success");
-
       const updatedUser = response.data;
-      localStorage.setItem("user", JSON.stringify(updatedUser));
 
-      // Update state with new profile data
+      // Merge updated user with old stored token
+      const existingToken = localStorage.getItem("token");
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      if (existingToken) {
+        localStorage.setItem("token", existingToken); // Optional, preserves token
+      }
+
+      // Update state to reflect changes immediately
       setEmail(updatedUser.email || "");
       setFName(updatedUser.fName || "");
       setLName(updatedUser.lName || "");
@@ -84,6 +87,9 @@ const AdminProfile = () => {
       setTelephone(updatedUser.phone || "");
       setProfileImage(updatedUser.profile || null);
       setOriginalData(updatedUser);
+
+      setMessage("Profile updated successfully.");
+      setMessageType("success");
     } catch (error) {
       console.error("Update failed:", error);
       setMessage("Failed to update profile. Please try again.");
