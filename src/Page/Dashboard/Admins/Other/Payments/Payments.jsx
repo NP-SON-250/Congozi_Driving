@@ -110,7 +110,7 @@ const Payments = () => {
         <button
           onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
           disabled={currentPage === 1}
-          className={`px-4 py-1 rounded ${
+          className={`px-2 py-1 rounded ${
             currentPage === 1
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-blue-500 text-white hover:bg-blue-600"
@@ -126,7 +126,7 @@ const Payments = () => {
             handlePageChange(Math.min(currentPage + 1, totalPages))
           }
           disabled={currentPage === totalPages}
-          className={`px-4 py-1 rounded ${
+          className={`px-2 py-1 rounded ${
             currentPage === totalPages
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-blue-500 text-white hover:bg-blue-600"

@@ -17,7 +17,8 @@ const CompanyPopup = ({ onClose }) => {
 
         {/* Content */}
         <p className="text-center mb-2 capitalize">
-          hemererwe kugura umuntu ufite <br /> <strong className="pr-2">Ikkigo!</strong>
+          hemererwe kugura umuntu ufite <br />{" "}
+          <strong className="pr-2">Ikkigo!</strong>
           cyangwa uwabsabye hamagara:
           <span className="text-orange-400 font-semibold text-lg pl-2">
             0783905790
@@ -46,7 +47,7 @@ const CompanyPopup = ({ onClose }) => {
           />
           <button
             onClick={() => alert("Injira clicked")}
-            className="bg-orange-500  text-white px-4 py-2 rounded-md font-semibold hover:bg-orange-600"
+            className="bg-orange-500  text-white px-2 py-1 rounded-md font-semibold hover:bg-orange-600"
           >
             Injira
           </button>

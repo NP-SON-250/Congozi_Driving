@@ -189,7 +189,7 @@ const AdminUsers = () => {
         <h2 className="text-2xl font-semibold">Manage All Users</h2>
         <button
           onClick={() => setShowAddPopup(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+          className="bg-blue-600 text-white px-2 py-1 rounded-lg hover:bg-blue-700 transition"
         >
           Add New
         </button>
@@ -203,8 +203,8 @@ const AdminUsers = () => {
               <th className="px-6 py-2">Email</th>
               <th className="px-6 py-2">Id Card</th>
               <th className="px-6 py-2">Phone</th>
-              <th className="px-6 py-2">Role</th>
               <th className="px-6 py-2">Address</th>
+              <th className="px-6 py-2">Role</th>
               <th className="px-6 py-2 text-right">Actions</th>
             </tr>
           </thead>
@@ -256,7 +256,7 @@ const AdminUsers = () => {
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`px-4 py-2 rounded ${
+          className={`px-2 py-1 rounded ${
             currentPage === 1
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
               : "bg-blue-600 text-white hover:bg-blue-700"
@@ -272,7 +272,7 @@ const AdminUsers = () => {
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`px-4 py-2 rounded ${
+          className={`px-2 py-1 rounded ${
             currentPage === totalPages
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
               : "bg-blue-600 text-white hover:bg-blue-700"

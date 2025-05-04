@@ -210,13 +210,13 @@ const SchoolAccessedExam = () => {
                   <p>Are you ready to start the exam?</p>
                   <div className="flex gap-6">
                     <button
-                      className="bg-blue-500 text-white px-4 py-2 md:w-[100px] w-[80px] rounded-full"
+                      className="bg-blue-500 text-white px-2 py-1 md:w-[100px] w-[80px] rounded-full"
                       onClick={handleShowContinueCard}
                     >
                       Yes
                     </button>
                     <button
-                      className="bg-yellow-500 text-white px-4 py-2 md:w-[200px] w-[160px] rounded-full"
+                      className="bg-yellow-500 text-white px-2 py-1 md:w-[200px] w-[160px] rounded-full"
                       onClick={handleNotReady}
                     >
                       I'm Not Ready

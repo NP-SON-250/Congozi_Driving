@@ -207,7 +207,7 @@ const SchoolDemo = () => {
       {totalPages > 1 && (
         <div className="flex absolute md:gap-[860px] gap-[250px] right-0 md:bottom-[9vh] bottom-[16vh]">
           <button
-            className={`px-4 py-2 text-blue-900 rounded ${
+            className={`px-2 py-1 text-blue-900 rounded ${
               currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""
             }`}
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
@@ -216,7 +216,7 @@ const SchoolDemo = () => {
             <FaArrowAltCircleLeft size={24} />
           </button>
           <button
-            className={`px-4 py-2 text-blue-900 rounded ${
+            className={`px-2 py-1 text-blue-900 rounded ${
               currentPage === totalPages - 1
                 ? "opacity-50 cursor-not-allowed"
                 : ""
@@ -262,19 +262,19 @@ const SchoolDemo = () => {
                 </p>
                 <div className="flex justify-center p-6 mt-12 gap-6">
                   <button
-                    className="bg-red-500 text-white px-4 py-2 rounded"
+                    className="bg-red-500 text-white px-2 py-1 rounded"
                     onClick={closePopup}
                   >
                     Close
                   </button>
                   <button
-                    className="bg-yellow-500 text-white px-4 py-2 rounded"
+                    className="bg-yellow-500 text-white px-2 py-1 rounded"
                     onClick={handlePayLaterClick}
                   >
                     Pay Later
                   </button>
                   <button
-                    className="bg-green-500 text-white px-4 py-2 rounded"
+                    className="bg-green-500 text-white px-2 py-1 rounded"
                     onClick={handleProceedToPayment}
                   >
                     Pay Now
@@ -326,7 +326,7 @@ const SchoolDemo = () => {
                       className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
                     />
                     <button
-                      className="bg-green-500 text-white px-4 py-2 rounded mt-4 w-full"
+                      className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full"
                       onClick={handlePayNowClick}
                     >
                       Ishyura {selectedAccount.fees} RWF

@@ -76,7 +76,7 @@ const ViewOptions = ({ question, onBack }) => {
         <button
           onClick={onBack}
           title="Back to questions"
-          className="bg-gray-300 text-blue-900 px-4 py-2 text-2xl font-bold rounded hover:bg-gray-400"
+          className="bg-gray-300 text-blue-900 px-2 py-1 text-2xl font-bold rounded hover:bg-gray-400"
         >
           <IoReturnUpBack size={24} />
         </button>

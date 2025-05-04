@@ -112,7 +112,7 @@ const StudentUnpaid = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-start md:px-5 gap-1 bg-white md:p-2">
+    <div className="flex flex-col justify-center items-center md:px-5 gap-1 bg-white md:p-2">
       <WelcomeDear />
 
       {/* Filters */}
@@ -154,7 +154,9 @@ const StudentUnpaid = () => {
 
       {/* Exam Cards */}
       {filteredExams.length === 0 ? (
-        <p className="text-center py-4 text-red-500">No data found</p>
+        <p className="text-center py-4 text-red-500">
+          Nta kizamini kitishyuye ufite
+        </p>
       ) : (
         <div className="grid md:grid-cols-3 w-full gap-4 md:gap-3 py-1">
           {currentExams.map((exam, index) => {
@@ -181,7 +183,7 @@ const StudentUnpaid = () => {
       {totalPages > 1 && (
         <div className="flex justify-around md:gap-[900px] gap-[250px] md:pb-0 pb-10">
           <button
-            className={`px-4 py-2 text-blue-900 rounded ${
+            className={`px-2 py-1 text-blue-900 rounded ${
               currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""
             }`}
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
@@ -190,7 +192,7 @@ const StudentUnpaid = () => {
             <FaArrowAltCircleLeft size={24} />
           </button>
           <button
-            className={`px-4 py-2 text-blue-900 rounded ${
+            className={`px-2 py-1 text-blue-900 rounded ${
               currentPage === totalPages - 1
                 ? "opacity-50 cursor-not-allowed"
                 : ""
@@ -262,7 +264,7 @@ const StudentUnpaid = () => {
                       className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
                     />
                     <button
-                      className="bg-green-500 text-white px-4 py-2 rounded mt-4 w-full"
+                      className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full"
                       onClick={handlePayment}
                     >
                       Ishyura {selectedExam.itemId.fees} RWF

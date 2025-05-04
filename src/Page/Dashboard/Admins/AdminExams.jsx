@@ -137,10 +137,10 @@ const AdminExams = () => {
   ) : (
     <div className="md:px-6 py-6 px-1">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">Manage All Exams</h2>
+        <h2 className="font-semibold">Manage All Exams</h2>
         <button
           onClick={() => setShowAddExamPopup(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+          className="bg-blue-600 text-white px-2 py-1 rounded-lg hover:bg-blue-700 transition"
         >
           Add New
         </button>
@@ -238,7 +238,7 @@ const AdminExams = () => {
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`px-4 py-2 rounded ${
+          className={`px-2 py-1 rounded ${
             currentPage === 1
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
               : "bg-blue-600 text-white hover:bg-blue-700"
@@ -254,7 +254,7 @@ const AdminExams = () => {
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`px-4 py-2 rounded ${
+          className={`px-2 py-1 rounded ${
             currentPage === totalPages
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
               : "bg-blue-600 text-white hover:bg-blue-700"
@@ -299,7 +299,7 @@ const AdminExams = () => {
             <div className="flex justify-around gap-6">
               <button
                 onClick={handleDeleteExam}
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
               >
                 Yes
               </button>
@@ -308,7 +308,7 @@ const AdminExams = () => {
                   setShowDeleteConfirm(false);
                   setExamToDelete(null);
                 }}
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+                className="px-2 py-1 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
               >
                 No
               </button>

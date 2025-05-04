@@ -174,7 +174,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-400 py-3 px-1 md:hidden z-[999]">
+      <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-400 py-1 px-1 md:hidden z-[999]">
         <ul className="flex justify-around items-center">
           {visibleItems.map((item, index) => (
             <li key={index}>
@@ -214,7 +214,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
               className="flex flex-col items-center text-xl font-medium text-gray-700 pr-4 px-3 py-3 pt-5 rounded-full"
             >
               <div className="icon">
-                <MdMoreHoriz size={40} />
+                <MdMoreHoriz size={24} />
               </div>
               <span className="text-xs font-bold">More</span>
             </button>
@@ -223,7 +223,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
 
         {/* More Items Dropdown */}
         {showAll && (
-          <ul className="fixed bottom-[110px] left-0 w-full bg-gray-100 py-3 px-1 grid grid-cols-2 gap-4 border-t border-gray">
+          <ul className="fixed bottom-[80px] left-0 w-full bg-white py-1 px-0 grid grid-cols-2 gap-4">
             {hiddenItems.map((item, index) => (
               <li key={index} className="flex justify-center">
                 <button

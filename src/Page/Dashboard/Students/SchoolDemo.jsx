@@ -141,18 +141,19 @@ const SchoolDemo = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex absolute md:gap-[860px] gap-[250px] right-0 md:bottom-[15vh] bottom-[25vh]">
+        <div className="flex justify-around md:gap-[830px] gap-[110px] md:pb-0 pt-3 px-10 ">
           <button
-            className={`px-4 py-2 text-blue-900 rounded ${
+            className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
               currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""
             }`}
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
             disabled={currentPage === 0}
           >
             <FaArrowAltCircleLeft size={24} />
+            Izibanza
           </button>
           <button
-            className={`px-4 py-2 text-blue-900 rounded ${
+            className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
               currentPage === totalPages - 1
                 ? "opacity-50 cursor-not-allowed"
                 : ""
@@ -162,7 +163,7 @@ const SchoolDemo = () => {
             }
             disabled={currentPage === totalPages - 1}
           >
-            <FaArrowAltCircleRight size={24} />
+            Izikurira <FaArrowAltCircleRight size={24} />
           </button>
         </div>
       )}

@@ -100,53 +100,64 @@ const StudentExams = () => {
               </tr>
             </thead>
             <tbody>
-              {currentExams.map((exam, index) => (
-                <tr
-                  key={exam._id}
-                  className="bg-white border text-blue-900 md:text-base text-xs"
-                >
-                  <td className="text-center md:tex-md text-xs py-2 px-4">
-                    {indexOfFirstExam + index + 1}
-                  </td>
-                  <td className="text-center md:tex-md text-xs px-1">
-                    {exam.accessCode}
-                  </td>
-                  <td className="text-center md:tex-md text-xs p-2">
-                    {exam.itemId?.type}
-                  </td>
-                  <td className="text-center md:tex-md text-xs px-2">
-                    {getCurrentDate()}
-                  </td>
-                  <td className="text-center md:tex-md text-xs px-2">
-                    {exam.amount}
-                  </td>
-                  <td className="text-center md:tex-md text-xs px-2">
-                    {exam.status}
-                  </td>
-                  <td className="text-center p-2">
-                    {exam.status === "pending" ? (
-                      <button
-                        title="Proceed to payment"
-                        onClick={() => handlePurchaseClick(exam)}
-                        className="text-blue-900 py-1 px-3 flex md:tex-xs text-xs items-center gap-2"
-                      >
-                        <FaCartPlus />
-                      </button>
-                    ) : exam.status === "complete" ? (
-                      <button
-                        onClick={() => handleDoExam(exam)}
-                        className="text-blue-900 py-1 px-3 md:tex-xs text-xs flex items-center gap-2"
-                      >
-                        <FaEdit />
-                      </button>
-                    ) : (
-                      <button className="text-blue-900 py-1 px-3" disabled>
-                        -
-                      </button>
-                    )}
+              {currentExams.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="7"
+                    className="text-center py-4 text-red-500 font-semibold"
+                  >
+                    Ntakizamini uragura.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                currentExams.map((exam, index) => (
+                  <tr
+                    key={exam._id}
+                    className="bg-white border text-blue-900 md:text-base text-xs"
+                  >
+                    <td className="text-center md:tex-md text-xs py-2 px-4">
+                      {indexOfFirstExam + index + 1}
+                    </td>
+                    <td className="text-center md:tex-md text-xs px-1">
+                      {exam.accessCode}
+                    </td>
+                    <td className="text-center md:tex-md text-xs p-2">
+                      {exam.itemId?.type}
+                    </td>
+                    <td className="text-center md:tex-md text-xs px-2">
+                      {getCurrentDate()}
+                    </td>
+                    <td className="text-center md:tex-md text-xs px-2">
+                      {exam.amount}
+                    </td>
+                    <td className="text-center md:tex-md text-xs px-2">
+                      {exam.status}
+                    </td>
+                    <td className="text-center p-2">
+                      {exam.status === "pending" ? (
+                        <button
+                          title="Proceed to payment"
+                          onClick={() => handlePurchaseClick(exam)}
+                          className="text-blue-900 py-1 px-3 flex md:tex-xs text-xs items-center gap-2"
+                        >
+                          <FaCartPlus />
+                        </button>
+                      ) : exam.status === "complete" ? (
+                        <button
+                          onClick={() => handleDoExam(exam)}
+                          className="text-blue-900 py-1 px-3 md:tex-xs text-xs flex items-center gap-2"
+                        >
+                          <FaEdit />
+                        </button>
+                      ) : (
+                        <button className="text-blue-900 py-1 px-3" disabled>
+                          -
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -156,7 +167,7 @@ const StudentExams = () => {
       {totalPages > 1 && (
         <div className="flex justify-around md:gap-[830px] gap-[250px] md:pb-0 pb-10">
           <button
-            className={`px-4 py-2 text-blue-900 rounded ${
+            className={`px-2 py-1 text-blue-900 rounded ${
               currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
             }`}
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -165,7 +176,7 @@ const StudentExams = () => {
             <FaArrowAltCircleLeft size={24} />
           </button>
           <button
-            className={`px-4 py-2 text-blue-900 rounded ${
+            className={`px-2 py-1 text-blue-900 rounded ${
               currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
             }`}
             onClick={() =>
@@ -201,19 +212,19 @@ const StudentExams = () => {
                 </p>
                 <div className="flex justify-center p-6 mt-12 gap-6">
                   <button
-                    className="bg-red-500 text-white px-4 py-2 rounded"
+                    className="bg-red-500 text-white px-2 py-1 rounded"
                     onClick={closePopup}
                   >
                     Close
                   </button>
                   <button
-                    className="bg-yellow-500 text-white px-4 py-2 rounded"
+                    className="bg-yellow-500 text-white px-2 py-1 rounded"
                     onClick={closePopup}
                   >
                     Pay Later
                   </button>
                   <button
-                    className="bg-green-500 text-white px-4 py-2 rounded"
+                    className="bg-green-500 text-white px-2 py-1 rounded"
                     onClick={handleProceedToPayment}
                   >
                     Pay Now
@@ -264,7 +275,7 @@ const StudentExams = () => {
                       placeholder="ex: 0789xxxxxxx"
                       className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
                     />
-                    <button className="bg-green-500 text-white px-4 py-2 rounded mt-4 w-full">
+                    <button className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full">
                       Ishyura {selectedExam.itemId?.fees} RWF
                     </button>
                     <p className="text-start py-2 font-medium">

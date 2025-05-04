@@ -6,18 +6,21 @@ const DeleteUserPopup = ({ user, onCancel, onConfirm }) => {
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
           Are you sure you want to delete{" "}
-          <span className="font-bold">{user.fName} {" "}{user.lName}</span>?
+          <span className="font-bold">
+            {user.fName} {user.lName}
+          </span>
+          ?
         </h2>
         <div className="flex justify-around space-x-4">
           <button
             onClick={onCancel}
-            className="px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300"
+            className="px-2 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300"
           >
             No
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
+            className="px-2 py-1 rounded bg-red-600 text-white hover:bg-red-700"
           >
             Yes
           </button>

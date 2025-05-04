@@ -140,7 +140,7 @@ const ViewQuestions = ({ exam, onBack }) => {
             <button
               onClick={onBack}
               title="Back to exams"
-              className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400"
+              className="bg-gray-300 text-gray-800 px-2 py-1 rounded-lg hover:bg-gray-400"
             >
               <IoReturnUpBack size={20} />
             </button>
@@ -227,7 +227,7 @@ const ViewQuestions = ({ exam, onBack }) => {
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className={`px-4 py-2 rounded ${
+              className={`px-2 py-1 rounded ${
                 currentPage === 1
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                   : "bg-blue-600 text-white hover:bg-blue-700"
@@ -243,7 +243,7 @@ const ViewQuestions = ({ exam, onBack }) => {
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className={`px-4 py-2 rounded ${
+              className={`px-2 py-1 rounded ${
                 currentPage === totalPages
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                   : "bg-blue-600 text-white hover:bg-blue-700"

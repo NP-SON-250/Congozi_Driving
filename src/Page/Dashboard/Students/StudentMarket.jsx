@@ -202,18 +202,18 @@ const StudentMarket = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-around md:gap-[830px] gap-[250px] md:pb-0 pb-10">
+        <div className="flex justify-around md:gap-[830px] gap-[150px] md:pb-0 pt-3 px-10">
           <button
-            className={`px-4 py-2 text-blue-900 rounded ${
+            className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
               currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""
             }`}
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
             disabled={currentPage === 0}
           >
-            <FaArrowAltCircleLeft size={24} />
+            <FaArrowAltCircleLeft size={24} /> Ibibanza
           </button>
           <button
-            className={`px-4 py-2 text-blue-900 rounded ${
+            className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2${
               currentPage === totalPages - 1
                 ? "opacity-50 cursor-not-allowed"
                 : ""
@@ -223,6 +223,7 @@ const StudentMarket = () => {
             }
             disabled={currentPage === totalPages - 1}
           >
+            Ibikurikira
             <FaArrowAltCircleRight size={24} />
           </button>
         </div>
@@ -250,19 +251,19 @@ const StudentMarket = () => {
                 </p>
                 <div className="flex justify-center p-6 mt-12 gap-6">
                   <button
-                    className="bg-red-500 text-white px-4 py-2 rounded"
+                    className="bg-red-500 text-white px-2 py-1 rounded md:text-base text-xs"
                     onClick={closePopup}
                   >
                     Close
                   </button>
                   <button
-                    className="bg-yellow-500 text-white px-4 py-2 rounded"
+                    className="bg-yellow-500 text-white px-2 py-1 rounded"
                     onClick={handlePayLaterClick}
                   >
                     Pay Later
                   </button>
                   <button
-                    className="bg-green-500 text-white px-4 py-2 rounded"
+                    className="bg-green-500 text-white px-2 py-1 rounded"
                     onClick={handleProceedToPayment}
                   >
                     Pay Now
@@ -314,7 +315,7 @@ const StudentMarket = () => {
                       className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
                     />
                     <button
-                      className="bg-green-500 text-white px-4 py-2 rounded mt-4 w-full"
+                      className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full"
                       onClick={handlePayNowClick}
                     >
                       Ishyura {selectedExam.fees} RWF

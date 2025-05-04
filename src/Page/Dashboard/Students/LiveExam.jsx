@@ -143,6 +143,16 @@ const LiveExam = () => {
     });
   };
 
+  const confirmFinishExam = () => setShowModal(true);
+
+  const handleModalResponse = (res) => {
+    if (res === "yes") {
+      localStorage.removeItem("selectedOptions");
+      localStorage.removeItem(`examTimeLeft_${examCode}`);
+      handleSubmitExam();
+    }
+    setShowModal(false);
+  };
   const handleSubmitExam = async () => {
     try {
       let score = 0;
@@ -199,23 +209,12 @@ const LiveExam = () => {
       setSelectedOption(null);
       setTotalMarks(score);
       setExamFinished(true);
+      handleModalResponse();
       // navigate("/students/exams");
     } catch (error) {
       console.error("Submission error:", error);
-      setExamFinished(true);
       errors(error.message || "Habaye ikibazo mu kohereza ibisubizo.");
     }
-  };
-
-  const confirmFinishExam = () => setShowModal(true);
-
-  const handleModalResponse = (res) => {
-    if (res === "yes") {
-      localStorage.removeItem("selectedOptions");
-      localStorage.removeItem(`examTimeLeft_${examCode}`);
-      handleSubmitExam();
-    }
-    setShowModal(false);
   };
 
   const handleReviewResults = () => setReviewResults(true);
@@ -247,8 +246,8 @@ const LiveExam = () => {
                 questions={examQuestions.length}
                 total20={examQuestions.length * 1}
                 total100={examQuestions.length * 5}
-                pass20={((12 / 20) * examQuestions.length).toFixed(2)}
-                pass100={((60 / 20) * examQuestions.length).toFixed(2)}
+                pass20={((12 / 20) * examQuestions.length).toFixed(0)}
+                pass100={((60 / 20) * examQuestions.length).toFixed(0)}
                 number={examToDo?.number}
                 type={examToDo?.type}
                 timeLeft={formatTime(timeLeft)}
@@ -282,14 +281,14 @@ const LiveExam = () => {
           <div className="w-full px-3">
             {!reviewResults && currentQuestion ? (
               <>
-                <h3 className="mb-0 text-lg font-semibold">
+                <h3 className="mb-0 md:text-base text-sm font-semibold">
                   Q{selectedQuestion + 1}. {currentQuestion.phrase}
                 </h3>
                 {currentQuestion.image && (
                   <img
                     src={currentQuestion.image}
                     alt="question"
-                    className="w-16 h-16 rounded-full mb-1"
+                    className=" w-52 h-28 rounded-md mb-1"
                   />
                 )}
                 <div className="mb-1 space-y-1">
@@ -369,14 +368,14 @@ const LiveExam = () => {
                 )}
                 {examFinished && !reviewResults && (
                   <div className="flex justify-center items-center flex-col">
-                    <div className="mt-2 flex justify-center gap-24 md:mb-0">
+                    <div className="mt-2 flex justify-center md:gap-24 gap-10 md:mb-0">
                       <button className="bg-gray-500 cursor-not-allowed text-white px-4 py-1 rounded flex jus items-center gap-2">
                         <GrSend />
                         Soza Ikizamini
                       </button>
                       <button
                         onClick={handleReviewResults}
-                        className="bg-green-500 flex justify-center gap-2 items-center text-white px-4 py-1 rounded"
+                        className="bg-green-500 flex justify-center gap-2 items-center text-white px-2 py-1 rounded"
                       >
                         <FaRegEye />
                         Reba amanota
@@ -387,7 +386,7 @@ const LiveExam = () => {
                         {totalMarks}/{examQuestions.length}
                       </p>
                       <p>
-                        {((totalMarks / examQuestions.length) * 100).toFixed(2)}
+                        {((totalMarks / examQuestions.length) * 100).toFixed(0)}
                         /100
                       </p>
                     </div>
@@ -411,11 +410,11 @@ const LiveExam = () => {
                       />
                       <div className="bg-white rounded-md md:w-[60%] w-full pb-4">
                         <div className="p-2 w-full bg-green-700 rounded-md text-center">
-                          <h1 className="text-lg font-bold text-blue-900">
+                          <h1 className="md:text-lg text-sm font-bold text-blue-900">
                             Attention
                           </h1>
                         </div>
-                        <h3 className="text-lg font-bold my-3 text-center">
+                        <h3 className="md:text-lg text-sm font-bold my-3 text-center">
                           Are you sure to finish Exam now?
                         </h3>
                         <div className="flex justify-between p-6">
@@ -442,103 +441,107 @@ const LiveExam = () => {
                 <div className="w-full bg-green-500 text-blue-900 font-bold text-xl rounded-md text-center mb-4">
                   <h2 className="font-bold py-2">Exam Review</h2>
                 </div>
-                <table className="table-auto w-full border-collapse border border-gray-300">
-                  <thead className="bg-gray-300 text-blue-900">
-                    <tr>
-                      <th className="border p-1 text-bold text-lg">
-                        Ibibazo by'ikizamini
-                      </th>
-                      <th className="border p-1 text-bold text-lg">
-                        Ibisubizo by'ibibazo
-                      </th>
-                      <th className="border p-1 text-bold text-lg">
-                        Amanota wabonye
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {examQuestions.map((q) => {
-                      const selectedOptionId = selectedOptions[q._id];
-                      const correctOption = q.options.find(
-                        (opt) => opt.isCorrect
-                      );
-                      const correct = selectedOptionId === correctOption?._id;
+                <div className="overflow-x-auto rounded-lg shadow border border-blue-900 w-full">
+                  <table className="w-full text-left table-auto">
+                    <thead className="bg-gray-300 text-blue-900">
+                      <tr>
+                        <th className="border p-1 text-bold md:text-lg text-sm">
+                          Ibibazo
+                        </th>
+                        <th className="border p-1 text-bold md:text-lg text-sm">
+                          Ibisubizo
+                        </th>
+                        <th className="border p-1 text-bold md:text-lg text-sm">
+                          Amanota
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {examQuestions.map((q) => {
+                        const selectedOptionId = selectedOptions[q._id];
+                        const correctOption = q.options.find(
+                          (opt) => opt.isCorrect
+                        );
+                        const correct = selectedOptionId === correctOption?._id;
 
-                      return (
-                        <tr key={q._id}>
-                          <td className="border px-2">
-                            <div>{q.phrase}</div>
-                            {q.image && (
-                              <img
-                                src={q.image}
-                                alt=""
-                                className="w-16 h-16 rounded-full"
-                              />
-                            )}
-                          </td>
-                          <td className="border px-2">
-                            {q.options.map((opt, i) => {
-                              const isSelected = selectedOptionId === opt._id;
-                              const isCorrect = opt._id === correctOption?._id;
+                        return (
+                          <tr key={q._id}>
+                            <td className="border px-2">
+                              <div>{q.phrase}</div>
+                              {q.image && (
+                                <img
+                                  src={q.image}
+                                  alt=""
+                                  className="w-16 h-16 rounded-full"
+                                />
+                              )}
+                            </td>
+                            <td className="border px-2">
+                              {q.options.map((opt, i) => {
+                                const isSelected = selectedOptionId === opt._id;
+                                const isCorrect =
+                                  opt._id === correctOption?._id;
 
-                              return (
-                                <div
-                                  key={opt._id}
-                                  className={`p-1 ${
-                                    isCorrect
-                                      ? "text-green-500"
-                                      : isSelected
-                                      ? "text-red-500"
-                                      : ""
-                                  }`}
-                                >
-                                  {String.fromCharCode(97 + i)}. {opt.text}
-                                </div>
-                              );
-                            })}
-                          </td>
-                          <td className="border border-gray-300">
-                            <div
-                              className={`text-center -mt-12 font-semibold ${
-                                correct ? "text-green-500" : "text-red-500"
-                              }`}
-                            >
-                              {correct ? "Wagikoze" : "Wakishe"}
-                            </div>
-                            <div className="text-center font-semibold">
-                              {selectedOptionId == null
-                                ? "Kuko Ntiwagisubije"
-                                : correct
-                                ? "Amanota: 1/20 | 5%"
-                                : "Amanota: 0/20 | 0%"}
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <td
-                        colSpan="3"
-                        className="text-center font-bold text-lg p-4 bg-gray-100"
-                      >
-                        <div className="text-center text-2xl text-blue-900">
-                          {totalMarks >= 10
-                            ? "Conglaturations you have made it 🙌🙌🙌"
-                            : "You failed this exam, You need to learn more!!"}
-                        </div>
-                        <div className="text-xl text-orange-500 font-medium">
-                          Total Marks: {totalMarks}/{examQuestions.length} |{" "}
-                          {((totalMarks / examQuestions.length) * 100).toFixed(
-                            2
-                          )}
-                          /100
-                        </div>
-                      </td>
-                    </tr>
-                  </tfoot>
-                </table>
+                                return (
+                                  <div
+                                    key={opt._id}
+                                    className={`p-1 ${
+                                      isCorrect
+                                        ? "text-green-500"
+                                        : isSelected
+                                        ? "text-red-500"
+                                        : ""
+                                    }`}
+                                  >
+                                    {String.fromCharCode(97 + i)}. {opt.text}
+                                  </div>
+                                );
+                              })}
+                            </td>
+                            <td className="border border-gray-300">
+                              <div
+                                className={`text-center -mt-12 font-semibold ${
+                                  correct ? "text-green-500" : "text-red-500"
+                                }`}
+                              >
+                                {correct ? "Wagikoze" : "Wakishe"}
+                              </div>
+                              <div className="text-center font-semibold">
+                                {selectedOptionId == null
+                                  ? "Kuko Ntiwagisubije"
+                                  : correct
+                                  ? "Amanota: 1/20 | 5%"
+                                  : "Amanota: 0/20 | 0%"}
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td
+                          colSpan="3"
+                          className="text-center font-bold md:text-lg text-sm p-4 bg-gray-100"
+                        >
+                          <div className="text-center md:text-base text-sm text-blue-900">
+                            {totalMarks >= 10
+                              ? "Conglaturations you have made it 🙌🙌🙌"
+                              : "You failed this exam, You need to learn more!!"}
+                          </div>
+                          <div className="text-md text-orange-500 font-medium">
+                            Total Marks: {totalMarks}/{examQuestions.length} |{" "}
+                            {(
+                              (totalMarks / examQuestions.length) *
+                              100
+                            ).toFixed(0)}
+                            /100
+                          </div>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
                 <div className="flex justify-center mt-4">
                   <button
                     onClick={() => {
@@ -548,7 +551,7 @@ const LiveExam = () => {
                     }}
                     className="bg-red-300 text-white py-2 px-4 rounded"
                   >
-                    Kuraho iyi page
+                    Kuraho iyi paje
                   </button>
                 </div>
               </>

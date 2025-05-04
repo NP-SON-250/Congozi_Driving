@@ -103,13 +103,13 @@ const AddUserPopup = ({
         <div className="flex justify-around space-x-4 mt-6">
           <button
             onClick={() => setShowAddPopup(false)}
-            className="px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300"
+            className="px-2 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300"
           >
             Cancel
           </button>
           <button
             onClick={handleAddUser}
-            className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+            className="px-2 py-1 rounded bg-blue-600 text-white hover:bg-blue-700"
           >
             Add
           </button>

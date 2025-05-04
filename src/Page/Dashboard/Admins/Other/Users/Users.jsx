@@ -135,10 +135,10 @@ const Users = () => {
   return (
     <div className="md:px-6 py-6 px-1">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">Users</h2>
+        <h2 className="font-semibold">Users</h2>
       </div>
 
-      <div className="overflow-x-auto rounded-lg shadow border border-gray-200">
+      <div className="overflow-x-auto rounded-lg shadow border border-blue-900 w-full">
         <table className="w-full text-left table-auto">
           <thead className="bg-gray-100 text-gray-700">
             <tr>
@@ -195,11 +195,11 @@ const Users = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center items-center mt-6 space-x-4">
+      <div className="flex justify-center items-center md:mt-6 mt-2 space-x-4">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`px-4 py-2 rounded ${
+          className={`px-2 py-1 rounded ${
             currentPage === 1
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
               : "bg-blue-600 text-white hover:bg-blue-700"
@@ -215,7 +215,7 @@ const Users = () => {
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`px-4 py-2 rounded ${
+          className={`px-2 py-1 rounded ${
             currentPage === totalPages
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
               : "bg-blue-600 text-white hover:bg-blue-700"

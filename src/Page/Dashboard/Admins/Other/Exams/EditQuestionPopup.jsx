@@ -107,13 +107,13 @@ const EditQuestionPopup = ({
         <div className="mt-6 flex justify-around gap-6">
           <button
             onClick={() => setShowEditPopup(false)}
-            className="px-4 py-2 bg-red-300 text-gray-800 rounded hover:bg-red-400"
+            className="px-2 py-1 bg-red-300 text-gray-800 rounded hover:bg-red-400"
           >
             Cancel
           </button>
           <button
             onClick={handleSaveEdit}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             Save
           </button>

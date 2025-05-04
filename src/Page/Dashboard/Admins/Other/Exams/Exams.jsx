@@ -216,7 +216,7 @@ const Exams = () => {
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`px-4 py-2 rounded ${
+          className={`px-2 py-1 rounded ${
             currentPage === 1
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
               : "bg-blue-600 text-white hover:bg-blue-700"
@@ -232,7 +232,7 @@ const Exams = () => {
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`px-4 py-2 rounded ${
+          className={`px-2 py-1 rounded ${
             currentPage === totalPages
               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
               : "bg-blue-600 text-white hover:bg-blue-700"
@@ -274,7 +274,7 @@ const Exams = () => {
             <div className="flex justify-center gap-6">
               <button
                 onClick={handleDeleteExam}
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
               >
                 Yes
               </button>
@@ -283,7 +283,7 @@ const Exams = () => {
                   setShowDeleteConfirm(false);
                   setExamToDelete(null);
                 }}
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+                className="px-2 py-1 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
               >
                 No
               </button>

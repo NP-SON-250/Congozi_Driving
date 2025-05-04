@@ -6,7 +6,7 @@ const DescriptionCard = ({access,questions,total20,total100,pass20,pass100,numbe
       <div className="flex flex-wrap justify-center gap-2 w-full py-1 md:px-12 px-2">
         <p>Exam Access Code: {access}</p>
       </div>
-      <div className="grid md:grid-cols-4 grid-cols-2 gap-4 w-full py-1 md:px-12 px-2">
+      <div className="grid md:grid-cols-4 grid-cols-2 gap-2 w-full py-0 md:px-12 px-2">
         <p>Total Questions: {questions}</p>
         <p>Total Marks:{total20}/20 or</p>
         <p>Total Marks: {total100}/100</p>
@@ -16,7 +16,7 @@ const DescriptionCard = ({access,questions,total20,total100,pass20,pass100,numbe
         <p>Exam Type: {type}</p>
         <p>
           Exam Time:{" "}
-          <span className="bg-white p-2 rounded-full text-blue-900 font-bold">
+          <span className="bg-white p-1 rounded-full text-blue-900 font-extrabold">
             {timeLeft}
           </span>
         </p>

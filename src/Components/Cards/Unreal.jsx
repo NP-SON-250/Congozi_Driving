@@ -494,13 +494,13 @@ const LiveExam = () => {
                   <div className="flex justify-between p-6">
                     <button
                       onClick={() => handleModalResponse("no")}
-                      className="bg-Total text-white md:px-10 px-4 py-2 rounded-md"
+                      className="bg-Total text-white md:px-10 px-2 py-1 rounded-md"
                     >
                       No, Back
                     </button>
                     <button
                       onClick={() => handleModalResponse("yes")}
-                      className="bg-Total text-white md:px-10 px-4 py-2 rounded-md"
+                      className="bg-Total text-white md:px-10 px-2 py-1 rounded-md"
                     >
                       Yes, I finish
                     </button>
@@ -660,19 +660,19 @@ const LiveExam = () => {
                 </p>
                 <div className="flex justify-center p-6 mt-12 gap-6">
                   <button
-                    className="bg-red-500 text-white px-4 py-2 rounded"
+                    className="bg-red-500 text-white px-2 py-1 rounded"
                     onClick={closePopup}
                   >
                     Close
                   </button>
                   <button
-                    className="bg-yellow-500 text-white px-4 py-2 rounded"
+                    className="bg-yellow-500 text-white px-2 py-1 rounded"
                     onClick={closePopup}
                   >
                     Pay Later
                   </button>
                   <button
-                    className="bg-green-500 text-white px-4 py-2 rounded"
+                    className="bg-green-500 text-white px-2 py-1 rounded"
                     onClick={handleProceedToPayment}
                   >
                     Pay Now
@@ -723,7 +723,7 @@ const LiveExam = () => {
                       placeholder="ex: 0789xxxxxxx"
                       className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
                     />
-                    <button className="bg-green-500 text-white px-4 py-2 rounded mt-4 w-full">
+                    <button className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full">
                       Ishyura {testVersion.fees} RWF
                     </button>
                     <p className="text-start py-2 font-medium">

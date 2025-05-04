@@ -10,7 +10,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
-  const isDisabled = location.pathname === "/kwinjira"; 
+  const isDisabled = location.pathname === "/kwinjira";
 
   return (
     <>
@@ -45,25 +45,27 @@ const Navbar = () => {
           </div>
 
           {/* Button Section */}
-          <Link to={'/kwinjira'}>
-          <div
-            className={`flex justify-center items-center gap-2 px-4 py-2 rounded-3xl cursor-pointer ${
-              isDisabled ? "bg-gray-500 cursor-not-allowed" : "bg-Unpaid/95 hover:bg-yellow-700"
-            }`}
-          >
-            {/* Icon */}
-            <div className="bg-white w-6 h-6 p-2 flex justify-center items-center rounded-full">
-              <FaUser />
-            </div>
-            <button
-              className={`text-xl text-blue-900 pr-4 font-semibold ${
-                isDisabled ? "opacity-50" : ""
+          <Link to={"/kwinjira"}>
+            <div
+              className={`flex justify-center items-center gap-2 px-2 py-1 rounded-3xl cursor-pointer ${
+                isDisabled
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-Unpaid/95 hover:bg-yellow-700"
               }`}
-              disabled={isDisabled}
             >
-              Kwinjira
-            </button>
-          </div>
+              {/* Icon */}
+              <div className="bg-white w-6 h-6 p-2 flex justify-center items-center rounded-full">
+                <FaUser />
+              </div>
+              <button
+                className={`text-xl text-blue-900 pr-4 font-semibold ${
+                  isDisabled ? "opacity-50" : ""
+                }`}
+                disabled={isDisabled}
+              >
+                Kwinjira
+              </button>
+            </div>
           </Link>
 
           {/* Mobile hamburger menu Section */}
