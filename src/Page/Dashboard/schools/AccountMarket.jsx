@@ -33,7 +33,7 @@ const SchoolDemo = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://localhost:4900/api/v1/accounts",
+        "https://congozi-backend.onrender.com/api/v1/accounts",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -91,7 +91,7 @@ const SchoolDemo = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `http://localhost:4900/api/v1/purchases/${selectedAccount._id}`,
+        `https://congozi-backend.onrender.com/api/v1/purchases/${selectedAccount._id}`,
         {},
         {
           headers: {
@@ -114,7 +114,7 @@ const SchoolDemo = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `http://localhost:4900/api/v1/purchases/paid/${selectedAccount._id}`,
+        `https://congozi-backend.onrender.com/api/v1/purchases/paid/${selectedAccount._id}`,
         {},
         {
           headers: {

@@ -36,7 +36,7 @@ const LiveLearn = () => {
     const fetchPaidExam = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:4900/api/v1/purchases/access/${examCode}`,
+          `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setPaidExam(res.data.data.itemId);
@@ -52,7 +52,8 @@ const LiveLearn = () => {
       try {
         const examId = paidExam?.examId || paidExam?._id;
         if (!examId) return;
-        const res = await axios.get(`http://localhost:4900/api/v1/exams/${examId}`,
+        const res = await axios.get(
+          `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const examData = res.data.data;
@@ -105,15 +106,19 @@ const LiveLearn = () => {
       const number = paidExam?.number;
       if (!number) return;
 
-      const purchaseRes = await axios.get("http://localhost:4900/api/v1/purchases/user",
+      const purchaseRes = await axios.get(
+        "https://congozi-backend.onrender.com/api/v1/purchases/user",
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       const purchasedExams = purchaseRes.data.data;
-      const examPurchased = purchasedExams.some(p => p.accessCode === examCode);
+      const examPurchased = purchasedExams.some(
+        (p) => p.accessCode === examCode
+      );
       if (!examPurchased) return;
 
-      const res = await axios.get(`http://localhost:4900/api/v1/exams/test/${number}`,
+      const res = await axios.get(
+        `https://congozi-backend.onrender.com/api/v1/exams/test/${number}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const testData = res.data.data;
@@ -131,7 +136,9 @@ const LiveLearn = () => {
 
   const handlePayLaterClick = async () => {
     try {
-      await axios.post(`http://localhost:4900/api/v1/purchases/${testExam._id}`, {},
+      await axios.post(
+        `https://congozi-backend.onrender.com/api/v1/purchases/${testExam._id}`,
+        {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setPaymentPopup(false);
@@ -147,7 +154,9 @@ const LiveLearn = () => {
 
   const handleSelectQuestion = (index) => {
     setSelectedQuestion(index);
-    setInteractedQuestions((prev) => (prev.includes(index) ? prev : [...prev, index]));
+    setInteractedQuestions((prev) =>
+      prev.includes(index) ? prev : [...prev, index]
+    );
   };
 
   const formatTime = useCallback((seconds) => {
@@ -156,16 +165,19 @@ const LiveLearn = () => {
     return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
   }, []);
 
-  const currentQuestion = useMemo(() => examQuestions[selectedQuestion], [selectedQuestion, examQuestions]);
+  const currentQuestion = useMemo(
+    () => examQuestions[selectedQuestion],
+    [selectedQuestion, examQuestions]
+  );
 
   return (
     <div className="flex flex-col bg-white md:p-2 gap-2">
       {showNoQuestionsMessage ? (
         <div className="text-center mt-10 text-Total font-semibold">
+          <p>Ikikizami ntabibazo gifite. Hamagara Admin</p>
           <p>
-          Ikikizami ntabibazo gifite. Hamagara Admin
+            kuri: <span className="text-orange-500">0783905790</span>
           </p>
-          <p>kuri: <span className="text-orange-500">0783905790</span></p>
         </div>
       ) : (
         <>

@@ -21,7 +21,7 @@ const AddOptionPopup = ({ question, onClose, onSave }) => {
       setIsLoading(true);
 
       const response = await axios.post(
-        `http://localhost:4900/api/v1/options/${question._id}`,
+        `https://congozi-backend.onrender.com/api/v1/options/${question._id}`,
         payload
       );
 

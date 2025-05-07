@@ -45,7 +45,7 @@ const AddQuestionPopup = ({
       }
 
       await axios.post(
-        `http://localhost:4900/api/v1/questions/${selectedExam._id}`,
+        `https://congozi-backend.onrender.com/api/v1/questions/${selectedExam._id}`,
         data,
         {
           headers: {

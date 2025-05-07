@@ -33,12 +33,30 @@ const StudentHome = () => {
           passedRes,
           failedRes,
         ] = await Promise.all([
-          axios.get("http://localhost:4900/api/v1/unpaidexams", config),
-          axios.get("http://localhost:4900/api/v1/totaluserexams", config),
-          axios.get("http://localhost:4900/api/v1/expiredexams", config),
-          axios.get("http://localhost:4900/api/v1/waittingexams", config),
-          axios.get("http://localhost:4900/api/v1/passedexams", config),
-          axios.get("http://localhost:4900/api/v1/failledexams", config),
+          axios.get(
+            "https://congozi-backend.onrender.com/api/v1/unpaidexams",
+            config
+          ),
+          axios.get(
+            "https://congozi-backend.onrender.com/api/v1/totaluserexams",
+            config
+          ),
+          axios.get(
+            "https://congozi-backend.onrender.com/api/v1/expiredexams",
+            config
+          ),
+          axios.get(
+            "https://congozi-backend.onrender.com/api/v1/waittingexams",
+            config
+          ),
+          axios.get(
+            "https://congozi-backend.onrender.com/api/v1/passedexams",
+            config
+          ),
+          axios.get(
+            "https://congozi-backend.onrender.com/api/v1/failledexams",
+            config
+          ),
         ]);
 
         setUnpaidExams(unpaidRes.data?.data || []);

@@ -61,7 +61,7 @@ const SchoolMyAccount = () => {
 
     try {
       const response = await axios.put(
-        `http://localhost:4900/api/v1/users/${userId}`,
+        `https://congozi-backend.onrender.com/api/v1/users/${userId}`,
         newData,
         {
           headers: {
@@ -118,7 +118,7 @@ const SchoolMyAccount = () => {
               profileImage instanceof File
                 ? URL.createObjectURL(profileImage) // Generate URL only if profileImage is a file object
                 : profileImage ||
-                  "https://res.cloudinary.com/da12yf0am/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1740671685/SBS%20Images/file_limbge.webp" 
+                  "https://res.cloudinary.com/da12yf0am/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1740671685/SBS%20Images/file_limbge.webp"
             }
             alt="Profile"
             className="w-full h-full object-cover rounded-full border border-gray-300"
