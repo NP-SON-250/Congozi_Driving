@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BsCart } from "react-icons/bs";
 import { GrSend } from "react-icons/gr";
 import { LuCircleArrowLeft } from "react-icons/lu";
 import { FiArrowRightCircle } from "react-icons/fi";
 import DescriptionCard from "../../../Components/Cards/DescriptionCard";
-import { useNavigate } from "react-router-dom";
 
 const LiveLearn = () => {
   const [examCode, setExamCode] = useState("");
@@ -21,10 +20,16 @@ const LiveLearn = () => {
   const [showNoQuestionsMessage, setShowNoQuestionsMessage] = useState(false);
   const [paymentPopup, setPaymentPopup] = useState(false);
   const [interactedQuestions, setInteractedQuestions] = useState([]);
+
   const location = useLocation();
   const navigate = useNavigate();
 
-  const token = useMemo(() => localStorage.getItem("token"), []);
+  const token = useMemo(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("token");
+    }
+    return "";
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -58,7 +63,9 @@ const LiveLearn = () => {
         );
         const examData = res.data.data;
         setExamToDo(examData);
-        localStorage.setItem("live_exam_data", JSON.stringify(examData));
+        if (typeof window !== "undefined") {
+          localStorage.setItem("live_exam_data", JSON.stringify(examData));
+        }
       } catch (error) {
         console.error("Error fetching exam details:", error);
       }
@@ -70,35 +77,49 @@ const LiveLearn = () => {
     if (examToDo && examCode) {
       const questions = examToDo.questions || [];
       setExamQuestions(questions);
-      const storedTime = localStorage.getItem(`examTimeLeft_${examCode}`);
-      const initialTime = storedTime ? parseInt(storedTime, 10) : 3600;
-      setTimeLeft(initialTime);
-      if (questions.length === 0) setShowNoQuestionsMessage(true);
+
+      if (typeof window !== "undefined") {
+        const storedTime = localStorage.getItem(`examTimeLeft_${examCode}`);
+        const initialTime = storedTime ? parseInt(storedTime, 10) : 3600;
+        setTimeLeft(initialTime);
+      }
+
+      if (questions.length === 0) {
+        setShowNoQuestionsMessage(true);
+      }
     }
   }, [examToDo, examCode]);
 
   useEffect(() => {
     if (examFinished || !examCode) return;
+
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime <= 1) {
           clearInterval(timer);
-          localStorage.removeItem(`examTimeLeft_${examCode}`);
+          if (typeof window !== "undefined") {
+            localStorage.removeItem(`examTimeLeft_${examCode}`);
+          }
           handleSubmitExam();
           navigate("/students/waitingexams");
           return 0;
         }
         const newTime = prevTime - 1;
-        localStorage.setItem(`examTimeLeft_${examCode}`, newTime);
+        if (typeof window !== "undefined") {
+          localStorage.setItem(`examTimeLeft_${examCode}`, newTime);
+        }
         return newTime;
       });
     }, 1000);
+
     return () => clearInterval(timer);
   }, [examFinished, examCode]);
 
   const handleSubmitExam = useCallback(() => {
     setExamFinished(true);
-    localStorage.removeItem(`examTimeLeft_${examCode}`);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(`examTimeLeft_${examCode}`);
+    }
   }, [examCode]);
 
   const fetchTestExam = useCallback(async () => {
@@ -123,7 +144,9 @@ const LiveLearn = () => {
       );
       const testData = res.data.data;
       setTestExam(testData);
-      localStorage.setItem("test_exam_data", JSON.stringify(testData));
+      if (typeof window !== "undefined") {
+        localStorage.setItem("test_exam_data", JSON.stringify(testData));
+      }
     } catch (error) {
       console.error("Error fetching test exam:", error);
     }
