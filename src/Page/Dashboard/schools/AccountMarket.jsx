@@ -33,7 +33,7 @@ const SchoolDemo = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/accounts",
+        "http://localhost:4900/api/v1/accounts",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -91,7 +91,7 @@ const SchoolDemo = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${selectedAccount._id}`,
+        `http://localhost:4900/api/v1/purchases/${selectedAccount._id}`,
         {},
         {
           headers: {
@@ -114,7 +114,7 @@ const SchoolDemo = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/purchases/paid/${selectedAccount._id}`,
+        `http://localhost:4900/api/v1/purchases/paid/${selectedAccount._id}`,
         {},
         {
           headers: {
@@ -205,18 +205,19 @@ const SchoolDemo = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex absolute md:gap-[860px] gap-[250px] right-0 md:bottom-[9vh] bottom-[16vh]">
+        <div className="flex justify-around md:gap-[830px] gap-[110px] md:pb-0 pt-3 px-10 ">
           <button
-            className={`px-2 py-1 text-blue-900 rounded ${
+            className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
               currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""
             }`}
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
             disabled={currentPage === 0}
           >
             <FaArrowAltCircleLeft size={24} />
+            Izibanza
           </button>
           <button
-            className={`px-2 py-1 text-blue-900 rounded ${
+            className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
               currentPage === totalPages - 1
                 ? "opacity-50 cursor-not-allowed"
                 : ""
@@ -226,7 +227,7 @@ const SchoolDemo = () => {
             }
             disabled={currentPage === totalPages - 1}
           >
-            <FaArrowAltCircleRight size={24} />
+            Izikurira <FaArrowAltCircleRight size={24} />
           </button>
         </div>
       )}
@@ -244,7 +245,7 @@ const SchoolDemo = () => {
             {paymentStep === "confirmation" ? (
               <>
                 <h2 className="text-lg text-start font-bold text-white px-6 pt-6">
-                  Dear {userName?.fName} {userName?.lName},
+                  Dear {userName?.companyName},
                 </h2>
                 <p className="mt-0 text-start text-white px-6">
                   Your{" "}

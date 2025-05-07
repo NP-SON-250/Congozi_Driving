@@ -8,10 +8,10 @@ const DescriptionCard = ({access,questions,total20,total100,pass20,pass100,numbe
       </div>
       <div className="grid md:grid-cols-4 grid-cols-2 gap-2 w-full py-0 md:px-12 px-2">
         <p>Total Questions: {questions}</p>
-        <p>Total Marks:{total20}/20 or</p>
+        <p>Total Marks:{total20}/20</p>
         <p>Total Marks: {total100}/100</p>
-        <p>Pass Marks: {pass20} or</p>
-        <p>Pass Marks: {pass100} % </p>
+        <p>Pass Marks: {pass20}/20</p>
+        <p>Pass Marks: {pass100}/100 </p>
         <p>Exam Number: {number}</p>
         <p>Exam Type: {type}</p>
         <p>

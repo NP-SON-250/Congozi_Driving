@@ -61,7 +61,7 @@ const StudentAccount = () => {
 
     try {
       const response = await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/users/${userId}`,
+        `http://localhost:4900/api/v1/users/${userId}`,
         newData,
         {
           headers: {

@@ -38,7 +38,7 @@ const SchoolMyExams = () => {
           },
         };
         const response = await axios.get(
-          "https://congozi-backend.onrender.com/api/v1/purchases/user",
+          "http://localhost:4900/api/v1/purchases/user",
           config
         );
         const result = response.data?.data;
@@ -102,14 +102,14 @@ const SchoolMyExams = () => {
           <table className="min-w-full table-auto">
             <thead>
               <tr className="bg-gray-100 border text-blue-900 md:text-base text-xs font-bold">
-                <th className="text-center p-2">No.</th>
-                <th className="text-center p-2">Access Code</th>
-                <th className="text-center p-2">Valid In</th>
-                <th className="text-center p-2">Days Remain</th>
-                <th className="text-center p-2">Date</th>
-                <th className="text-center p-2">Fees</th>
-                <th className="text-center p-2">Status</th>
-                <th className="text-center p-2">Actions</th>
+                <th className="px-6 py-2 whitespace-nowrap">No.</th>
+                <th className="px-6 py-2 whitespace-nowrap">Access Code</th>
+                <th className="px-6 py-2 whitespace-nowrap">Valid In</th>
+                <th className="px-6 py-2 whitespace-nowrap">Days Remain</th>
+                <th className="px-6 py-2 whitespace-nowrap">Date</th>
+                <th className="px-6 py-2 whitespace-nowrap">Fees</th>
+                <th className="px-6 py-2 whitespace-nowrap">Status</th>
+                <th className="px-6 py-2 whitespace-nowrap">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -120,28 +120,28 @@ const SchoolMyExams = () => {
                     key={account._id}
                     className="bg-white border text-blue-900 md:text-base text-xs"
                   >
-                    <td className="text-center md:tex-md text-xs py-2 px-4">
+                    <td className="px-6 py-2 whitespace-nowrap md:tex-md text-xs">
                       {indexOfFirstExam + index + 1}
                     </td>
-                    <td className="text-center md:tex-md text-xs px-1">
+                    <td className="px-6 py-2 whitespace-nowrap md:tex-md text-xs">
                       {account.accessCode}
                     </td>
-                    <td className="text-center md:tex-md text-xs p-2">
+                    <td className="px-6 py-2 whitespace-nowrap md:tex-md text-x">
                       {account.itemId?.validIn} Days
                     </td>
-                    <td className="text-center md:tex-md text-xs p-2">
+                    <td className="px-6 py-2 whitespace-nowrap md:tex-md text-x">
                       {remainingDays} Days
                     </td>
-                    <td className="text-center md:tex-md text-xs px-2">
+                    <td className="px-6 py-2 whitespace-nowrap md:tex-md text-xs">
                       {getCurrentDate()}
                     </td>
-                    <td className="text-center md:tex-md text-xs px-2">
+                    <td className="px-6 py-2 whitespace-nowrap md:tex-md text-xs">
                       {account.amount}
                     </td>
-                    <td className="text-center md:tex-md text-xs px-2">
+                    <td className="px-6 py-2 whitespace-nowrap md:tex-md text-xs">
                       {account.status}
                     </td>
-                    <td className="text-center p-2">
+                    <td className="px-6 py-2 whitespace-nowrap">
                       {account.status === "pending" ? (
                         <button
                           title="Proceed to payment"

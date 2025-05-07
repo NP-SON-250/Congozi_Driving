@@ -1,14 +1,14 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
 import { FaUser } from "react-icons/fa";
 import { CiLock } from "react-icons/ci";
 import { IoIosLogIn } from "react-icons/io";
-import { Link, useNavigate } from "react-router-dom";
 import { FaCircleArrowRight } from "react-icons/fa6";
 import { FaQuestionCircle } from "react-icons/fa";
 import LoginInputs from "../../Components/Inputs/Studentnputs/LoginInputs";
 import Injira from "../../assets/Injira.png";
-import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
 
 const Login = () => {
   const [identifier, setIdentifier] = useState("");
@@ -23,7 +23,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/users/auth",
+        "http://localhost:4900/api/v1/users/auth",
         {
           identifier,
           password,
@@ -36,7 +36,6 @@ const Login = () => {
       localStorage.setItem("user", JSON.stringify(data));
 
       toast.success(message || "Kwinjira byakunze");
-
       // Role-based redirect
       switch (data.role) {
         case "student":

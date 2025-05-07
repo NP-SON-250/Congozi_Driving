@@ -6,10 +6,9 @@ import axios from "axios";
 const SchoolMyAccount = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [email, setEmail] = useState("");
-  const [fName, setFName] = useState("");
-  const [lName, setLName] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [tin, setTin] = useState("");
   const [address, setAddress] = useState("");
-  A;
   const [telephone, setTelephone] = useState("");
   const [userId, setUserId] = useState(null);
   const [originalData, setOriginalData] = useState({});
@@ -23,16 +22,16 @@ const SchoolMyAccount = () => {
         const parsedUser = JSON.parse(storedUser);
         setUserId(parsedUser._id);
         setEmail(parsedUser.email || "");
-        setFName(parsedUser.fName || "");
-        setLName(parsedUser.lName || "");
+        setCompanyName(parsedUser.companyName || "");
+        setTin(parsedUser.tin || "");
         setAddress(parsedUser.address || "");
         setTelephone(parsedUser.phone || "");
         setProfileImage(parsedUser.profile || null);
         setOriginalData({
           profile: parsedUser.profile || null,
           email: parsedUser.email || "",
-          fName: parsedUser.fName || "",
-          lName: parsedUser.lName || "",
+          companyName: parsedUser.companyName || "",
+          tin: parsedUser.tin || "",
           address: parsedUser.address || "",
           phone: parsedUser.phone || "",
         });
@@ -55,14 +54,14 @@ const SchoolMyAccount = () => {
     const newData = new FormData();
     newData.append("profile", profileImage);
     newData.append("email", email);
-    newData.append("fName", fName);
-    newData.append("lName", lName);
+    newData.append("companyName", companyName);
+    newData.append("tin", tin);
     newData.append("address", address);
     newData.append("phone", telephone);
 
     try {
       const response = await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/users/${userId}`,
+        `http://localhost:4900/api/v1/users/${userId}`,
         newData,
         {
           headers: {
@@ -79,8 +78,8 @@ const SchoolMyAccount = () => {
 
       // Update state with new profile data
       setEmail(updatedUser.email || "");
-      setFName(updatedUser.fName || "");
-      setLName(updatedUser.lName || "");
+      setCompanyName(updatedUser.companyName || "");
+      setTin(updatedUser.tin || "");
       setAddress(updatedUser.address || "");
       setTelephone(updatedUser.phone || "");
       setProfileImage(updatedUser.profile || null);
@@ -119,7 +118,7 @@ const SchoolMyAccount = () => {
               profileImage instanceof File
                 ? URL.createObjectURL(profileImage) // Generate URL only if profileImage is a file object
                 : profileImage ||
-                  "https://res.cloudinary.com/da12yf0am/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1740671685/SBS%20Images/file_limbge.webp" // Fallback if no image is selected
+                  "https://res.cloudinary.com/da12yf0am/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1740671685/SBS%20Images/file_limbge.webp" 
             }
             alt="Profile"
             className="w-full h-full object-cover rounded-full border border-gray-300"
@@ -157,25 +156,25 @@ const SchoolMyAccount = () => {
 
           <div>
             <label className="block md:text-xs text-md font-medium">
-              First Name
+              Company Name
             </label>
             <input
               type="text"
-              value={fName} // This should always be a string
+              value={companyName}
               className="w-full px-4 md:text-xs text-md py-1 border rounded"
-              onChange={(e) => setFName(e.target.value)}
+              onChange={(e) => setCompanyName(e.target.value)}
             />
           </div>
 
           <div>
             <label className="block md:text-xs text-md font-medium">
-              Last Name
+              Tin Number
             </label>
             <input
               type="text"
-              value={lName} // This should always be a string
+              value={tin}
               className="w-full px-4 md:text-xs text-md py-1 border rounded"
-              onChange={(e) => setLName(e.target.value)}
+              onChange={(e) => setTin(e.target.value)}
             />
           </div>
 
@@ -185,7 +184,7 @@ const SchoolMyAccount = () => {
             </label>
             <input
               type="text"
-              value={address} // This should always be a string
+              value={address}
               className="w-full px-4 md:text-xs text-md py-1 border rounded"
               onChange={(e) => setAddress(e.target.value)}
             />
@@ -197,7 +196,7 @@ const SchoolMyAccount = () => {
             </label>
             <input
               type="text"
-              value={telephone} // This should always be a string
+              value={telephone}
               className="w-full px-4 md:text-xs text-md py-1 border rounded"
               onChange={(e) => setTelephone(e.target.value)}
             />

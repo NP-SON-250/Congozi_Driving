@@ -17,7 +17,7 @@ const AddNewExamPopup = ({ setShowAddExamPopup, onExamAdded }) => {
       };
 
       const res = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/exams",
+        "http://localhost:4900/api/v1/exams",
         newExam
       );
 

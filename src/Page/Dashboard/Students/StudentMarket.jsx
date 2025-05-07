@@ -35,14 +35,11 @@ const StudentMarket = () => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/exams",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get("http://localhost:4900/api/v1/exams", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setExam(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -92,7 +89,7 @@ const StudentMarket = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${selectedExam._id}`,
+        `http://localhost:4900/api/v1/purchases/${selectedExam._id}`,
         {},
         {
           headers: {
@@ -114,7 +111,7 @@ const StudentMarket = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/purchases/paid/${selectedExam._id}`,
+        `http://localhost:4900/api/v1/purchases/paid/${selectedExam._id}`,
         {},
         {
           headers: {

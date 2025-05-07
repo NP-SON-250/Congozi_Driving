@@ -23,7 +23,7 @@ const SchoolUnpaid = () => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
-      setUserName(`${user.fName} ${user.lName}`);
+      setUserName(`${user.companyName}`);
     }
   }, []);
   // Fetch unpaid accounts
@@ -31,7 +31,7 @@ const SchoolUnpaid = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/purchases/pending",
+        "http://localhost:4900/api/v1/purchases/pending",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -90,7 +90,7 @@ const SchoolUnpaid = () => {
       const token = localStorage.getItem("token");
       const purchaseId = selectedAccount._id;
       const response = await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${purchaseId}`,
+        `http://localhost:4900/api/v1/purchases/${purchaseId}`,
         { status: "complete" },
         {
           headers: {

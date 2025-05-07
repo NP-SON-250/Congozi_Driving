@@ -66,7 +66,7 @@ const LiveExam = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
+          `http://localhost:4900/api/v1/purchases/access/${examCode}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -86,7 +86,7 @@ const LiveExam = () => {
         const examId = paidExam?.examId || paidExam?._id;
         if (!examId) return;
         const res = await axios.get(
-          `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
+          `http://localhost:4900/api/v1/exams/${examId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -184,17 +184,14 @@ const LiveExam = () => {
         responses,
       };
 
-      const res = await fetch(
-        `https://congozi-backend.onrender.com/api/v1/responses/add`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const res = await fetch(`http://localhost:4900/api/v1/responses/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
 
       const data = await res.json();
 
@@ -236,7 +233,10 @@ const LiveExam = () => {
     <div className="flex flex-col bg-white md:p-2 gap-2">
       {showNoQuestionsMessage ? (
         <div className="text-center mt-10 text-Total font-semibold">
-          This exam has no questions. Please contact your administrator.
+          <p>Ikikizami ntabibazo gifite. Hamagara Admin</p>
+          <p>
+            kuri: <span className="text-orange-500">0783905790</span>
+          </p>
         </div>
       ) : (
         <>
@@ -255,7 +255,6 @@ const LiveExam = () => {
               />
               <div className="flex flex-wrap justify-start py-1 md:gap-4 gap-2">
                 {examQuestions.map((q, idx) => {
-                  const isCurrent = selectedQuestion === idx;
                   const isAnswered = selectedOptions[q._id];
                   return (
                     <button

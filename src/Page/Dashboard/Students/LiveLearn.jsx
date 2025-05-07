@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { BsCart } from "react-icons/bs";
@@ -6,6 +6,8 @@ import { GrSend } from "react-icons/gr";
 import { LuCircleArrowLeft } from "react-icons/lu";
 import { FiArrowRightCircle } from "react-icons/fi";
 import DescriptionCard from "../../../Components/Cards/DescriptionCard";
+import { useNavigate } from "react-router-dom";
+
 const LiveLearn = () => {
   const [examCode, setExamCode] = useState("");
   const [paidExam, setPaidExam] = useState(null);
@@ -19,8 +21,10 @@ const LiveLearn = () => {
   const [showNoQuestionsMessage, setShowNoQuestionsMessage] = useState(false);
   const [paymentPopup, setPaymentPopup] = useState(false);
   const [interactedQuestions, setInteractedQuestions] = useState([]);
-
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const token = useMemo(() => localStorage.getItem("token"), []);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -31,12 +35,9 @@ const LiveLearn = () => {
   useEffect(() => {
     const fetchPaidExam = async () => {
       try {
-        const token = localStorage.getItem("token");
         const res = await axios.get(
-          `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          `http://localhost:4900/api/v1/purchases/access/${examCode}`,
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         setPaidExam(res.data.data.itemId);
       } catch (error) {
@@ -44,19 +45,15 @@ const LiveLearn = () => {
       }
     };
     if (examCode) fetchPaidExam();
-  }, [examCode]);
+  }, [examCode, token]);
 
   useEffect(() => {
     const fetchExamDetails = async () => {
       try {
-        const token = localStorage.getItem("token");
         const examId = paidExam?.examId || paidExam?._id;
         if (!examId) return;
-        const res = await axios.get(
-          `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+        const res = await axios.get(`http://localhost:4900/api/v1/exams/${examId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         const examData = res.data.data;
         setExamToDo(examData);
@@ -66,26 +63,28 @@ const LiveLearn = () => {
       }
     };
     if (paidExam) fetchExamDetails();
-  }, [paidExam]);
+  }, [paidExam, token]);
 
   useEffect(() => {
     if (examToDo && examCode) {
-      setExamQuestions(examToDo.questions || []);
+      const questions = examToDo.questions || [];
+      setExamQuestions(questions);
       const storedTime = localStorage.getItem(`examTimeLeft_${examCode}`);
-      const initialTime = storedTime ? parseInt(storedTime, 10) : 1200;
+      const initialTime = storedTime ? parseInt(storedTime, 10) : 3600;
       setTimeLeft(initialTime);
+      if (questions.length === 0) setShowNoQuestionsMessage(true);
     }
   }, [examToDo, examCode]);
 
   useEffect(() => {
     if (examFinished || !examCode) return;
-
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime <= 1) {
           clearInterval(timer);
           localStorage.removeItem(`examTimeLeft_${examCode}`);
           handleSubmitExam();
+          navigate("/students/waitingexams");
           return 0;
         }
         const newTime = prevTime - 1;
@@ -93,104 +92,51 @@ const LiveLearn = () => {
         return newTime;
       });
     }, 1000);
-
     return () => clearInterval(timer);
   }, [examFinished, examCode]);
 
-  const handleSubmitExam = () => {
-    let score = 0;
-    examQuestions.forEach((q) => {
-      const selectedOptionId = selectedOptions[q._id];
-      const correctOption = q.options.find((opt) => opt.isCorrect);
-      if (selectedOptionId && selectedOptionId === correctOption?._id) {
-        score++;
-      }
-    });
-    setTotalMarks(score);
+  const handleSubmitExam = useCallback(() => {
     setExamFinished(true);
     localStorage.removeItem(`examTimeLeft_${examCode}`);
-  };
+  }, [examCode]);
 
-  const handleReviewResults = () => setReviewResults(true);
-
-  const formatTime = (seconds) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-  };
-
-  useEffect(() => {
-    if (examToDo && examToDo.questions?.length === 0) {
-      setShowNoQuestionsMessage(true);
-    }
-  }, [examToDo]);
-
-  const fetchTestExam = async () => {
+  const fetchTestExam = useCallback(async () => {
     try {
-      const token = localStorage.getItem("token");
       const number = paidExam?.number;
+      if (!number) return;
 
-      if (!number) {
-        console.warn("No number found to fetch test exam");
-        return;
-      }
-
-      // Fetch the list of purchased exams for the current user
-      const purchaseRes = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/purchases/user",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+      const purchaseRes = await axios.get("http://localhost:4900/api/v1/purchases/user",
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // Check if the current exam is in the list of purchased exams
       const purchasedExams = purchaseRes.data.data;
-      const examPurchased = purchasedExams.some(
-        (purchase) => purchase.accessCode === examCode
+      const examPurchased = purchasedExams.some(p => p.accessCode === examCode);
+      if (!examPurchased) return;
+
+      const res = await axios.get(`http://localhost:4900/api/v1/exams/test/${number}`,
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      if (examPurchased) {
-        // If the exam is purchased, fetch the test exam details
-        const res = await axios.get(
-          `https://congozi-backend.onrender.com/api/v1/exams/test/${number}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        const TestData = res.data.data;
-        setTestExam(TestData);
-        localStorage.setItem("test_exam_data", JSON.stringify(TestData));
-      } else {
-      }
+      const testData = res.data.data;
+      setTestExam(testData);
+      localStorage.setItem("test_exam_data", JSON.stringify(testData));
     } catch (error) {
       console.error("Error fetching test exam:", error);
     }
-  };
+  }, [examCode, paidExam, token]);
 
   const handleShowPaymentPopup = async () => {
     await fetchTestExam();
     setPaymentPopup(true);
   };
 
-  const handleClosePaymentPopup = () => {
-    setPaymentPopup(false);
-  };
   const handlePayLaterClick = async () => {
     try {
-      const token = localStorage.getItem("token");
-      await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${testExam._id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      await axios.post(`http://localhost:4900/api/v1/purchases/${testExam._id}`, {},
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-      handleClosePaymentPopup();
+      setPaymentPopup(false);
     } catch (error) {
-      if (error.response && error.response.status === 404) {
+      if (error.response?.status === 404) {
         alert("You have already purchased this exam.");
       } else {
         console.error("Purchase request failed:", error);
@@ -198,19 +144,28 @@ const LiveLearn = () => {
       }
     }
   };
+
   const handleSelectQuestion = (index) => {
     setSelectedQuestion(index);
-    if (!interactedQuestions.includes(index)) {
-      setInteractedQuestions((prev) => [...prev, index]);
-    }
+    setInteractedQuestions((prev) => (prev.includes(index) ? prev : [...prev, index]));
   };
 
-  const currentQuestion = examQuestions[selectedQuestion];
+  const formatTime = useCallback((seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  }, []);
+
+  const currentQuestion = useMemo(() => examQuestions[selectedQuestion], [selectedQuestion, examQuestions]);
+
   return (
     <div className="flex flex-col bg-white md:p-2 gap-2">
       {showNoQuestionsMessage ? (
         <div className="text-center mt-10 text-Total font-semibold">
-          This exam has no questions. Please contact your administrator.
+          <p>
+          Ikikizami ntabibazo gifite. Hamagara Admin
+          </p>
+          <p>kuri: <span className="text-orange-500">0783905790</span></p>
         </div>
       ) : (
         <>
@@ -223,8 +178,8 @@ const LiveLearn = () => {
                 questions={examQuestions.length}
                 total20={examQuestions.length * 1}
                 total100={examQuestions.length * 5}
-                pass20={((12 / 20) * examQuestions.length).toFixed(2)}
-                pass100={((60 / 20) * examQuestions.length).toFixed(2)}
+                pass20={((12 / 20) * examQuestions.length).toFixed(0)}
+                pass100={((60 / 20) * examQuestions.length).toFixed(0)}
                 number={examToDo?.number}
                 type={examToDo?.type}
                 timeLeft={formatTime(timeLeft)}
@@ -236,20 +191,23 @@ const LiveLearn = () => {
                   const isCurrent = selectedQuestion === idx;
                   const isInteracted = interactedQuestions.includes(idx);
 
+                  const getButtonClasses = () => {
+                    if (examFinished)
+                      return "opacity-50 cursor-not-allowed bg-white border";
+
+                    if (isCurrent) return "bg-blue-500 text-white";
+
+                    return isInteracted
+                      ? "bg-blue-500 text-white"
+                      : "bg-white border";
+                  };
+
                   return (
                     <button
                       key={q._id}
                       onClick={() => !examFinished && handleSelectQuestion(idx)}
                       disabled={examFinished}
-                      className={`w-20 h-10 text-sm rounded-md flex justify-center items-center 
-                    ${isCurrent ? "bg-blue-500 text-white" : ""}
-                    ${
-                      isInteracted
-                        ? "bg-blue-500 text-white"
-                        : "bg-white border"
-                    }
-                    ${examFinished ? "opacity-50 cursor-not-allowed" : ""}
-                    `}
+                      className={`w-20 h-10 text-sm rounded-md flex justify-center items-center ${getButtonClasses()}`}
                     >
                       Ikibazo: {idx + 1}
                     </button>
@@ -269,7 +227,7 @@ const LiveLearn = () => {
                   <img
                     src={currentQuestion.image}
                     alt="question"
-                    className="w-16 h-16 rounded-full mb-1"
+                    className="w-52 h-28 rounded-md mb-1"
                   />
                 )}
                 <form className="space-y-1 md:text-md text-sm">

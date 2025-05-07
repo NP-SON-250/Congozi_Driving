@@ -63,7 +63,7 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
             {studentTop.map((item) => (
               <li key={item.id}>
                 <button
-                onClick={() => handleNavClick(item.path)}
+                  onClick={() => handleNavClick(item.path)}
                   className="flex justify-center items-center gap-2 py-1 text-xs px-3 hover:text-Unpaid/95 text-white font-semibold"
                 >
                   {item.icon}
@@ -81,13 +81,18 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
         >
           {user?.profile ? (
             <img
-              src={user.profile}
-              alt={user.fName}
+              src={
+                user.profile ||
+                "https://res.cloudinary.com/da12yf0am/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1740671685/SBS%20Images/file_limbge.webp"
+              }
+              alt={user.companyName}
               className="w-10 h-10 rounded-full object-cover border-2 border-white"
             />
           ) : (
             <div className="bg-white text-blue-500 p-2 rounded-full flex justify-center items-center">
-              <span className="text-xs font-bold">{user?.fName?.[0]}</span>
+              <span className="text-xs font-bold">
+                {user?.companyName?.[0]}
+              </span>
             </div>
           )}
         </div>
@@ -96,20 +101,23 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
       {/* Mobile Dropdown Menu */}
       {menuVisible && (
         <div className="absolute top-[11vh] right-0 w-full bg-gray-800 py-4 md:hidden z-[999]">
-          <div className="flex justify-center items-center gap-2 mb-4">
+          <div className="flex  flex-col justify-center items-center gap-1 mb-4">
             {user?.profile ? (
               <img
-                src={user.profile}
-                alt={user.fName}
+                src={
+                  user.profile ||
+                  "https://res.cloudinary.com/da12yf0am/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1740671685/SBS%20Images/file_limbge.webp"
+                }
+                alt={user.companyName}
                 className="w-16 h-16 rounded-full object-cover border-2 border-white"
               />
             ) : (
               <div className="bg-white text-blue-500 p-4 rounded-full flex justify-center items-center text-xs font-bold">
-                {user?.fName?.[0]}
+                {user?.companyName?.[0]}
               </div>
             )}
             <div className="text-xs font-bold text-white">
-              {user?.fName || "User"}
+              {user?.companyName || user?.fName}
             </div>
           </div>
 
@@ -141,20 +149,23 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
       )}
 
       {/* Desktop Profile */}
-      <div className="hidden md:flex justify-center items-center gap-2">
+      <div className="hidden md:flex flex-col justify-center items-center gap-0">
         {user?.profile ? (
           <img
-            src={user.profile}
-            alt={user.fName}
+            src={
+              user.profile ||
+              "https://res.cloudinary.com/da12yf0am/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1740671685/SBS%20Images/file_limbge.webp"
+            }
+            alt={user.companyName}
             className="w-10 h-10 rounded-full object-cover border-2 border-white"
           />
         ) : (
           <div className="bg-white text-blue-500 p-2 rounded-full flex justify-center items-center">
-            <span className="text-xs font-bold">{user?.fName?.[0]}</span>
+            <span className="text-xs font-bold">{user?.companyName?.[0]}</span>
           </div>
         )}
         <div className="text-xs font-bold text-white">
-          {user?.fName || "User"}
+          {user?.companyName || user?.fName}
         </div>
       </div>
     </div>

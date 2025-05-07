@@ -28,9 +28,7 @@ const Users = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(
-          "https://congozi-backend.onrender.com/api/v1/users"
-        );
+        const response = await axios.get("http://localhost:4900/api/v1/users");
         setUsers(response.data.data);
       } catch (error) {
         console.error("Failed to fetch users:", error);
@@ -82,7 +80,7 @@ const Users = () => {
       };
 
       const response = await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/users/${userToEdit._id}`,
+        `http://localhost:4900/api/v1/users/${userToEdit._id}`,
         updatedUser
       );
 
@@ -110,7 +108,7 @@ const Users = () => {
 
     try {
       await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/users/${userToDelete._id}`
+        `http://localhost:4900/api/v1/users/${userToDelete._id}`
       );
       console.log("User successfully deleted");
 
@@ -155,7 +153,9 @@ const Users = () => {
             {currentUsers.map((user) => (
               <tr key={user._id} className="border-t  hover:bg-gray-50">
                 <td className="px-6 py-2 whitespace-nowrap">
-                  {user.fName} {user.lName}
+                  {user.fName || user.lName
+                    ? `${user.fName || ""} ${user.lName || ""}`
+                    : user.companyName}
                 </td>
                 <td className="px-6 py-2 whitespace-nowrap">{user.email}</td>
                 <td className="px-6 py-2 whitespace-nowrap">{user.idCard}</td>

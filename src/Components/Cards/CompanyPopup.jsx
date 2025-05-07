@@ -1,9 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
 
 const CompanyPopup = ({ onClose }) => {
-  const [companyName, setCompanyName] = React.useState("");
-  const [tinNumber, setTinNumber] = React.useState("");
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
+  const handleLogin = async () => {
+    if (!identifier || !password) {
+      toast.error("Shyiramo nomero ya telefone n'ijambo banga");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4900/api/v1/users/auth/school",
+        {
+          identifier,
+          password,
+        }
+      );
+
+      const { token, data, message } = response.data;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(data));
+
+      toast.success(message || "Kwinjira byakunze");
+      // Role-based redirect
+      switch (data.role) {
+        case "student":
+          navigate("/students/home");
+          break;
+        case "admin":
+          navigate("/admins/home");
+          break;
+        case "school":
+          navigate("/schools/home");
+          break;
+        default:
+          toast.error("User role not recognized.");
+          break;
+      }
+    } catch (error) {
+      const errMsg =
+        error?.response?.data?.message || "Login failed. Try again.";
+      toast.error(errMsg);
+    }
+  };
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[999]">
       <div className="bg-[#1e2a87] text-white rounded-2xl p-6 w-[90%] md:w-[500px] relative">
@@ -33,26 +79,27 @@ const CompanyPopup = ({ onClose }) => {
         <div className="flex flex-col gap-3">
           <input
             type="text"
-            placeholder="Telefone Cg Emaili Y'ikigo Cyawe"
-            value={companyName}
-            onChange={(e) => setCompanyName(e.target.value)}
+            placeholder="Company Name or Tin Number"
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
             className="p-2 rounded-md text-black"
           />
           <input
             type="text"
             placeholder="Ijambo Banga Winjiriraho"
-            value={tinNumber}
-            onChange={(e) => setTinNumber(e.target.value)}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="p-2 rounded-md text-black"
           />
           <button
-            onClick={() => alert("Injira clicked")}
+            onClick={handleLogin}
             className="bg-orange-500  text-white px-2 py-1 rounded-md font-semibold hover:bg-orange-600"
           >
             Injira
           </button>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

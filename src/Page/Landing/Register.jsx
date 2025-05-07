@@ -8,6 +8,7 @@ import FullInput from "../../Components/Inputs/Studentnputs/FullInput";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -26,6 +27,7 @@ const Register = () => {
   const [errors, setErrors] = useState({});
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
+  const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
 
@@ -84,11 +86,9 @@ const Register = () => {
     });
 
     try {
-      const res = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/users",
-        data
-      );
+      const res = await axios.post("http://localhost:4900/api/v1/users", data);
       notifySuccess(res.data.message || "Kwiyandikisha byagenze neza!");
+      navigate("/kwinjira");
     } catch (error) {
       const msg =
         error.response?.data?.message || "Habayeho ikosa mu gihe cyo kohereza.";
@@ -157,7 +157,7 @@ const Register = () => {
             </div>
             <p
               className="absolute md:top-[195px] md:right-0 top-[602px] right-0 cursor-pointer text-red-500 px-4"
-              title="Andika nimero ya telefone muri uburyo: +2507..."
+              title="Andika nimero ya telefone muri uburyo: 07..."
             >
               {errors.phone && <ErrorMessage message={errors.phone} />}
             </p>

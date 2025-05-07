@@ -38,7 +38,7 @@ const StudentExams = () => {
           },
         };
         const response = await axios.get(
-          "https://congozi-backend.onrender.com/api/v1/purchases/user",
+          "http://localhost:4900/api/v1/purchases/user",
           config
         );
         const result = response.data?.data;
@@ -56,6 +56,13 @@ const StudentExams = () => {
   const currentExams = allExams.slice(indexOfFirstExam, indexOfLastExam);
   const totalPages = Math.ceil(allExams.length / examsPerPage);
 
+  const handleLearnExam = (exam) => {
+    if (exam.accessCode && exam.accessCode.length > 0) {
+      navigate(`/liveLearn?code=${exam.accessCode}`);
+    } else {
+      console.error("No access code available for this exam.");
+    }
+  };
   const handleDoExam = (exam) => {
     if (exam.accessCode && exam.accessCode.length > 0) {
       navigate(`/liveExam?code=${exam.accessCode}`);
@@ -142,9 +149,18 @@ const StudentExams = () => {
                         >
                           <FaCartPlus />
                         </button>
-                      ) : exam.status === "complete" ? (
+                      ) : exam.status === "complete" &&
+                        exam.itemId?.type === "test" ? (
                         <button
                           onClick={() => handleDoExam(exam)}
+                          className="text-blue-900 py-1 px-3 md:tex-xs text-xs flex items-center gap-2"
+                        >
+                          <FaEdit />
+                        </button>
+                      ) : exam.status === "complete" &&
+                        exam.itemId?.type === "learn" ? (
+                        <button
+                          onClick={() => handleLearnExam(exam)}
                           className="text-blue-900 py-1 px-3 md:tex-xs text-xs flex items-center gap-2"
                         >
                           <FaEdit />

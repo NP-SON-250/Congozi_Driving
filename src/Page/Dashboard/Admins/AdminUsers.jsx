@@ -15,6 +15,8 @@ const AdminUsers = () => {
 
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
+  const [editedCompanyName, setEditedCompanyName] = useState("");
+  const [editedTin, setEditedTin] = useState("");
   const [editedFName, setEditedFName] = useState("");
   const [editedLName, setEditedLName] = useState("");
   const [editedPhone, setEditedPhone] = useState("");
@@ -27,8 +29,8 @@ const AdminUsers = () => {
   const [userToDelete, setUserToDelete] = useState(null);
 
   const [showAddPopup, setShowAddPopup] = useState(false);
-  const [newFName, setNewFName] = useState("");
-  const [newLName, setNewLName] = useState("");
+  const [newCompanyName, setNewCompanyName] = useState("");
+  const [newTin, setNewTin] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [newRole, setNewRole] = useState("");
@@ -39,9 +41,7 @@ const AdminUsers = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(
-          "https://congozi-backend.onrender.com/api/v1/users"
-        );
+        const response = await axios.get("http://localhost:4900/api/v1/users");
         setUsers(response.data.data);
       } catch (error) {
         console.error("Failed to fetch users:", error);
@@ -67,6 +67,8 @@ const AdminUsers = () => {
 
   const handleEditClick = (user) => {
     setUserToEdit(user);
+    setEditedCompanyName(user.companyName);
+    setEditedTin(user.tin);
     setEditedFName(user.fName);
     setEditedLName(user.lName);
     setEditedIdcard(user.idCard);
@@ -83,6 +85,8 @@ const AdminUsers = () => {
 
     try {
       const updatedUser = {
+        companyName: editedCompanyName,
+        tin: editedTin,
         fName: editedFName,
         lName: editedLName,
         email: editedEmail,
@@ -93,7 +97,7 @@ const AdminUsers = () => {
       };
 
       const response = await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/users/${userToEdit._id}`,
+        `http://localhost:4900/api/v1/users/${userToEdit._id}`,
         updatedUser
       );
 
@@ -121,7 +125,7 @@ const AdminUsers = () => {
 
     try {
       await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/users/${userToDelete._id}`
+        `http://localhost:4900/api/v1/users/${userToDelete._id}`
       );
       console.log("User successfully deleted");
 
@@ -147,8 +151,8 @@ const AdminUsers = () => {
   const handleAddUser = async () => {
     try {
       const newUser = {
-        fName: newFName,
-        lName: newLName,
+        companyName: newCompanyName,
+        tin: newTin,
         phone: newPhone,
         password: newPassword,
         email: newEmail,
@@ -158,7 +162,7 @@ const AdminUsers = () => {
       };
 
       const response = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/users",
+        "http://localhost:4900/api/v1/users",
         newUser
       );
 
@@ -169,14 +173,14 @@ const AdminUsers = () => {
 
       // Close the popup and reset the form
       setShowAddPopup(false);
-      setNewFName("");
+      setNewCompanyName("");
       setNewEmail("");
       setNewRole("");
       setNewAddress("");
       setNewPassword("");
       setNewPhone("");
       setNewIdcard("");
-      setNewLName("");
+      setNewTin("");
     } catch (error) {
       console.error("Failed to add user:", error);
       alert("Failed to add user. Please check your input or server.");
@@ -191,7 +195,7 @@ const AdminUsers = () => {
           onClick={() => setShowAddPopup(true)}
           className="bg-blue-600 text-white px-2 py-1 rounded-lg hover:bg-blue-700 transition"
         >
-          Add New
+          Add Company
         </button>
       </div>
 
@@ -212,7 +216,9 @@ const AdminUsers = () => {
             {currentUsers.map((user) => (
               <tr key={user._id} className="border-t  hover:bg-gray-50">
                 <td className="px-6 py-2 whitespace-nowrap">
-                  {user.fName} {user.lName}
+                  {user.fName || user.lName
+                    ? `${user.fName || ""} ${user.lName || ""}`
+                    : user.companyName}
                 </td>
                 <td className="px-6 py-2 whitespace-nowrap">{user.email}</td>
                 <td className="px-6 py-2 whitespace-nowrap">{user.idCard}</td>
@@ -286,6 +292,8 @@ const AdminUsers = () => {
       {showEditPopup && (
         <EditUserPopup
           userToEdit={userToEdit}
+          editedCompanyName={editedCompanyName}
+          editedTin={editedTin}
           editedFName={editedFName}
           editedLName={editedLName}
           editedEmail={editedEmail}
@@ -293,6 +301,8 @@ const AdminUsers = () => {
           editedPhone={editedPhone}
           editedRole={editedRole}
           editedAddress={editedAddress}
+          setEditedCompanyName={setEditedCompanyName}
+          setEditedTin={setEditedTin}
           setEditedFName={setEditedFName}
           setEditedLName={setEditedLName}
           setEditedPhone={setEditedPhone}
@@ -307,16 +317,16 @@ const AdminUsers = () => {
       {/*Add new user */}
       {showAddPopup && (
         <AddUserPopup
-          newFName={newFName}
-          newLName={newLName}
+          newCompanyName={newCompanyName}
+          newTin={newTin}
           newPhone={newPhone}
           newEmail={newEmail}
           newRole={newRole}
           newAddress={newAddress}
           newIdcard={newIdcard}
           newPassword={newPassword}
-          setNewFName={setNewFName}
-          setNewLName={setNewLName}
+          setNewCompanyName={setNewCompanyName}
+          setNewTin={setNewTin}
           setNewPhone={setNewPhone}
           setNewEmail={setNewEmail}
           setNewRole={setNewRole}

@@ -2,16 +2,16 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import React, { useState } from "react";
 
 const AddUserPopup = ({
-  newFName,
-  newLName,
+  newCompanyName,
+  newTin,
   newEmail,
   newRole,
   newAddress,
   newPhone,
   newIdcard,
   newPassword,
-  setNewFName,
-  setNewLName,
+  setNewCompanyName,
+  setNewTin,
   setNewEmail,
   setNewRole,
   setNewAddress,
@@ -32,17 +32,17 @@ const AddUserPopup = ({
         <div className="space-y-4">
           <input
             type="text"
-            placeholder="First Name"
+            placeholder="Company Name"
             className="w-full border px-4 py-1 rounded"
-            value={newFName}
-            onChange={(e) => setNewFName(e.target.value)}
+            value={newCompanyName}
+            onChange={(e) => setNewCompanyName(e.target.value)}
           />
           <input
             type="text"
-            placeholder="Last Name"
+            placeholder="Tin Number"
             className="w-full border px-4 py-1 rounded"
-            value={newLName}
-            onChange={(e) => setNewLName(e.target.value)}
+            value={newTin}
+            onChange={(e) => setNewTin(e.target.value)}
           />
           <input
             type="text"

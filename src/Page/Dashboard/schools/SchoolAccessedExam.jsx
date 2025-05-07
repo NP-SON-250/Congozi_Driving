@@ -30,7 +30,7 @@ const SchoolAccessedExam = () => {
         try {
           const token = localStorage.getItem("token");
           const response = await axios.get(
-            `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
+            `http://localhost:4900/api/v1/exams/${examId}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -175,7 +175,7 @@ const SchoolAccessedExam = () => {
                             School Granted:
                           </td>
                           <td className="border border-gray-400 px-1 md:text-base text-xs bg-blue-100 text-start text-blue-900">
-                            {userName?.fName}
+                            {userName?.companyName}
                           </td>
                         </tr>
                         <tr>
@@ -183,7 +183,7 @@ const SchoolAccessedExam = () => {
                             School Owner
                           </td>
                           <td className="border border-gray-400 px-1">
-                            {userName?.fName} {userName?.lName}
+                            {userName?.companyName}
                           </td>
                         </tr>
                         <tr>

@@ -11,14 +11,11 @@ const AdminsPayments = () => {
     const fetchPayments = async () => {
       const token = localStorage.getItem("token");
       try {
-        const res = await axios.get(
-          "https://congozi-backend.onrender.com/api/v1/purchases/",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await axios.get("http://localhost:4900/api/v1/purchases/", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = res.data;
         const mapped = data.data.map((item) => ({
           id: item._id,
