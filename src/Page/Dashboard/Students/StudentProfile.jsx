@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { FaCamera } from "react-icons/fa";
 
-const StudentAccount = () => {
+const StudentProfile = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState("");
@@ -256,4 +256,4 @@ const StudentAccount = () => {
   );
 };
 
-export default StudentAccount;
+export default StudentProfile;

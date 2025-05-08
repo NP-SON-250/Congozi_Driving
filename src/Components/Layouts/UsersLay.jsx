@@ -12,7 +12,7 @@ const UsersLay = ({ role }) => {
     "/students/market": "Examination Market",
     "/students/online": "Do Exams Online",
     "/students/exams": "My Examinations",
-    "/students/account": "My Account",
+    "/students/profile": "My Account",
     "/students/school": "School Account",
 
     "/admins/home": "Admin Dashboard",

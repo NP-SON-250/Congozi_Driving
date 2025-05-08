@@ -6,7 +6,7 @@ import Mtn from "../../../assets/MTN.jpg";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import AccountCard from "../../../Components/Cards/AdminCards/AccountCard";
 import axios from "axios";
-const SchoolDemo = () => {
+const AccountMarket = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [accountsPerPage, setAccountsPerPage] = useState(6);
   const [searchTerm, setSearchTerm] = useState("");
@@ -348,4 +348,4 @@ const SchoolDemo = () => {
   );
 };
 
-export default SchoolDemo;
+export default AccountMarket;

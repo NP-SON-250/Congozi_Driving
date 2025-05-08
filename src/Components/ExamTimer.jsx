@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 
-const ExamTimer = ({ accessCode, duration = 100, onTimeout }) => {
+const ExamTimer = ({ accessCode, duration = 50, onTimeout }) => {
   const [timeLeft, setTimeLeft] = useState(duration);
   const intervalRef = useRef(null);
 

@@ -8,7 +8,7 @@ import { FiArrowRightCircle } from "react-icons/fi";
 import DescriptionCard from "../../../Components/Cards/DescriptionCard";
 import ExamTimer from "../../../Components/ExamTimer";
 
-const LiveLearn = ({ accessCode }) => {
+const LiveLearn = () => {
   const [examCode, setExamCode] = useState("");
   const [paidExam, setPaidExam] = useState(null);
   const [testExam, setTestExam] = useState(null);
@@ -142,21 +142,24 @@ const LiveLearn = ({ accessCode }) => {
     );
   };
 
-  const formatTime = useCallback((seconds) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-  }, []);
-
   const currentQuestion = useMemo(
     () => examQuestions[selectedQuestion],
     [selectedQuestion, examQuestions]
   );
 
-  const handleTimeout = () => {
-    alert("Time's up! Submitting exam...");
-    // You can submit exam here or redirect
-  };
+  const handleTimeout = useCallback(async () => {
+    try {
+      if (examCode) {
+        await axios.delete(
+          `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`
+        );
+        navigate("/students/market");
+      }
+    } catch (error) {
+      console.error("Error deleting exam purchase on timeout:", error);
+    }
+    localStorage.removeItem(`selectedAnswers_${examCode}`);
+  }, [examCode, navigate]);
 
   return (
     <div className="flex flex-col bg-white md:p-2 gap-2">
@@ -183,8 +186,8 @@ const LiveLearn = ({ accessCode }) => {
               type={examToDo?.type}
               timeLeft={
                 <ExamTimer
-                  accessCode={accessCode}
-                  duration={100}
+                  accessCode={examCode}
+                  duration={50}
                   onTimeout={handleTimeout}
                 />
               }

@@ -15,7 +15,7 @@ import StudentHome from "./Page/Dashboard/Students/StudentHome";
 import StudentMarket from "./Page/Dashboard/Students/StudentMarket";
 import ManualTracking from "./Page/Dashboard/Students/ManualTracking";
 import StudentExams from "./Page/Dashboard/Students/StudentExams";
-import StudentAccount from "./Page/Dashboard/Students/StudentAccount";
+import StudentProfile from "./Page/Dashboard/Students/StudentProfile";
 import StudentUnpaid from "./Page/Dashboard/Students/StudentUnpaid";
 import StudentWaiting from "./Page/Dashboard/Students/StudentWaiting";
 import LiveExam from "./Page/Dashboard/Students/LiveExam";
@@ -47,16 +47,14 @@ import LiveLearn from "./Page/Dashboard/Students/LiveLearn";
 const App = () => {
   const { userRole, loading } = useUserContext();
 
-  // Disable right click
-  // onContextMenu={(e) => e.preventDefault()}
-  //select-none
-
   if (loading) return <div>Loading...</div>;
   return (
     <>
-      <div className="overflow-x-hidden font-Poppins">
+      <div
+        className="overflow-x-hidden font-Poppins select-none"
+        onContextMenu={(e) => e.preventDefault()}
+      >
         <Routes>
-          
           {/* Landing Routes */}
           <Route element={<LandingLay />}>
             <Route path="/" element={<Home />}></Route>
@@ -74,7 +72,7 @@ const App = () => {
                 <Route path="/students/market" element={<StudentMarket />} />
                 <Route path="/students/tracking" element={<ManualTracking />} />
                 <Route path="/students/exams" element={<StudentExams />} />
-                <Route path="/students/account" element={<StudentAccount />} />
+                <Route path="/students/profile" element={<StudentProfile />} />
                 <Route
                   path="/students/unpaidexams"
                   element={<StudentUnpaid />}

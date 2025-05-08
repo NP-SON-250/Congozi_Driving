@@ -49,7 +49,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
       },
       {
         name: "My Profile",
-        path: "/students/account",
+        path: "/students/profile",
         iconR: <IoSettingsOutline />,
         iconL: <IoIosArrowForward />,
       },
@@ -163,7 +163,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
             className="flex items-center px-3 fixed bottom-14 cursor-pointer"
             onClick={() => {
               localStorage.clear();
-              if (onSignOut) onSignOut(); 
+              if (onSignOut) onSignOut();
               window.location.href = "/";
             }}
           >
