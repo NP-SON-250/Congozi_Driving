@@ -157,7 +157,7 @@ const StudentWaiting = () => {
           )}
 
           {totalPages > 1 && (
-            <div className="flex justify-around md:gap-[900px] gap-[280px] md:pb-0 pb-10">
+            <div className="flex justify-around md:gap-[830px] gap-[150px] md:pb-0 pt-3 px-10">
               <div>
                 <button
                   className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
