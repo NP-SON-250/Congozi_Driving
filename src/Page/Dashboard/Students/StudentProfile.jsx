@@ -233,7 +233,7 @@ const StudentProfile = () => {
             </>
           )}
 
-          <div className="pt-4 flex md:text-xs text-md md:flex-row flex-col md:gap-10 gap-0 items-center">
+          <div className="pt-4 flex md:text-xs text-md flex-row justify-center gap-3 md:gap-10 items-center">
             <button
               type="submit"
               className="bg-blue-900 text-white px-6 py-1 rounded hover:bg-blue-800 mb-3"
