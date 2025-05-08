@@ -3,9 +3,9 @@ import { useLocation } from "react-router-dom";
 import { MdMoreHoriz } from "react-icons/md";
 import { HiHome } from "react-icons/hi2";
 import { BsCart } from "react-icons/bs";
+import { FaUsersCog } from "react-icons/fa";
 import { PiFolderSimpleUserLight, PiExam } from "react-icons/pi";
 import { IoIosMenu, IoIosArrowForward } from "react-icons/io";
-import { IoSettingsOutline } from "react-icons/io5";
 import { MdDashboard } from "react-icons/md";
 import { MdManageAccounts, MdAccountBalance } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
@@ -50,7 +50,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
       {
         name: "My Profile",
         path: "/students/profile",
-        iconR: <IoSettingsOutline />,
+        iconR: <FaUsersCog />,
         iconL: <IoIosArrowForward />,
       },
       {
@@ -88,7 +88,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
       {
         name: "My Profile",
         path: "/schools/account",
-        iconR: <IoSettingsOutline />,
+        iconR: <FaUsersCog />,
         iconL: <IoIosArrowForward />,
       },
     ],
@@ -126,7 +126,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
       {
         name: "My Profile",
         path: "/admins/profile",
-        iconR: <MdManageAccounts />,
+        iconR: <FaUsersCog />,
         iconL: <IoIosArrowForward />,
       },
     ],
