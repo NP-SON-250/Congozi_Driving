@@ -184,21 +184,21 @@ const SchoolWaiting = () => {
         )}
 
         {totalPages > 1 && (
-          <div className="flex justify-around md:gap-[900px] gap-[280px] md:pb-0 pb-10">
+          <div className="flex justify-around md:gap-[830px] gap-[120px] md:pb-0 pt-3 px-10">
             <div>
               <button
-                className={`text-blue-900 ${
+                className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
                   currentPage === 0 ? "opacity-50" : ""
                 }`}
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
                 disabled={currentPage === 0}
               >
-                <FaArrowAltCircleLeft size={24} />
+                <FaArrowAltCircleLeft size={24} /> Izibanza
               </button>
             </div>
             <div>
               <button
-                className={`text-blue-900 ${
+                className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
                   currentPage === totalPages - 1 ? "opacity-50" : ""
                 }`}
                 onClick={() =>
@@ -206,6 +206,7 @@ const SchoolWaiting = () => {
                 }
                 disabled={currentPage === totalPages - 1}
               >
+                Izikurira
                 <FaArrowAltCircleRight size={24} />
               </button>
             </div>
