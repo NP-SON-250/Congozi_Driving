@@ -189,7 +189,7 @@ const SchoolLiveExam = () => {
                   <img
                     src={currentQuestion.image}
                     alt="question"
-                    className="w-16 h-16 rounded-full mb-1"
+                    className="w-52 h-28 rounded-md mb-1"
                   />
                 )}
                 <div className="mb-1 space-y-1">
