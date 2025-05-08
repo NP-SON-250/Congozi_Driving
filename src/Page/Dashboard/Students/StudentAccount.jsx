@@ -1,104 +1,133 @@
-import React, { useEffect, useState } from "react";
-import { FaCamera } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import { FaCamera } from "react-icons/fa";
 
 const StudentAccount = () => {
-  const [profileImage, setProfileImage] = useState(null);
-  const [email, setEmail] = useState("");
-  const [fName, setFName] = useState("");
-  const [lName, setLName] = useState("");
-  const [address, setAddress] = useState("");
-  const [telephone, setTelephone] = useState("");
-  const [userId, setUserId] = useState(null);
-  const [originalData, setOriginalData] = useState({});
+  const user = JSON.parse(localStorage.getItem("user"));
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState("");
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+
+  const [formData, setFormData] = useState({
+    fName: "",
+    lName: "",
+    phone: "",
+    email: "",
+    idCard: "",
+    address: "",
+  });
+
+  const [passwordData, setPasswordData] = useState({
+    password: "",
+  });
+
+  const [profile, setProfile] = useState(null);
+  const [preview, setPreview] = useState(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUserId(parsedUser._id);
-        setEmail(parsedUser.email || "");
-        setFName(parsedUser.fName || "");
-        setLName(parsedUser.lName || "");
-        setAddress(parsedUser.address || "");
-        setTelephone(parsedUser.phone || "");
-        setProfileImage(parsedUser.profile || null);
-        setOriginalData({
-          profile: parsedUser.profile || null,
-          email: parsedUser.email || "",
-          fName: parsedUser.fName || "",
-          lName: parsedUser.lName || "",
-          address: parsedUser.address || "",
-          phone: parsedUser.phone || "",
-        });
-      } catch (err) {
-        console.error("Failed to parse stored user:", err);
-      }
+    if (user) {
+      setFormData({
+        fName: user.fName || "",
+        lName: user.lName || "",
+        phone: user.phone || "",
+        email: user.email || "",
+        idCard: user.idCard || "",
+        address: user.address || "",
+      });
+      setPreview(user.profile || null);
     }
   }, []);
 
-  // Handle profile image file selection
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setProfileImage(file);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (showPasswordForm) {
+      setPasswordData((prev) => ({ ...prev, [name]: value }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
-  // Save updated profile data
-  const handleSave = async () => {
-    const newData = new FormData();
-    newData.append("profile", profileImage);
-    newData.append("email", email);
-    newData.append("fName", fName);
-    newData.append("lName", lName);
-    newData.append("address", address);
-    newData.append("phone", telephone);
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setProfile(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setPreview(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!user?._id) return toast.error("User not logged in");
 
     try {
+      const form = new FormData();
+
+      if (showPasswordForm) {
+        if (!passwordData.password) {
+          return toast.error("Please fill in password field");
+        }
+
+        form.append("password", passwordData.password);
+      } else {
+        for (let key in formData) {
+          if (formData[key]) {
+            form.append(key, formData[key]);
+          }
+        }
+        if (profile) {
+          form.append("profile", profile);
+        }
+      }
+
+      const token = localStorage.getItem("token");
+
       const response = await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/users/${userId}`,
-        newData,
+        `https://congozi-backend.onrender.com/api/v1/users/${user._id}`,
+        form,
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      setMessage("Profile updated successfully.");
+      const updatedUser = response.data.data;
+      if (!showPasswordForm) {
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+      }
+
+      setMessage(
+        showPasswordForm
+          ? "Password updated successfully"
+          : "Profile updated successfully"
+      );
       setMessageType("success");
 
-      const updatedUser = response.data;
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-
-      // Update state with new profile data
-      setEmail(updatedUser.email || "");
-      setFName(updatedUser.fName || "");
-      setLName(updatedUser.lName || "");
-      setAddress(updatedUser.address || "");
-      setTelephone(updatedUser.phone || "");
-      setProfileImage(updatedUser.profile || null);
-      setOriginalData(updatedUser);
+      setTimeout(() => {
+        if (!showPasswordForm) {
+          window.location.reload();
+        } else {
+          setShowPasswordForm(false);
+          setPasswordData({ password: "" });
+        }
+      }, 1000);
     } catch (error) {
-      console.error("Update failed:", error);
-      setMessage("Failed to update profile. Please try again.");
+      console.error(error);
+      setMessage(
+        error?.response?.data?.message || "Failed to update information"
+      );
       setMessageType("error");
     }
   };
 
   return (
-    <div className="flex items-top justify-center">
+    <div className="flex items-center justify-center">
       <div className="bg-white shadow-md rounded-lg md:p-1 p-6 w-full max-w-xl text-center">
-        <h2 className="md:text-xs text-md font-bold text-blue-900 mb-1">
-          Your Profile
-        </h2>
-
-        {/* Message Display */}
+        {/* Message */}
         {message && (
           <div
             className={`text-sm mb-3 px-2 py-1 rounded ${
@@ -111,113 +140,117 @@ const StudentAccount = () => {
           </div>
         )}
 
-        {/* Profile Image */}
-        <div className="relative w-24 h-24 mx-auto mb-1">
-          <img
-            src={
-              profileImage instanceof File
-                ? URL.createObjectURL(profileImage) // Generate URL only if profileImage is a file object
-                : profileImage ||
-                  "https://res.cloudinary.com/da12yf0am/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1740671685/SBS%20Images/file_limbge.webp" // Fallback if no image is selected
-            }
-            alt="Profile"
-            className="w-full h-full object-cover rounded-full border border-gray-300"
-          />
-          <label className="absolute bottom-0 right-0 bg-white p-[6px] rounded-full shadow cursor-pointer">
-            <FaCamera />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
-            />
-          </label>
-        </div>
+        <h2 className="md:text-xs text-md font-bold text-blue-900 mb-1">
+          {showPasswordForm ? "Change Password" : "Your Profile"}
+        </h2>
 
-        {/* Form */}
         <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSave();
-          }}
-          className="space-y-1 px-4 text-left"
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-4 justify-center items-center"
         >
-          <div>
-            <label className="block md:text-xs text-md font-medium">
-              Email
-            </label>
-            <input
-              type="email"
-              value={email} // This should always be a string
-              className="w-full px-4 md:text-xs text-md py-1 border rounded"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
+          {!showPasswordForm ? (
+            <>
+              {/* Profile Image */}
+              <div className="relative w-24 h-24 mx-auto mb-1">
+                {preview && (
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="w-full h-full object-cover rounded-full border border-gray-300"
+                  />
+                )}
+                <label className="absolute bottom-0 right-0 bg-white p-[6px] rounded-full shadow cursor-pointer">
+                  <FaCamera />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                </label>
+              </div>
 
-          <div>
-            <label className="block md:text-xs text-md font-medium">
-              First Name
-            </label>
-            <input
-              type="text"
-              value={fName} // This should always be a string
-              className="w-full px-4 md:text-xs text-md py-1 border rounded"
-              onChange={(e) => setFName(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <label className="block md:text-xs text-md font-medium">
-              Last Name
-            </label>
-            <input
-              type="text"
-              value={lName} // This should always be a string
-              className="w-full px-4 md:text-xs text-md py-1 border rounded"
-              onChange={(e) => setLName(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <label className="block md:text-xs text-md font-medium">
-              Address
-            </label>
-            <input
-              type="text"
-              value={address} // This should always be a string
-              className="w-full px-4 md:text-xs text-md py-1 border rounded"
-              onChange={(e) => setAddress(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <label className="block md:text-xs text-md font-medium">
-              Telephone
-            </label>
-            <input
-              type="text"
-              value={telephone} // This should always be a string
-              className="w-full px-4 md:text-xs text-md py-1 border rounded"
-              onChange={(e) => setTelephone(e.target.value)}
-            />
-          </div>
+              {/* Profile Form Fields */}
+              <input
+                type="text"
+                name="fName"
+                value={formData.fName}
+                onChange={handleChange}
+                placeholder="First Name"
+                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+              />
+              <input
+                type="text"
+                name="lName"
+                value={formData.lName}
+                onChange={handleChange}
+                placeholder="Last Name"
+                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+              />
+              <input
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="Phone"
+                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+              />
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Email"
+                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+              />
+              <input
+                type="text"
+                name="idCard"
+                value={formData.idCard}
+                onChange={handleChange}
+                placeholder="ID Card"
+                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+              />
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                placeholder="Address"
+                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+              />
+            </>
+          ) : (
+            <>
+              <input
+                type="password"
+                name="password"
+                value={passwordData.password}
+                onChange={handleChange}
+                placeholder="New Password"
+                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+              />
+            </>
+          )}
 
           <div className="pt-4 flex md:text-xs text-md md:flex-row flex-col md:gap-10 gap-0 items-center">
             <button
               type="submit"
               className="bg-blue-900 text-white px-6 py-1 rounded hover:bg-blue-800 mb-3"
             >
-              Save Changes
+              {showPasswordForm ? "Update Password" : "Save Changes"}
             </button>
 
-            <Link
-              to="/change/password"
+            <button
+              type="button"
+              onClick={() => setShowPasswordForm((prev) => !prev)}
               className="text-blue-600 hover:text-yellow-600"
             >
-              Change password?
-            </Link>
+              {showPasswordForm ? "Back to Profile" : "Change Password?"}
+            </button>
           </div>
         </form>
+        <ToastContainer />
       </div>
     </div>
   );

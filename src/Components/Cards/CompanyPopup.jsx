@@ -10,7 +10,7 @@ const CompanyPopup = ({ onClose }) => {
 
   const handleLogin = async () => {
     if (!identifier || !password) {
-      toast.error("Shyiramo nomero ya telefone n'ijambo banga");
+      toast.error("Shyiramo tin cyangwa company name n'ijambo banga");
       return;
     }
 

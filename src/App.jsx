@@ -7,7 +7,8 @@ import Register from "./Page/Landing/Register";
 import ContactUs from "./Page/Landing/ContactUs";
 import Login from "./Page/Landing/Login";
 import RestPassword from "./Page/Landing/RestPassword";
-
+import ProtectedRoute from "./Components/ProtectedRoute";
+import { useUserContext } from "./Components/useUserContext";
 // Student Imports
 import UserStudent from "./Components/Users/Students/UserStudent";
 import StudentHome from "./Page/Dashboard/Students/StudentHome";
@@ -44,15 +45,18 @@ import SchoolLiveExam from "./Page/Dashboard/schools/SchoolLiveExam";
 import SchoolLiveLearn from "./Page/Dashboard/schools/SchoolLiveLearn";
 import LiveLearn from "./Page/Dashboard/Students/LiveLearn";
 const App = () => {
-  
+  const { userRole, loading } = useUserContext();
+
   // Disable right click
-  // onContextMenu={(e) => e.preventDefault()} 
+  // onContextMenu={(e) => e.preventDefault()}
   //select-none
 
+  if (loading) return <div>Loading...</div>;
   return (
     <>
       <div className="overflow-x-hidden font-Poppins">
         <Routes>
+          
           {/* Landing Routes */}
           <Route element={<LandingLay />}>
             <Route path="/" element={<Home />}></Route>
@@ -62,45 +66,75 @@ const App = () => {
             <Route path="/kwinjira" element={<Login />}></Route>
             <Route path="/hindura" element={<RestPassword />}></Route>
           </Route>
-
           {/* Student Market Routes */}
-          <Route element={<UserStudent />}>
-            <Route path="/students/home" element={<StudentHome />} />
-            <Route path="/students/market" element={<StudentMarket />} />
-            <Route path="/students/tracking" element={<ManualTracking />} />
-            <Route path="/students/exams" element={<StudentExams />} />
-            <Route path="/students/account" element={<StudentAccount />} />
-            <Route path="/students/unpaidexams" element={<StudentUnpaid />} />
-            <Route path="/students/waitingexams" element={<StudentWaiting />} />
-            <Route path="/liveExam" element={<LiveExam />} />
-            <Route path="/liveLearn" element={<LiveLearn />} />
-            <Route path="/students/school" element={<SchoolDemo />} />
-          </Route>
-          {/* Admins Routes */}
-          <Route element={<UserAdmin />}>
-            <Route path="/admins/home" element={<AdminDashboard />} />
-            <Route path="/admins/exams" element={<AdminExams />} />
-            <Route path="/admins/accounts" element={<AdminAccounts />} />
-            <Route path="/admins/users" element={<AdminUsers />} />
-            <Route path="/admins/profile" element={<AdminProfile />} />
-            <Route path="/admins/payments" element={<AdminsPayments />} />
-          </Route>
-          {/* School Market Routes */}
-          <Route element={<UserSchool />}>
-            <Route path="/schools/home" element={<SchoolsDashboard />} />
-            <Route path="/schools/account/market" element={<AccountMarket />} />
-            <Route path="/schools/online" element={<SchoolDoExams />} />
-            <Route path="/schools/exams" element={<SchoolMyExams />} />
-            <Route path="/schools/account" element={<SchoolMyAccount />} />
-            <Route path="/schools/unpaidaccounts" element={<SchoolUnpaid />} />
-            <Route path="/schools/waitingaccounts" element={<SchoolWaiting />} />
-            <Route path="/schools/accessableexams" element={<SchoolAccessableExams />} />
-            <Route path="/schools/accessedexam" element={<SchoolAccessedExam />} />
-            <Route path="/schoolsliveExam" element={<SchoolLiveExam />} />
-            <Route path="/schoolsliveLearn" element={<SchoolLiveLearn />} />
-            
-
-          </Route>
+          {userRole === "student" && (
+            <Route element={<ProtectedRoute allowedRole="student" />}>
+              <Route element={<UserStudent />}>
+                <Route path="/students/home" element={<StudentHome />} />
+                <Route path="/students/market" element={<StudentMarket />} />
+                <Route path="/students/tracking" element={<ManualTracking />} />
+                <Route path="/students/exams" element={<StudentExams />} />
+                <Route path="/students/account" element={<StudentAccount />} />
+                <Route
+                  path="/students/unpaidexams"
+                  element={<StudentUnpaid />}
+                />
+                <Route
+                  path="/students/waitingexams"
+                  element={<StudentWaiting />}
+                />
+                <Route path="/liveExam" element={<LiveExam />} />
+                <Route path="/liveLearn" element={<LiveLearn />} />
+                <Route path="/students/school" element={<SchoolDemo />} />
+              </Route>
+            </Route>
+          )}
+          {/* Admin Routes */}
+          {userRole === "admin" && (
+            <Route element={<ProtectedRoute allowedRole="admin" />}>
+              <Route element={<UserAdmin />}>
+                <Route path="/admins/home" element={<AdminDashboard />} />
+                <Route path="/admins/exams" element={<AdminExams />} />
+                <Route path="/admins/accounts" element={<AdminAccounts />} />
+                <Route path="/admins/users" element={<AdminUsers />} />
+                <Route path="/admins/profile" element={<AdminProfile />} />
+                <Route path="/admins/payments" element={<AdminsPayments />} />
+              </Route>
+            </Route>
+          )}
+          {/* School Routes */}
+          {userRole === "school" && (
+            <Route element={<ProtectedRoute allowedRole="school" />}>
+              <Route element={<UserSchool />}>
+                <Route path="/schools/home" element={<SchoolsDashboard />} />
+                <Route
+                  path="/schools/account/market"
+                  element={<AccountMarket />}
+                />
+                <Route path="/schools/online" element={<SchoolDoExams />} />
+                <Route path="/schools/exams" element={<SchoolMyExams />} />
+                <Route path="/schools/account" element={<SchoolMyAccount />} />
+                <Route
+                  path="/schools/unpaidaccounts"
+                  element={<SchoolUnpaid />}
+                />
+                <Route
+                  path="/schools/waitingaccounts"
+                  element={<SchoolWaiting />}
+                />
+                <Route
+                  path="/schools/accessableexams"
+                  element={<SchoolAccessableExams />}
+                />
+                <Route
+                  path="/schools/accessedexam"
+                  element={<SchoolAccessedExam />}
+                />
+                <Route path="/schoolsliveExam" element={<SchoolLiveExam />} />
+                <Route path="/schoolsliveLearn" element={<SchoolLiveLearn />} />
+              </Route>
+            </Route>
+          )}
         </Routes>
       </div>
     </>

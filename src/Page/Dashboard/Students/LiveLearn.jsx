@@ -6,17 +6,15 @@ import { GrSend } from "react-icons/gr";
 import { LuCircleArrowLeft } from "react-icons/lu";
 import { FiArrowRightCircle } from "react-icons/fi";
 import DescriptionCard from "../../../Components/Cards/DescriptionCard";
+import ExamTimer from "../../../Components/ExamTimer";
 
-const LiveLearn = () => {
+const LiveLearn = ({ accessCode }) => {
   const [examCode, setExamCode] = useState("");
   const [paidExam, setPaidExam] = useState(null);
   const [testExam, setTestExam] = useState(null);
   const [examToDo, setExamToDo] = useState(null);
   const [examQuestions, setExamQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(3600);
-  const [examFinished, setExamFinished] = useState(false);
-  const [reviewResults, setReviewResults] = useState(false);
   const [showNoQuestionsMessage, setShowNoQuestionsMessage] = useState(false);
   const [paymentPopup, setPaymentPopup] = useState(false);
   const [interactedQuestions, setInteractedQuestions] = useState([]);
@@ -78,49 +76,11 @@ const LiveLearn = () => {
       const questions = examToDo.questions || [];
       setExamQuestions(questions);
 
-      if (typeof window !== "undefined") {
-        const storedTime = localStorage.getItem(`examTimeLeft_${examCode}`);
-        const initialTime = storedTime ? parseInt(storedTime, 10) : 3600;
-        setTimeLeft(initialTime);
-      }
-
       if (questions.length === 0) {
         setShowNoQuestionsMessage(true);
       }
     }
   }, [examToDo, examCode]);
-
-  useEffect(() => {
-    if (examFinished || !examCode) return;
-
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(timer);
-          if (typeof window !== "undefined") {
-            localStorage.removeItem(`examTimeLeft_${examCode}`);
-          }
-          handleSubmitExam();
-          navigate("/students/waitingexams");
-          return 0;
-        }
-        const newTime = prevTime - 1;
-        if (typeof window !== "undefined") {
-          localStorage.setItem(`examTimeLeft_${examCode}`, newTime);
-        }
-        return newTime;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [examFinished, examCode]);
-
-  const handleSubmitExam = useCallback(() => {
-    setExamFinished(true);
-    if (typeof window !== "undefined") {
-      localStorage.removeItem(`examTimeLeft_${examCode}`);
-    }
-  }, [examCode]);
 
   const fetchTestExam = useCallback(async () => {
     try {
@@ -193,6 +153,11 @@ const LiveLearn = () => {
     [selectedQuestion, examQuestions]
   );
 
+  const handleTimeout = () => {
+    alert("Time's up! Submitting exam...");
+    // You can submit exam here or redirect
+  };
+
   return (
     <div className="flex flex-col bg-white md:p-2 gap-2">
       {showNoQuestionsMessage ? (
@@ -204,56 +169,56 @@ const LiveLearn = () => {
         </div>
       ) : (
         <>
-          {!reviewResults && (
-            <>
-              <h1 className="md:text-xl text-center md:py-1 py-3 font-bold text-Total capitalize">
-                Ibisubizo by'ukuri biri mu ibara ry'icyatsi
-              </h1>
-              <DescriptionCard
-                questions={examQuestions.length}
-                total20={examQuestions.length * 1}
-                total100={examQuestions.length * 5}
-                pass20={((12 / 20) * examQuestions.length).toFixed(0)}
-                pass100={((60 / 20) * examQuestions.length).toFixed(0)}
-                number={examToDo?.number}
-                type={examToDo?.type}
-                timeLeft={formatTime(timeLeft)}
-                access={examCode}
-              />
+          <>
+            <h1 className="md:text-xl text-center md:py-1 py-3 font-bold text-Total capitalize">
+              Ibisubizo by'ukuri biri mu ibara ry'icyatsi
+            </h1>
+            <DescriptionCard
+              questions={examQuestions.length}
+              total20={examQuestions.length * 1}
+              total100={examQuestions.length * 5}
+              pass20={((12 / 20) * examQuestions.length).toFixed(0)}
+              pass100={((60 / 20) * examQuestions.length).toFixed(0)}
+              number={examToDo?.number}
+              type={examToDo?.type}
+              timeLeft={
+                <ExamTimer
+                  accessCode={accessCode}
+                  duration={100}
+                  onTimeout={handleTimeout}
+                />
+              }
+              access={examCode}
+            />
 
-              <div className="flex flex-wrap justify-start py-1 md:gap-4 gap-2">
-                {examQuestions.map((q, idx) => {
-                  const isCurrent = selectedQuestion === idx;
-                  const isInteracted = interactedQuestions.includes(idx);
+            <div className="flex flex-wrap justify-start py-1 md:gap-4 gap-2">
+              {examQuestions.map((q, idx) => {
+                const isCurrent = selectedQuestion === idx;
+                const isInteracted = interactedQuestions.includes(idx);
 
-                  const getButtonClasses = () => {
-                    if (examFinished)
-                      return "opacity-50 cursor-not-allowed bg-white border";
+                const getButtonClasses = () => {
+                  if (isCurrent) return "bg-blue-500 text-white";
 
-                    if (isCurrent) return "bg-blue-500 text-white";
+                  return isInteracted
+                    ? "bg-blue-500 text-white"
+                    : "bg-white border";
+                };
 
-                    return isInteracted
-                      ? "bg-blue-500 text-white"
-                      : "bg-white border";
-                  };
-
-                  return (
-                    <button
-                      key={q._id}
-                      onClick={() => !examFinished && handleSelectQuestion(idx)}
-                      disabled={examFinished}
-                      className={`w-20 h-10 text-sm rounded-md flex justify-center items-center ${getButtonClasses()}`}
-                    >
-                      Ikibazo: {idx + 1}
-                    </button>
-                  );
-                })}
-              </div>
-            </>
-          )}
+                return (
+                  <button
+                    key={q._id}
+                    onClick={() => handleSelectQuestion(idx)}
+                    className={`w-20 h-10 text-sm rounded-md flex justify-center items-center ${getButtonClasses()}`}
+                  >
+                    Ikibazo: {idx + 1}
+                  </button>
+                );
+              })}
+            </div>
+          </>
 
           <div className="w-full px-3">
-            {!reviewResults && currentQuestion ? (
+            {currentQuestion ? (
               <>
                 <h3 className="mb-0 md:text-md text-sm font-semibold">
                   Q{selectedQuestion + 1}. {currentQuestion.phrase}
@@ -267,7 +232,16 @@ const LiveLearn = () => {
                 )}
                 <form className="space-y-1 md:text-md text-sm">
                   {currentQuestion.options.map((option, index) => {
-                    const optionLabels = ["a", "b", "c", "d"];
+                    const optionLabels = [
+                      "A",
+                      "B",
+                      "C",
+                      "D",
+                      "E",
+                      "F",
+                      "G",
+                      "H",
+                    ];
                     const label = optionLabels[index];
                     const isCorrect = option.isCorrect;
 
@@ -286,54 +260,48 @@ const LiveLearn = () => {
                     );
                   })}
                 </form>
-
-                {!examFinished && (
-                  <div className="mt-4 mb-12 flex justify-between flex-wrap gap-2">
-                    <button
-                      onClick={handleShowPaymentPopup}
-                      className="bg-blue-900 text-white px-4 py-1 rounded flex md:ml-0 ml-12 items-center gap-2"
-                    >
-                      <GrSend />
-                      Isuzume Muri ikikizamini
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleSelectQuestion(Math.max(selectedQuestion - 1, 0))
-                      }
-                      disabled={selectedQuestion === 0}
-                      className={`text-white px-4 py-1 rounded flex items-center gap-2
+                <div className="mt-4 mb-12 flex justify-between flex-wrap gap-2">
+                  <button
+                    onClick={handleShowPaymentPopup}
+                    className="bg-blue-900 text-white px-4 py-1 rounded flex md:ml-0 ml-12 items-center gap-2"
+                  >
+                    <GrSend />
+                    Isuzume Muri ikikizamini
+                  </button>
+                  <button
+                    onClick={() =>
+                      handleSelectQuestion(Math.max(selectedQuestion - 1, 0))
+                    }
+                    disabled={selectedQuestion === 0}
+                    className={`text-white px-4 py-1 rounded flex items-center gap-2
                      ${
                        selectedQuestion === 0
                          ? "bg-gray-500 cursor-not-allowed"
                          : "bg-blue-900"
                      }
                      `}
-                    >
-                      <LuCircleArrowLeft />
-                      Ikibanza
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleSelectQuestion(
-                          Math.min(
-                            selectedQuestion + 1,
-                            examQuestions.length - 1
-                          )
-                        )
-                      }
-                      disabled={selectedQuestion === examQuestions.length - 1}
-                      className={`text-white px-4 py-1 rounded flex items-center gap-2
+                  >
+                    <LuCircleArrowLeft />
+                    Ikibanza
+                  </button>
+                  <button
+                    onClick={() =>
+                      handleSelectQuestion(
+                        Math.min(selectedQuestion + 1, examQuestions.length - 1)
+                      )
+                    }
+                    disabled={selectedQuestion === examQuestions.length - 1}
+                    className={`text-white px-4 py-1 rounded flex items-center gap-2
                       ${
                         selectedQuestion === examQuestions.length - 1
                           ? "bg-gray-500 cursor-not-allowed"
                           : "bg-blue-900"
                       }
   `}
-                    >
-                      <FiArrowRightCircle /> Igikurikira
-                    </button>
-                  </div>
-                )}
+                  >
+                    <FiArrowRightCircle /> Igikurikira
+                  </button>
+                </div>
               </>
             ) : null}
           </div>
@@ -346,7 +314,7 @@ const LiveLearn = () => {
           <div className="bg-Total p-4 rounded-lg md:w-1/2 h-1/2 flex justify-center items-center w-full relative">
             <button
               className="absolute top-1 bg-white w-10 h-10 rounded-full right-2 text-red-500 text-xl"
-              onClick={handleClosePaymentPopup}
+              onClick={setPaymentPopup(false)}
             >
               ✖
             </button>

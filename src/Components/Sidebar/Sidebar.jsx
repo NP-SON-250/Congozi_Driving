@@ -48,7 +48,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "My Account",
+        name: "My Profile",
         path: "/students/account",
         iconR: <IoSettingsOutline />,
         iconL: <IoIosArrowForward />,
@@ -86,7 +86,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "My Account",
+        name: "My Profile",
         path: "/schools/account",
         iconR: <IoSettingsOutline />,
         iconL: <IoIosArrowForward />,
@@ -124,7 +124,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "My Account",
+        name: "My Profile",
         path: "/admins/profile",
         iconR: <MdManageAccounts />,
         iconL: <IoIosArrowForward />,

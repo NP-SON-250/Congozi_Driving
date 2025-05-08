@@ -14,9 +14,9 @@ const DescriptionCard = ({access,questions,total20,total100,pass20,pass100,numbe
         <p>Pass Marks: {pass100}/100 </p>
         <p>Exam Number: {number}</p>
         <p>Exam Type: {type}</p>
-        <p>
+        <p className="flex flex-row">
           Exam Time:{" "}
-          <span className="bg-white p-1 rounded-full text-blue-900 font-extrabold">
+          <span className="bg-white px-1 rounded-full text-blue-900 font-extrabold">
             {timeLeft}
           </span>
         </p>

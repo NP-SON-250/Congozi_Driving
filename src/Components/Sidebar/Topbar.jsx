@@ -4,12 +4,13 @@ import { PiFolderOpenDuotone } from "react-icons/pi";
 import { IoLanguageOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import Police from "../../assets/Policelogo.png";
-import { useLocation } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 
 const Topbar = ({ currentSection, role = "students", onSignOut }) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [user, setUser] = useState(null);
-
+  const navigate = useNavigate();
+  
   const handleNavClick = (path) => {
     window.location.href = path;
   };
@@ -43,6 +44,13 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
     setMenuVisible(!menuVisible);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/kwinjira", { replace: true });
+  };
+  
   return (
     <div
       className={`fixed top-0 right-0 md:px-24 px-4 flex justify-between items-center w-full h-[11vh] shadow bg-Total`}
@@ -138,6 +146,7 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
               onClick={() => {
                 localStorage.clear();
                 if (onSignOut) onSignOut();
+                setUser(null);
                 window.location.href = "/";
               }}
             >

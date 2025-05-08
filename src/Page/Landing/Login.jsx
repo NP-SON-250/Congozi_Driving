@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
@@ -9,10 +9,12 @@ import { FaCircleArrowRight } from "react-icons/fa6";
 import { FaQuestionCircle } from "react-icons/fa";
 import LoginInputs from "../../Components/Inputs/Studentnputs/LoginInputs";
 import Injira from "../../assets/Injira.png";
+import { useUserContext } from "../../Components/useUserContext";
 
 const Login = () => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const { setUser } = useUserContext();
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -32,31 +34,47 @@ const Login = () => {
 
       const { token, data, message } = response.data;
 
+      // Update both localStorage and context
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(data));
+      setUser(data);
 
       toast.success(message || "Kwinjira byakunze");
+
       // Role-based redirect
       switch (data.role) {
         case "student":
           navigate("/students/home");
+          window.location.reload();
           break;
         case "admin":
           navigate("/admins/home");
+          window.location.reload();
           break;
         case "school":
           navigate("/schools/home");
+          window.location.reload();
           break;
         default:
-          toast.error("User role not recognized.");
-          break;
+          toast.error("Ntitwabashije kumenya uw'uriwe");
       }
     } catch (error) {
       const errMsg =
-        error?.response?.data?.message || "Login failed. Try again.";
+        error?.response?.data?.message || "Kwinjira byanze ongera ugerageze.";
       toast.error(errMsg);
     }
   };
+
+  useEffect(() => {
+    // Redirect if user is already logged out
+    const token = localStorage.getItem("token");
+    if (!token) {
+      window.history.pushState(null, "", window.location.href);
+      window.onpopstate = () => {
+        window.history.go(1);
+      };
+    }
+  }, []);
 
   return (
     <div className="pt-24 md:px-12">
