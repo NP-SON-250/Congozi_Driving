@@ -96,7 +96,7 @@ const SchoolLiveLearn = () => {
               timeLeft={
                 <ExamTimer
                   accessCode={examId}
-                  duration={10}
+                  duration={3600}
                   onTimeout={handleTimeout}
                 />
               }

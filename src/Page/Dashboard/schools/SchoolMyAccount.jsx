@@ -177,7 +177,7 @@ const SchoolMyAccount = () => {
                 value={formData.companyName}
                 onChange={handleChange}
                 placeholder="Company Name "
-                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+                className="md:md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
               />
               <input
                 type="text"
@@ -185,7 +185,7 @@ const SchoolMyAccount = () => {
                 value={formData.tin}
                 onChange={handleChange}
                 placeholder="Tin Number"
-                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+                className="md:md:w-1/2 w-full  px-4 md:text-xs text-md py-1 border rounded"
               />
               <input
                 type="text"
@@ -193,7 +193,7 @@ const SchoolMyAccount = () => {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="Phone"
-                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+                className="md:md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
               />
               <input
                 type="email"
@@ -201,7 +201,7 @@ const SchoolMyAccount = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Email"
-                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+                className="md:md:w-1/2 w-full  px-4 md:text-xs text-md py-1 border rounded"
               />
               <input
                 type="text"
@@ -209,7 +209,7 @@ const SchoolMyAccount = () => {
                 value={formData.idCard}
                 onChange={handleChange}
                 placeholder="ID Card"
-                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+                className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
               />
               <input
                 type="text"
@@ -217,7 +217,7 @@ const SchoolMyAccount = () => {
                 value={formData.address}
                 onChange={handleChange}
                 placeholder="Address"
-                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+                className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
               />
             </>
           ) : (
@@ -228,12 +228,12 @@ const SchoolMyAccount = () => {
                 value={passwordData.password}
                 onChange={handleChange}
                 placeholder="New Password"
-                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+                className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
               />
             </>
           )}
 
-          <div className="pt-4 flex md:text-xs text-md md:flex-row flex-col md:gap-10 gap-0 items-center">
+          <div className="pt-4 flex md:text-xs text-md flex-row md:gap-10 gap-0 items-center">
             <button
               type="submit"
               className="bg-blue-900 text-white px-6 py-1 rounded hover:bg-blue-800 mb-3"

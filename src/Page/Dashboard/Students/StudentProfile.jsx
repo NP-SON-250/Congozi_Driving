@@ -177,7 +177,7 @@ const StudentProfile = () => {
                 value={formData.fName}
                 onChange={handleChange}
                 placeholder="First Name"
-                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+                className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
               />
               <input
                 type="text"
@@ -185,7 +185,7 @@ const StudentProfile = () => {
                 value={formData.lName}
                 onChange={handleChange}
                 placeholder="Last Name"
-                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+                className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
               />
               <input
                 type="text"
@@ -193,7 +193,7 @@ const StudentProfile = () => {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="Phone"
-                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+                className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
               />
               <input
                 type="email"
@@ -201,7 +201,7 @@ const StudentProfile = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Email"
-                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+                className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
               />
               <input
                 type="text"
@@ -209,7 +209,7 @@ const StudentProfile = () => {
                 value={formData.idCard}
                 onChange={handleChange}
                 placeholder="ID Card"
-                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+                className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
               />
               <input
                 type="text"
@@ -217,7 +217,7 @@ const StudentProfile = () => {
                 value={formData.address}
                 onChange={handleChange}
                 placeholder="Address"
-                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+                className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
               />
             </>
           ) : (
@@ -228,7 +228,7 @@ const StudentProfile = () => {
                 value={passwordData.password}
                 onChange={handleChange}
                 placeholder="New Password"
-                className="w-1/2 px-4 md:text-xs text-md py-1 border rounded"
+                className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
               />
             </>
           )}
