@@ -156,7 +156,8 @@ const SchoolDoExams = () => {
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
                 disabled={currentPage === 0}
               >
-                <FaArrowAltCircleLeft size={24} />Izibanza
+                <FaArrowAltCircleLeft size={24} />
+                Izibanza
               </button>
             </div>
             <div>

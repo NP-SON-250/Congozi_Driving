@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Police from "../../../assets/Policelogo.png";
 import { GrSend } from "react-icons/gr";
@@ -7,8 +7,8 @@ import { LuCircleArrowLeft } from "react-icons/lu";
 import { FiArrowRightCircle } from "react-icons/fi";
 import { FaRegEye } from "react-icons/fa6";
 import DescriptionCard from "../../../Components/Cards/DescriptionCard";
-import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import Timer from "../../../Components/ExamTimerLive";
 
 const LiveExam = () => {
   const [examCode, setExamCode] = useState("");
@@ -19,14 +19,15 @@ const LiveExam = () => {
   const [selectedOptions, setSelectedOptions] = useState(() => {
     return JSON.parse(localStorage.getItem("selectedOptions")) || {};
   });
-  const [timeLeft, setTimeLeft] = useState(1200); // 20 minutes
   const [examFinished, setExamFinished] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [reviewResults, setReviewResults] = useState(false);
   const [totalMarks, setTotalMarks] = useState(0);
   const [showNoQuestionsMessage, setShowNoQuestionsMessage] = useState(false);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
+
+  const hasShownSuccess = useRef(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -55,6 +56,7 @@ const LiveExam = () => {
       theme: "light",
     });
   };
+
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const code = params.get("code") || "";
@@ -104,56 +106,17 @@ const LiveExam = () => {
   useEffect(() => {
     if (examToDo && examCode) {
       setExamQuestions(examToDo.questions || []);
-      const storedTime = localStorage.getItem(`examTimeLeft_${examCode}`);
-      const initialTime = storedTime ? parseInt(storedTime, 10) : 1200;
-      setTimeLeft(initialTime);
     }
   }, [examToDo, examCode]);
-
-  useEffect(() => {
-    if (examFinished || !examCode) return;
-
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(timer);
-          localStorage.removeItem(`examTimeLeft_${examCode}`);
-          handleSubmitExam();
-          return 0;
-        }
-        const newTime = prevTime - 1;
-        localStorage.setItem(`examTimeLeft_${examCode}`, newTime);
-        return newTime;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [examFinished, examCode]);
 
   useEffect(() => {
     localStorage.setItem("selectedOptions", JSON.stringify(selectedOptions));
   }, [selectedOptions]);
 
-  const handleAnswerChange = (questionId, optionId) => {
-    if (examFinished) return;
-    setSelectedOptions((prev) => {
-      const updated = { ...prev, [questionId]: optionId };
-      localStorage.setItem("selectedOptions", JSON.stringify(updated));
-      return updated;
-    });
-  };
+  const handleSubmitExam = useCallback(async () => {
+    if (examFinished || !examToDo || isSubmitting) return;
+    setIsSubmitting(true);
 
-  const confirmFinishExam = () => setShowModal(true);
-
-  const handleModalResponse = (res) => {
-    if (res === "yes") {
-      localStorage.removeItem("selectedOptions");
-      localStorage.removeItem(`examTimeLeft_${examCode}`);
-      handleSubmitExam();
-    }
-    setShowModal(false);
-  };
-  const handleSubmitExam = async () => {
     try {
       let score = 0;
       examQuestions.forEach((q) => {
@@ -203,27 +166,52 @@ const LiveExam = () => {
         throw new Error(message);
       }
 
-      success("Ibisubizo byawe byoherejwe neza.");
+      if (!hasShownSuccess.current) {
+        success("Ibisubizo byawe byoherejwe neza.");
+        hasShownSuccess.current = true;
+      }
+
       localStorage.removeItem("selectedOptions");
       localStorage.removeItem(`examTimeLeft_${examCode}`);
       setSelectedOption(null);
       setTotalMarks(score);
       setExamFinished(true);
-      handleModalResponse();
-      // navigate("/students/exams");
+      setShowModal(false);
     } catch (error) {
       console.error("Submission error:", error);
       errors(error.message || "Habaye ikibazo mu kohereza ibisubizo.");
+    } finally {
+      setIsSubmitting(false);
     }
+  }, [
+    examQuestions,
+    examToDo,
+    examCode,
+    navigate,
+    selectedOptions,
+    examFinished,
+    isSubmitting,
+  ]);
+
+  const handleAnswerChange = (questionId, optionId) => {
+    if (examFinished) return;
+    setSelectedOptions((prev) => {
+      const updated = { ...prev, [questionId]: optionId };
+      localStorage.setItem("selectedOptions", JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const confirmFinishExam = () => setShowModal(true);
+
+  const handleModalResponse = (res) => {
+    if (res === "yes") {
+      handleSubmitExam();
+    }
+    setShowModal(false);
   };
 
   const handleReviewResults = () => setReviewResults(true);
-
-  const formatTime = (seconds) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-  };
 
   useEffect(() => {
     if (examToDo && examToDo.questions?.length === 0) {
@@ -232,6 +220,7 @@ const LiveExam = () => {
   }, [examToDo]);
 
   const currentQuestion = examQuestions[selectedQuestion];
+
   return (
     <div className="flex flex-col bg-white md:p-2 gap-2">
       {showNoQuestionsMessage ? (
@@ -253,7 +242,14 @@ const LiveExam = () => {
                 pass100={((60 / 20) * examQuestions.length).toFixed(0)}
                 number={examToDo?.number}
                 type={examToDo?.type}
-                timeLeft={formatTime(timeLeft)}
+                timeLeft={
+                  <Timer
+                    initialTime={10}
+                    onTimeEnd={handleSubmitExam}
+                    examId={examCode}
+                    examFinished={examFinished}
+                  />
+                }
                 access={examCode}
               />
               <div className="flex flex-wrap justify-start py-1 md:gap-4 gap-2">
@@ -290,7 +286,7 @@ const LiveExam = () => {
                   <img
                     src={currentQuestion.image}
                     alt="question"
-                    className=" w-52 h-28 rounded-md mb-1"
+                    className="w-32 h-32 rounded-md mb-1"
                   />
                 )}
                 <div className="mb-1 space-y-1">
@@ -342,8 +338,7 @@ const LiveExam = () => {
                                 selectedQuestion === 0
                                   ? "bg-gray-500 cursor-not-allowed"
                                   : "bg-blue-900"
-                              }
-                              `}
+                              }`}
                       disabled={selectedQuestion === 0}
                     >
                       <LuCircleArrowLeft />
@@ -360,8 +355,7 @@ const LiveExam = () => {
                                 selectedQuestion === examQuestions.length - 1
                                   ? "bg-gray-500 cursor-not-allowed"
                                   : "bg-blue-900"
-                              }
-                              `}
+                              }`}
                       disabled={selectedQuestion === examQuestions.length - 1}
                     >
                       <FiArrowRightCircle /> Igikurikira
@@ -395,7 +389,6 @@ const LiveExam = () => {
                   </div>
                 )}
 
-                {/* Modal */}
                 {showModal && (
                   <div className="fixed inset-0 bg-black/60 flex justify-center items-center p-2 z-[9999]">
                     <div className="bg-Total rounded-lg flex md:flex-row flex-col items-center justify-around shadow-lg md:w-[60%] md:py-14 py-0 w-full text-center relative">
@@ -408,7 +401,7 @@ const LiveExam = () => {
                       <img
                         src={Police}
                         alt="Logo"
-                        className=" w-48 h-48 justify-center"
+                        className="w-48 h-48 justify-center"
                       />
                       <div className="bg-white rounded-md md:w-[60%] w-full pb-4">
                         <div className="p-2 w-full bg-green-700 rounded-md text-center">
@@ -427,10 +420,11 @@ const LiveExam = () => {
                             No, Back
                           </button>
                           <button
-                            onClick={() => handleSubmitExam()}
-                            className="bg-Total text-white px-4 py-1 rounded"
+                            onClick={() => handleModalResponse("yes")}
+                            disabled={isSubmitting}
+                            className="bg-Total text-white px-4 py-1 rounded disabled:opacity-50"
                           >
-                            Yes, I finish
+                            {isSubmitting ? "Submitting..." : "Yes, I finish"}
                           </button>
                         </div>
                       </div>
@@ -548,8 +542,8 @@ const LiveExam = () => {
                   <button
                     onClick={() => {
                       localStorage.removeItem("selectedOptions");
-                      localStorage.removeItem("examTimeLeft");
-                      window.location.href = "/students/waitingexams";
+                      localStorage.removeItem(`examTimeLeft_${examCode}`);
+                      navigate("/students/waitingexams");
                     }}
                     className="bg-red-300 text-white py-2 px-4 rounded"
                   >

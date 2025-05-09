@@ -114,7 +114,9 @@ const LiveLearn = () => {
 
   const handleShowPaymentPopup = async () => {
     await fetchTestExam();
-    setPaymentPopup(true);
+    if (testExam) {
+      setPaymentPopup(true);
+    }
   };
 
   const handlePayLaterClick = async () => {
@@ -230,7 +232,7 @@ const LiveLearn = () => {
                   <img
                     src={currentQuestion.image}
                     alt="question"
-                    className="w-52 h-28 rounded-md mb-1"
+                    className="w-32 h-32 rounded-md mb-1"
                   />
                 )}
                 <form className="space-y-1 md:text-md text-sm">
@@ -311,13 +313,12 @@ const LiveLearn = () => {
         </>
       )}
 
-      {/* Payment Popup */}
-      {paymentPopup && (
+      {paymentPopup && testExam && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
           <div className="bg-Total p-4 rounded-lg md:w-1/2 h-1/2 flex justify-center items-center w-full relative">
             <button
               className="absolute top-1 bg-white w-10 h-10 rounded-full right-2 text-red-500 text-xl"
-              onClick={setPaymentPopup(false)}
+              onClick={() => setPaymentPopup(false)}
             >
               ✖
             </button>
@@ -326,22 +327,22 @@ const LiveLearn = () => {
               <div className="flex w-full flex-col bg-gray-300 rounded-lg">
                 <div className="flex flex-col justify-center items-center gap-1 py-5">
                   <h1 className="text-xl pt-1 text-Total font-bold">
-                    {testExam?.title}: {testExam?.number}
+                    {testExam.title}: {testExam.number}
                   </h1>
                   <div className="flex flex-col justify-center items-start">
                     <p className="text-Total">
                       Exam Fees:{" "}
-                      <span className="font-bold">{testExam?.fees} Rwf</span>
+                      <span className="font-bold">{testExam.fees} Rwf</span>
                     </p>
-                    <p className="text-Total">Exam Type: {testExam?.type}</p>
+                    <p className="text-Total">Exam Type: {testExam.type}</p>
                   </div>
                 </div>
                 <div className="pt-1">
                   <button
-                    className={`flex items-center justify-center gap-4 text-lg py-1 px-4 rounded-md w-full text-white bg-yellow-500`}
+                    className="flex items-center justify-center gap-4 text-lg py-1 px-4 rounded-md w-full text-white bg-yellow-500"
                     onClick={handlePayLaterClick}
                   >
-                    <BsCart /> Pay Now
+                    <BsCart /> Confirm Purchase
                   </button>
                 </div>
               </div>

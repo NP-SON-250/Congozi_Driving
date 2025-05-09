@@ -134,7 +134,7 @@ const SchoolLiveLearn = () => {
                     <img
                       src={currentQuestion.image}
                       alt="question"
-                      className="w-52 h-28 rounded-md mb-1"
+                      className="w-32 h-32 rounded-md mb-1"
                     />
                   )}
                   <form className="space-y-1 md:text-md text-sm">

@@ -110,7 +110,6 @@ const AccountMarket = () => {
     }
   };
   const handlePayNowClick = async () => {
-    console.log(selectedAccount._id);
     try {
       const token = localStorage.getItem("token");
       await axios.post(
@@ -283,7 +282,7 @@ const AccountMarket = () => {
                 </div>
               </>
             ) : (
-              <div className="flex md:flex-row flex-col md:gap-6 gap-1">
+              <div className="flex md:flex-row flex-col gap-0">
                 <div className="text-left">
                   <ul className="md:space-y-6 space-y-2 bg-gray-200 h-full p-4">
                     <li className="text-blue-900 font-bold">
@@ -306,7 +305,7 @@ const AccountMarket = () => {
                     <img src={Irembo} alt="" className="w-24" />
                   </ul>
                 </div>
-                <div className="flex flex-col justify-center items-start px-3 py-2">
+                <div className="flex flex-col bg-white w-full justify-center items-start px-3 py-2">
                   <p className="text-start">
                     Kanda ino mibare kuri telefone yawe ya MTN maze <br />
                     wishyure:

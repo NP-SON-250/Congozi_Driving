@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Police from "../../../assets/Policelogo.png";
 import { GrSend } from "react-icons/gr";
@@ -7,6 +7,9 @@ import { LuCircleArrowLeft } from "react-icons/lu";
 import { FiArrowRightCircle } from "react-icons/fi";
 import { FaRegEye } from "react-icons/fa6";
 import DescriptionCard from "../../../Components/Cards/DescriptionCard";
+import { ToastContainer, toast } from "react-toastify";
+import Timer from "../../../Components/ExamTimerLive";
+
 const SchoolLiveExam = () => {
   const [examId, setExamId] = useState("");
   const [examToDo, setExamToDo] = useState(null);
@@ -15,14 +18,42 @@ const SchoolLiveExam = () => {
   const [selectedOptions, setSelectedOptions] = useState(() => {
     return JSON.parse(localStorage.getItem("selectedOptions")) || {};
   });
-  const [timeLeft, setTimeLeft] = useState(1200); // 20 minutes
   const [examFinished, setExamFinished] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [reviewResults, setReviewResults] = useState(false);
   const [totalMarks, setTotalMarks] = useState(0);
   const [showNoQuestionsMessage, setShowNoQuestionsMessage] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const hasShownSuccess = useRef(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const errors = (message) => {
+    toast.error(message, {
+      position: "top-center",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
+
+  const success = (message) => {
+    toast.success(message, {
+      position: "top-center",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -53,35 +84,91 @@ const SchoolLiveExam = () => {
   useEffect(() => {
     if (examToDo && examId) {
       setExamQuestions(examToDo?.questions || []);
-      const storedTime = localStorage.getItem(`examTimeLeft_${examId}`);
-      const initialTime = storedTime ? parseInt(storedTime, 10) : 1200;
-      setTimeLeft(initialTime);
     }
   }, [examToDo, examId]);
 
   useEffect(() => {
-    if (examFinished || !examId) return;
-
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(timer);
-          localStorage.removeItem(`examTimeLeft_${examId}`);
-          handleSubmitExam();
-          return 0;
-        }
-        const newTime = prevTime - 1;
-        localStorage.setItem(`examTimeLeft_${examId}`, newTime);
-        return newTime;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [examFinished, examId]);
-
-  useEffect(() => {
     localStorage.setItem("selectedOptions", JSON.stringify(selectedOptions));
   }, [selectedOptions]);
+
+  const handleSubmitExam = useCallback(async () => {
+    if (examFinished || !examToDo || isSubmitting) return;
+    setIsSubmitting(true);
+
+    try {
+      let score = 0;
+      examQuestions.forEach((q) => {
+        const selectedOptionId = selectedOptions[q._id];
+        const correctOption = q.options.find((opt) => opt.isCorrect);
+        if (selectedOptionId && selectedOptionId === correctOption?._id) {
+          score++;
+        }
+      });
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        errors("You need to login first");
+        setExamFinished(true);
+        navigate("/login");
+        return;
+      }
+
+      const savedOptions =
+        JSON.parse(localStorage.getItem("selectedOptions")) || {};
+      const responses = Object.keys(savedOptions).map((questionId) => ({
+        questionId,
+        selectedOptionId: savedOptions[questionId],
+      }));
+
+      const payload = {
+        examId: examToDo._id,
+        responses,
+      };
+
+      const res = await fetch(
+        `https://congozi-backend.onrender.com/api/v1/responses/add`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok || data.status !== "200") {
+        const message = data.message || "Failed to submit answers";
+        throw new Error(message);
+      }
+
+      if (!hasShownSuccess.current) {
+        success("Your answers submitted successfully");
+        hasShownSuccess.current = true;
+      }
+
+      localStorage.removeItem("selectedOptions");
+      localStorage.removeItem(`examTimeLeft_${examId}`);
+      setTotalMarks(score);
+      setExamFinished(true);
+      setShowModal(false);
+    } catch (error) {
+      console.error("Submission error:", error);
+      errors(error.message || "Error submitting answers");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [
+    examQuestions,
+    examToDo,
+    examId,
+    navigate,
+    selectedOptions,
+    examFinished,
+    isSubmitting,
+  ]);
 
   const handleAnswerChange = (questionId, optionId) => {
     if (examFinished) return;
@@ -92,38 +179,16 @@ const SchoolLiveExam = () => {
     });
   };
 
-  const handleSubmitExam = () => {
-    let score = 0;
-    examQuestions.forEach((q) => {
-      const selectedOptionId = selectedOptions[q._id];
-      const correctOption = q.options.find((opt) => opt.isCorrect);
-      if (selectedOptionId && selectedOptionId === correctOption?._id) {
-        score++;
-      }
-    });
-    setTotalMarks(score);
-    setExamFinished(true);
-    localStorage.removeItem(`examTimeLeft_${examId}`);
-  };
-
   const confirmFinishExam = () => setShowModal(true);
 
   const handleModalResponse = (res) => {
     if (res === "yes") {
-      localStorage.removeItem("selectedOptions");
-      localStorage.removeItem(`examTimeLeft_${examId}`);
       handleSubmitExam();
     }
     setShowModal(false);
   };
 
   const handleReviewResults = () => setReviewResults(true);
-
-  const formatTime = (seconds) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-  };
 
   useEffect(() => {
     if (examToDo && examToDo.questions?.length === 0) {
@@ -132,6 +197,7 @@ const SchoolLiveExam = () => {
   }, [examToDo]);
 
   const currentQuestion = examQuestions[selectedQuestion];
+
   return (
     <div className="flex flex-col bg-white md:p-2 gap-2">
       {showNoQuestionsMessage ? (
@@ -146,17 +212,23 @@ const SchoolLiveExam = () => {
                 questions={examQuestions.length}
                 total20={examQuestions.length * 1}
                 total100={examQuestions.length * 5}
-                pass20={((12 / 20) * examQuestions.length).toFixed(2)}
-                pass100={((60 / 20) * examQuestions.length).toFixed(2)}
+                pass20={((12 / 20) * examQuestions.length).toFixed(0)}
+                pass100={((60 / 20) * examQuestions.length).toFixed(0)}
                 number={examToDo?.number}
                 type={examToDo?.type}
-                timeLeft={formatTime(timeLeft)}
+                timeLeft={
+                  <Timer
+                    initialTime={1200}
+                    onTimeEnd={handleSubmitExam}
+                    examId={examId}
+                    examFinished={examFinished}
+                  />
+                }
                 access={examId}
               />
 
               <div className="flex flex-wrap justify-start py-1 md:gap-4 gap-2">
                 {examQuestions.map((q, idx) => {
-                  const isCurrent = selectedQuestion === idx;
                   const isAnswered = selectedOptions[q._id];
                   return (
                     <button
@@ -189,7 +261,7 @@ const SchoolLiveExam = () => {
                   <img
                     src={currentQuestion.image}
                     alt="question"
-                    className="w-52 h-28 rounded-md mb-1"
+                    className="w-32 h-32 rounded-md mb-1"
                   />
                 )}
                 <div className="mb-1 space-y-1">
@@ -241,8 +313,7 @@ const SchoolLiveExam = () => {
                                 selectedQuestion === 0
                                   ? "bg-gray-500 cursor-not-allowed"
                                   : "bg-blue-900"
-                              }
-                              `}
+                              }`}
                       disabled={selectedQuestion === 0}
                     >
                       <LuCircleArrowLeft />
@@ -259,8 +330,7 @@ const SchoolLiveExam = () => {
                                 selectedQuestion === examQuestions.length - 1
                                   ? "bg-gray-500 cursor-not-allowed"
                                   : "bg-blue-900"
-                              }
-                              `}
+                              }`}
                       disabled={selectedQuestion === examQuestions.length - 1}
                     >
                       <FiArrowRightCircle /> Igikurikira
@@ -272,7 +342,7 @@ const SchoolLiveExam = () => {
                     <div className="mt-2 flex justify-center gap-24 md:mb-0">
                       <button className="bg-gray-500 cursor-not-allowed text-white px-4 py-1 rounded flex jus items-center gap-2">
                         <GrSend />
-                        Soza Ikizamini
+                        Soza
                       </button>
                       <button
                         onClick={handleReviewResults}
@@ -287,14 +357,13 @@ const SchoolLiveExam = () => {
                         {totalMarks}/{examQuestions.length}
                       </p>
                       <p>
-                        {((totalMarks / examQuestions.length) * 100).toFixed(2)}
+                        {((totalMarks / examQuestions.length) * 100).toFixed(0)}
                         /100
                       </p>
                     </div>
                   </div>
                 )}
 
-                {/* Modal */}
                 {showModal && (
                   <div className="fixed inset-0 bg-black/60 flex justify-center items-center p-2 z-[9999]">
                     <div className="bg-Total rounded-lg flex md:flex-row flex-col items-center justify-around shadow-lg md:w-[60%] md:py-14 py-0 w-full text-center relative">
@@ -307,7 +376,7 @@ const SchoolLiveExam = () => {
                       <img
                         src={Police}
                         alt="Logo"
-                        className=" w-48 h-48 justify-center"
+                        className="w-48 h-48 justify-center"
                       />
                       <div className="bg-white rounded-md md:w-[60%] w-full pb-4">
                         <div className="p-2 w-full bg-green-700 rounded-md text-center">
@@ -327,9 +396,10 @@ const SchoolLiveExam = () => {
                           </button>
                           <button
                             onClick={() => handleModalResponse("yes")}
-                            className="bg-Total text-white px-4 py-1 rounded"
+                            disabled={isSubmitting}
+                            className="bg-Total text-white px-4 py-1 rounded disabled:opacity-50"
                           >
-                            Yes, I finish
+                            {isSubmitting ? "Submitting..." : "Yes, I finish"}
                           </button>
                         </div>
                       </div>
@@ -431,7 +501,7 @@ const SchoolLiveExam = () => {
                         <div className="text-xl text-orange-500 font-medium">
                           Total Marks: {totalMarks}/{examQuestions.length} |{" "}
                           {((totalMarks / examQuestions.length) * 100).toFixed(
-                            2
+                            0
                           )}
                           /100
                         </div>
@@ -443,8 +513,8 @@ const SchoolLiveExam = () => {
                   <button
                     onClick={() => {
                       localStorage.removeItem("selectedOptions");
-                      localStorage.removeItem("examTimeLeft");
-                      window.location.href = "/schools/accessableexams";
+                      localStorage.removeItem(`examTimeLeft_${examId}`);
+                      navigate("/schools/accessableexams");
                     }}
                     className="bg-red-300 text-white py-2 px-4 rounded"
                   >
@@ -456,6 +526,7 @@ const SchoolLiveExam = () => {
           </div>
         </>
       )}
+      <ToastContainer />
     </div>
   );
 };
