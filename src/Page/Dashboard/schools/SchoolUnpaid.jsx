@@ -180,29 +180,32 @@ const SchoolUnpaid = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-around md:gap-[900px] gap-[250px] md:pb-0 pb-10">
-          <button
-            className={`px-2 py-1 text-blue-900 rounded ${
-              currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
-            disabled={currentPage === 0}
-          >
-            <FaArrowAltCircleLeft size={24} />
-          </button>
-          <button
-            className={`px-2 py-1 text-blue-900 rounded ${
-              currentPage === totalPages - 1
-                ? "opacity-50 cursor-not-allowed"
-                : ""
-            }`}
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))
-            }
-            disabled={currentPage === totalPages - 1}
-          >
-            <FaArrowAltCircleRight size={24} />
-          </button>
+        <div className="flex justify-around md:gap-[830px] gap-[120px] md:pb-0 pt-3 px-10">
+          <div>
+            <button
+              className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
+                currentPage === 0 ? "opacity-50" : ""
+              }`}
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
+              disabled={currentPage === 0}
+            >
+              <FaArrowAltCircleLeft size={24} /> Izibanza
+            </button>
+          </div>
+          <div>
+            <button
+              className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
+                currentPage === totalPages - 1 ? "opacity-50" : ""
+              }`}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))
+              }
+              disabled={currentPage === totalPages - 1}
+            >
+              Izikurira
+              <FaArrowAltCircleRight size={24} />
+            </button>
+          </div>
         </div>
       )}
 
