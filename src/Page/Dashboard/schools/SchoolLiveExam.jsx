@@ -41,7 +41,6 @@ const SchoolLiveExam = () => {
       theme: "light",
     });
   };
-
   const success = (message) => {
     toast.success(message, {
       position: "top-center",
@@ -91,9 +90,89 @@ const SchoolLiveExam = () => {
     localStorage.setItem("selectedOptions", JSON.stringify(selectedOptions));
   }, [selectedOptions]);
 
+  // const handleSubmitExam = useCallback(async () => {
+  //   if (examFinished || !examToDo || isSubmitting) return;
+  //   setIsSubmitting(true);
+
+  //   try {
+  //     let score = 0;
+  //     examQuestions.forEach((q) => {
+  //       const selectedOptionId = selectedOptions[q._id];
+  //       const correctOption = q.options.find((opt) => opt.isCorrect);
+  //       if (selectedOptionId && selectedOptionId === correctOption?._id) {
+  //         score++;
+  //       }
+  //     });
+
+  //     const token = localStorage.getItem("token");
+  //     if (!token) {
+  //       errors("You need to login first");
+  //       setExamFinished(true);
+  //       navigate("/login");
+  //       return;
+  //     }
+
+  //     const savedOptions =
+  //       JSON.parse(localStorage.getItem("selectedOptions")) || {};
+  //     const responses = Object.keys(savedOptions).map((questionId) => ({
+  //       questionId,
+  //       selectedOptionId: savedOptions[questionId],
+  //     }));
+
+  //     const payload = {
+  //       examId: examToDo._id,
+  //       responses,
+  //     };
+
+  //     const res = await fetch(
+  //       `https://congozi-backend.onrender.com/api/v1/responses/add`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //         body: JSON.stringify(payload),
+  //       }
+  //     );
+
+  //     const data = await res.json();
+
+  //     if (!res.ok || data.status !== "200") {
+  //       const message = data.message || "Failed to submit answers";
+  //       throw new Error(message);
+  //     }
+
+  //     if (!hasShownSuccess.current) {
+  //       success("Your answers submitted successfully");
+  //       hasShownSuccess.current = true;
+  //     }
+
+  //     localStorage.removeItem("selectedOptions");
+  //     localStorage.removeItem(`examTimeLeft_${examId}`);
+  //     setTotalMarks(score);
+  //     setExamFinished(true);
+  //     setShowModal(false);
+  //   } catch (error) {
+  //     console.error("Submission error:", error);
+  //     errors(error.message || "Error submitting answers");
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // }, [
+  //   examQuestions,
+  //   examToDo,
+  //   examId,
+  //   navigate,
+  //   selectedOptions,
+  //   examFinished,
+  //   isSubmitting,
+  // ]);
+
   const handleSubmitExam = useCallback(async () => {
     if (examFinished || !examToDo || isSubmitting) return;
     setIsSubmitting(true);
+    setExamFinished(true);
 
     try {
       let score = 0;
@@ -108,7 +187,6 @@ const SchoolLiveExam = () => {
       const token = localStorage.getItem("token");
       if (!token) {
         errors("You need to login first");
-        setExamFinished(true);
         navigate("/login");
         return;
       }
@@ -152,7 +230,6 @@ const SchoolLiveExam = () => {
       localStorage.removeItem("selectedOptions");
       localStorage.removeItem(`examTimeLeft_${examId}`);
       setTotalMarks(score);
-      setExamFinished(true);
       setShowModal(false);
     } catch (error) {
       console.error("Submission error:", error);
@@ -169,7 +246,6 @@ const SchoolLiveExam = () => {
     examFinished,
     isSubmitting,
   ]);
-
   const handleAnswerChange = (questionId, optionId) => {
     if (examFinished) return;
     setSelectedOptions((prev) => {
@@ -197,7 +273,6 @@ const SchoolLiveExam = () => {
   }, [examToDo]);
 
   const currentQuestion = examQuestions[selectedQuestion];
-
   return (
     <div className="flex flex-col bg-white md:p-2 gap-2">
       {showNoQuestionsMessage ? (
@@ -218,7 +293,7 @@ const SchoolLiveExam = () => {
                 type={examToDo?.type}
                 timeLeft={
                   <Timer
-                    initialTime={1200}
+                    initialTime={50}
                     onTimeEnd={handleSubmitExam}
                     examId={examId}
                     examFinished={examFinished}

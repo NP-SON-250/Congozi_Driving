@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const Timer = ({ initialTime, onTimeEnd, examId, examFinished }) => {
   const [timeLeft, setTimeLeft] = useState(initialTime);
+  const [timeEnded, setTimeEnded] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,27 +14,36 @@ const Timer = ({ initialTime, onTimeEnd, examId, examFinished }) => {
       ? parseInt(storedTime, 10)
       : initialTime;
     setTimeLeft(initialTimeValue);
-  }, [examId, initialTime, examFinished]);
+    
+    // If stored time is 0, immediately end the exam
+    if (storedTime && parseInt(storedTime, 10) <= 0) {
+      setTimeEnded(true);
+      onTimeEnd();
+    }
+  }, [examId, initialTime, examFinished, onTimeEnd]);
 
   useEffect(() => {
-    if (examFinished || !examId) return;
+    if (examFinished || !examId || timeEnded) return;
 
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
+        const newTime = prevTime - 1;
+        
+        if (newTime <= 0) {
           clearInterval(timer);
           localStorage.removeItem(`examTimeLeft_${examId}`);
+          setTimeEnded(true);
           onTimeEnd();
           return 0;
         }
-        const newTime = prevTime - 1;
+        
         localStorage.setItem(`examTimeLeft_${examId}`, newTime);
         return newTime;
       });
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [examFinished, examId, onTimeEnd]);
+  }, [examFinished, examId, onTimeEnd, timeEnded]);
 
   const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60);
