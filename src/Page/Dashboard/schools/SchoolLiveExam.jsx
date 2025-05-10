@@ -569,8 +569,9 @@ const SchoolLiveExam = () => {
                         className="text-center font-bold text-lg p-4 bg-gray-100"
                       >
                         <div className="text-center text-2xl text-blue-900">
-                          {totalMarks >= 10
-                            ? "Conglaturations you have made it 🙌🙌🙌"
+                          {totalMarks >=
+                          ((12 / 20) * examQuestions.length).toFixed(0)
+                            ? "Congratulations you have made it 🙌🙌🙌"
                             : "You failed this exam, You need to learn more!!"}
                         </div>
                         <div className="text-xl text-orange-500 font-medium">
