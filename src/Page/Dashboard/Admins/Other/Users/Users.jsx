@@ -142,13 +142,13 @@ const Users = () => {
         <table className="w-full text-left table-auto">
           <thead className="bg-gray-100 text-gray-700">
             <tr>
-              <th className="px-6 py-2">Name</th>
-              <th className="px-6 py-2">Email</th>
-              <th className="px-6 py-2">Id Card</th>
-              <th className="px-6 py-2">Phone</th>
-              <th className="px-6 py-2">Role</th>
-              <th className="px-6 py-2">Address</th>
-              <th className="px-6 py-2 text-right">Actions</th>
+              <th className="px-6 py-2 whitespace-nowrap">Name</th>
+              <th className="px-6 py-2 whitespace-nowrap">Email</th>
+              <th className="px-6 py-2 whitespace-nowrap">Id Card</th>
+              <th className="px-6 py-2 whitespace-nowrap">Phone</th>
+              <th className="px-6 py-2 whitespace-nowrap">Role</th>
+              <th className="px-6 py-2 whitespace-nowrap">Address</th>
+              <th className="px-6 py-2 text-right whitespace-nowrap">Actions</th>
             </tr>
           </thead>
           <tbody>

@@ -10,6 +10,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import Irembo from "../../../assets/irembopay.png";
 import Mtn from "../../../assets/MTN.jpg";
+import { toast, ToastContainer } from "react-toastify";
 
 const getCurrentDate = () => {
   const today = new Date();
@@ -24,13 +25,13 @@ const SchoolMyExams = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [paymentStep, setPaymentStep] = useState("confirmation");
-  const accountsPerPage = 5;
+  const accountsPerPage = 4;
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
+  
+    
     const fetchAccounts = async () => {
+      const token = localStorage.getItem("token");
       try {
         const config = {
           headers: {
@@ -48,6 +49,7 @@ const SchoolMyExams = () => {
       }
     };
 
+    useEffect(() => {
     fetchAccounts();
   }, []);
 
@@ -76,25 +78,52 @@ const SchoolMyExams = () => {
     setPaymentStep("payment");
   };
 
+  const handlePayment = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const purchaseId = selectedAccount._id;
+      const response = await axios.put(
+        `https://congozi-backend.onrender.com/api/v1/purchases/${purchaseId}`,
+        { status: "complete" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      closePopup();
+      fetchAccounts();
+    } catch (error) {
+      toast.error("Kwishyura byanze.");
+      console.error("Payment error:", error);
+    }
+  };
   const closePopup = () => {
     setSelectedAccount(null);
     setPaymentStep("confirmation");
   };
-
-  // Utility: Calculate remaining days from today to endDate
   const getRemainingDays = (endDate) => {
+    if (!endDate) return "N/A";
+
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     const end = new Date(endDate);
+    end.setHours(0, 0, 0, 0);
+
     const diffTime = end - today;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  };
 
+    // Return proper display values
+    if (diffDays < 0) return "Expired";
+    if (diffDays === 0) return "Today";
+    return `${diffDays} Days`;
+  };
   return (
     <div className="md:p-2 flex gap-2 flex-col">
       <WelcomeDear />
       <div className="flex justify-center items-center gap-4 text-blue-900 font-bold py-2 border bg-gray-100 rounded-md">
-        <h1>My Examinations</h1>
+        <h1>My Accounts</h1>
       </div>
 
       <div className="overflow-x-auto rounded-lg shadow border border-blue-900">
@@ -103,7 +132,7 @@ const SchoolMyExams = () => {
             <thead>
               <tr className="bg-gray-100 border text-blue-900 md:text-base text-xs font-bold">
                 <th className="px-6 py-2 whitespace-nowrap">No.</th>
-                <th className="px-6 py-2 whitespace-nowrap">Access Code</th>
+                <th className="px-6 py-2 whitespace-nowrap">Account Name</th>
                 <th className="px-6 py-2 whitespace-nowrap">Valid In</th>
                 <th className="px-6 py-2 whitespace-nowrap">Days Remain</th>
                 <th className="px-6 py-2 whitespace-nowrap">Date</th>
@@ -114,7 +143,21 @@ const SchoolMyExams = () => {
             </thead>
             <tbody>
               {currentAccounts.map((account, index) => {
-                const remainingDays = getRemainingDays(account.endDate);
+                const endDate = account.endDate
+                  ? new Date(account.endDate)
+                  : null;
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                const diffDays = endDate
+                  ? Math.ceil(
+                      (endDate.setHours(0, 0, 0, 0) - today) /
+                        (1000 * 60 * 60 * 24)
+                    )
+                  : null;
+
+                const isExpired = diffDays !== null && diffDays < 0;
+
                 return (
                   <tr
                     key={account._id}
@@ -124,13 +167,13 @@ const SchoolMyExams = () => {
                       {indexOfFirstExam + index + 1}
                     </td>
                     <td className="px-6 py-2 whitespace-nowrap md:tex-md text-xs">
-                      {account.accessCode}
+                      {account.itemId?.title}
                     </td>
                     <td className="px-6 py-2 whitespace-nowrap md:tex-md text-x">
                       {account.itemId?.validIn} Days
                     </td>
                     <td className="px-6 py-2 whitespace-nowrap md:tex-md text-x">
-                      {remainingDays} Days
+                      {getRemainingDays(account.endDate)}
                     </td>
                     <td className="px-6 py-2 whitespace-nowrap md:tex-md text-xs">
                       {getCurrentDate()}
@@ -142,10 +185,14 @@ const SchoolMyExams = () => {
                       {account.status}
                     </td>
                     <td className="px-6 py-2 whitespace-nowrap">
-                      {account.status === "pending" ? (
+                      {isExpired ? (
+                        <button className="text-blue-900 py-1 px-3" disabled>
+                          -
+                        </button>
+                      ) : account.status === "pending" ? (
                         <button
                           title="Proceed to payment"
-                          onClick={() => handlePurchaseClick(exam)}
+                          onClick={() => handlePurchaseClick(account)}
                           className="text-blue-900 py-1 px-3 flex md:tex-xs text-xs items-center gap-2"
                         >
                           <FaCartPlus />
@@ -173,27 +220,34 @@ const SchoolMyExams = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-around md:gap-[830px] gap-[250px] md:pb-0 pb-10">
-          <button
-            className={`px-2 py-1 text-blue-900 rounded ${
-              currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-          >
-            <FaArrowAltCircleLeft size={24} />
-          </button>
-          <button
-            className={`px-2 py-1 text-blue-900 rounded ${
-              currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-          >
-            <FaArrowAltCircleRight size={24} />
-          </button>
+        <div className="flex justify-around md:gap-[700px] gap-[80px] md:pb-0 pt-3 px-10">
+          <div>
+            <button
+              className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
+                currentPage === 1 ? "opacity-50" : ""
+              }`}
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              <FaArrowAltCircleLeft size={24} /> Izibanza
+            </button>
+          </div>
+          <div>
+            <button
+              className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
+                currentPage === totalPages
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }`}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+            >
+              Izikurira
+              <FaArrowAltCircleRight size={24} />
+            </button>
+          </div>
         </div>
       )}
 
@@ -283,7 +337,10 @@ const SchoolMyExams = () => {
                       placeholder="ex: 0789xxxxxxx"
                       className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
                     />
-                    <button className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full">
+                    <button
+                      className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full"
+                      onClick={handlePayment}
+                    >
                       Ishyura {selectedAccount.itemId?.fees} RWF
                     </button>
                     <p className="text-start py-2 font-medium">
@@ -298,6 +355,7 @@ const SchoolMyExams = () => {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 };

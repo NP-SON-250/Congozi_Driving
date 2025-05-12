@@ -111,7 +111,7 @@ const SchoolWaiting = () => {
         <WelcomeDear />
 
         {soonToExpireAccounts.length > 0 && (
-          <div className="w-[90%] bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md mb-3">
+          <div className="md:w-[90%] w-full bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md mb-3">
             ⚠️ <strong>Heads up!</strong> You have {soonToExpireAccounts.length}{" "}
             account
             {soonToExpireAccounts.length > 1 ? "s" : ""} expiring within 1 day.
@@ -184,7 +184,7 @@ const SchoolWaiting = () => {
         )}
 
         {totalPages > 1 && (
-          <div className="flex justify-around md:gap-[830px] gap-[120px] md:pb-0 pt-3 px-10">
+          <div className="flex justify-around md:gap-[700px] gap-[120px] md:pb-0 pt-3 px-10">
             <div>
               <button
                 className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${

@@ -80,7 +80,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "My Examinations",
+        name: "My Accounts",
         path: "/schools/exams",
         iconR: <IoIosMenu />,
         iconL: <IoIosArrowForward />,

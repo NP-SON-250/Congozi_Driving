@@ -97,13 +97,13 @@ const StudentExams = () => {
           <table className="min-w-full table-auto">
             <thead>
               <tr className="bg-gray-100 border text-blue-900 md:text-base text-xs font-bold">
-                <th className="text-center p-2">No.</th>
-                <th className="text-center p-2">Access Code</th>
-                <th className="text-center p-2">Type</th>
-                <th className="text-center p-2">Date</th>
-                <th className="text-center p-2">Fees</th>
-                <th className="text-center p-2">Status</th>
-                <th className="text-center p-2">Actions</th>
+                <th className="text-center p-2 whitespace-nowrap">No.</th>
+                <th className="text-center p-2 whitespace-nowrap">Exam Title</th>
+                <th className="text-center p-2 whitespace-nowrap">Type</th>
+                <th className="text-center p-2 whitespace-nowrap">Date</th>
+                <th className="text-center p-2 whitespace-nowrap">Fees</th>
+                <th className="text-center p-2 whitespace-nowrap">Status</th>
+                <th className="text-center p-2 whitespace-nowrap">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -120,27 +120,27 @@ const StudentExams = () => {
                 currentExams.map((exam, index) => (
                   <tr
                     key={exam._id}
-                    className="bg-white border text-blue-900 md:text-base text-xs"
+                    className="bg-white border text-blue-900 md:text-base text-xs whitespace-nowrap"
                   >
-                    <td className="text-center md:tex-md text-xs py-2 px-4">
+                    <td className="text-center md:tex-md text-xs py-2 px-4 whitespace-nowrap">
                       {indexOfFirstExam + index + 1}
                     </td>
-                    <td className="text-center md:tex-md text-xs px-1">
-                      {exam.accessCode}
+                    <td className="text-start md:tex-md text-xs px-1 whitespace-nowrap">
+                      {exam.itemId?.title}
                     </td>
-                    <td className="text-center md:tex-md text-xs p-2">
+                    <td className="text-start md:tex-md text-xs p-2 whitespace-nowrap">
                       {exam.itemId?.type}
                     </td>
-                    <td className="text-center md:tex-md text-xs px-2">
+                    <td className="text-start md:tex-md text-xs px-2 whitespace-nowrap">
                       {getCurrentDate()}
                     </td>
-                    <td className="text-center md:tex-md text-xs px-2">
+                    <td className="text-start md:tex-md text-xs px-2 whitespace-nowrap">
                       {exam.amount}
                     </td>
-                    <td className="text-center md:tex-md text-xs px-2">
+                    <td className="text-start md:tex-md text-xs px-2 whitespace-nowrap">
                       {exam.status}
                     </td>
-                    <td className="text-center p-2">
+                    <td className="text-center p-2 whitespace-nowrap">
                       {exam.status === "pending" ? (
                         <button
                           title="Proceed to payment"
@@ -181,18 +181,21 @@ const StudentExams = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-around md:gap-[830px] gap-[250px] md:pb-0 pb-10">
-          <button
-            className={`px-2 py-1 text-blue-900 rounded ${
-              currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-          >
-            <FaArrowAltCircleLeft size={24} />
-          </button>
-          <button
-            className={`px-2 py-1 text-blue-900 rounded ${
+        <div className="flex justify-around md:gap-[700px] gap-[120px] md:pb-0 pt-3 px-10">
+          <div>
+            <button
+              className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
+                currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              <FaArrowAltCircleLeft size={24} />Ibibanza
+            </button>
+          </div>
+          <div>
+            <button
+            className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
               currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
             }`}
             onClick={() =>
@@ -200,8 +203,9 @@ const StudentExams = () => {
             }
             disabled={currentPage === totalPages}
           >
-            <FaArrowAltCircleRight size={24} />
+            Ibikurikira<FaArrowAltCircleRight size={24} />
           </button>
+          </div>
         </div>
       )}
 

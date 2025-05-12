@@ -4,7 +4,7 @@ import { PiFolderOpenDuotone } from "react-icons/pi";
 import { IoLanguageOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import Police from "../../assets/Policelogo.png";
-import { useNavigate,useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Topbar = ({ currentSection, role = "students", onSignOut }) => {
   const [menuVisible, setMenuVisible] = useState(false);

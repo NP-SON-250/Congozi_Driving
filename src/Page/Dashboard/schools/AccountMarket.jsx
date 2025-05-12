@@ -136,7 +136,7 @@ const AccountMarket = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-start md:px-5 gap-1 bg-white">
+    <div className="flex flex-col justify-center items-center md:px-5 gap-1 bg-white">
       <WelcomeDear />
 
       {/* Filters */}
@@ -204,7 +204,7 @@ const AccountMarket = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-around md:gap-[830px] gap-[70px] md:pb-0 pt-3 px-10 ">
+        <div className="flex justify-around md:gap-[700px] gap-[70px] md:pb-0 pt-3 px-10 ">
           <button
             className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
               currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""
