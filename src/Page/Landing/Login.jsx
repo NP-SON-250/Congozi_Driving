@@ -93,15 +93,15 @@ const Login = () => {
 
           <p className="text-lg md:px-20 p-2 text-center">
             Kugirango ubone amakuru yawe n'ibizamini ndetse na serivisi zitangwa
-            na Congozi. Ugomba kubanza kwinjira
+            na Congozi Exapert. Ugomba kubanza kwinjira
           </p>
 
           <div className="flex flex-col items-start gap-4 md:w-[70%] w-full">
             <LoginInputs
-              label="Nomero Yawe Ya Telefone"
+              label="Telefone cg Email"
               type="text"
               icon={<FaUser />}
-              placeholder="07XXXXXXXX"
+              placeholder="Urugero: 07XX cg email@gmail.com"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
             />

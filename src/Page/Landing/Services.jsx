@@ -22,13 +22,13 @@ const Services = () => {
           <div className="flex justify-center items-center flex-col gap-2">
             <img src={Service1} alt="" className="md:h-[40vh] rounded-md" />
             <p className="text-sm text-blue-500 text-start pl-10 uppercase">
-              muri congozi driving school tukwigisha aho waba uri hose kw' is
+              muri congozi driving school tukwigisha aho waba uri hose kw' isi
             </p>
           </div>
           <div className="flex justify-center items-center flex-col gap-2">
             <img src={Service2} alt="" className="md:h-[40vh] rounded-md" />
             <p className="text-sm text-blue-500 text-start pl-0 uppercase">
-              dutanga amasomo mu buryo bw' imnonankubone
+              dutanga amasomo mu buryo bw' imbonankubone
             </p>
           </div>
           <div className="flex justify-center items-center flex-col gap-2 pb-4">
@@ -42,9 +42,9 @@ const Services = () => {
         <div className=" pb-4 text-md px-10">
           <p>
             Singombwa ko uvunwa no kuza mw'ishuri, twakira n'abifuza kwiga
-            hifashishijwe ikoranabuhanga ryacu kuko muri Congozi ushobora
+            hifashishijwe ikoranabuhanga ryacu kuko muri Congozi Expert ushobora
             guhitamo kwiga imbonankubone cyagwa ukifashisha uburyo
-            bw'ikoranabuhanga rya Congozi. Mumashuri ndetse n'amashami yacu
+            bw'ikoranabuhanga rya Congozi Expert. Mumashuri ndetse n'amashami yacu
             yose.
           </p>
         </div>

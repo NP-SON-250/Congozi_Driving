@@ -105,8 +105,8 @@ const Register = () => {
   return (
     <div className=" pt-16">
       <div className="bg-black/20 flex justify-center items-center p-1 rounded-sm">
-        <h1 className="text-xl text-Total font-semibold font-Roboto">
-          Fungura konti kuri Congozi
+        <h1 className="md:text-xl text-sm text-Total font-semibold font-Roboto">
+          Fungura konti kuri Congozi Expert
         </h1>
       </div>
       <div className="flex md:flex-row flex-col">
@@ -146,7 +146,7 @@ const Register = () => {
             </div>
             <div className="flex md:flex-row flex-col gap-1">
               <HalfInput
-                label="Address"
+                label="Aho uherereye"
                 name="address"
                 value={formData.address}
                 onChange={handleInputChange}
@@ -215,7 +215,7 @@ const Register = () => {
             </p>
             <div>
               <label className="text-gray-700 font-medium px-4 md:w-[16%] w-full">
-                Profile
+                Ifoto
               </label>
               <div
                 className="flex cursor-pointer lg:w-32 w-32 px-4 border-desired"
@@ -233,12 +233,12 @@ const Register = () => {
                 {selectedImage ? (
                   <img
                     src={selectedImage}
-                    alt="Profile"
+                    alt="Ifoto"
                     className="lg:w-6 lg:h-6 w-12 h-12 rounded-full object-cover ml-2"
                   />
                 ) : (
-                  <span className="text-pcolor lg:text-sm lg:mt-0 mt-1 text-xl font-bold">
-                    Choose..
+                  <span className="text-pcolor text-sm lg:mt-0 mt-1 md:text-xl font-bold">
+                    Hitamo..
                   </span>
                 )}
               </div>

@@ -34,7 +34,7 @@ const Home = () => {
           <div>
             <p className="text-start md:text-md text-md text-blue-500 py-4 px-0">
               Uhereye uyuminsi iyandikishe kuri sisteme yacu, maze wisanzure
-              n'ibisubizo bigezweho Congozi yabazaniye; Aho ushobora
+              n'ibisubizo bigezweho Congozi Expert yabazaniye; Aho ushobora
               kwimenyereza gukora ibizamini bya provisoir Online, ndetse no
               kwiga ukoresheje ibizamini bisubije neza!
             </p>
