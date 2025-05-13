@@ -160,7 +160,7 @@ const StudentMarket = () => {
         <div className="w-full px-3 md:flex justify-center items-center hidden md:bloc">
           <input
             type="search"
-            placeholder=""
+            placeholder="---Ubwoko, igiciro, nimero byikizami---"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="border-2 border-blue-500 p-2 rounded-xl w-full"
