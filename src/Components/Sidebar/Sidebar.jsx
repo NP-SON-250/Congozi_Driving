@@ -24,37 +24,37 @@ const Sidebar = ({ role = "students", onSignOut }) => {
   const sidebarMenu = {
     students: [
       {
-        name: "Home",
+        name: "Ahabanza",
         path: "/students/home",
         iconR: <HiHome />,
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "Examination Market",
+        name: "Isoko ry'ibizamni",
         path: "/students/market",
         iconR: <BsCart />,
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "Do Exams Online",
+        name: "Aho Bakorera Ikizamini",
         path: "/students/tracking",
         iconR: <PiFolderSimpleUserLight />,
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "My Examinations",
+        name: "Ibizamini Byanjye",
         path: "/students/exams",
         iconR: <IoIosMenu />,
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "My Profile",
+        name: "Umwirondoro Wanjye",
         path: "/students/profile",
         iconR: <FaUsersCog />,
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "School Account Market",
+        name: "Aho Bagurira Konti Y'shuri",
         path: "/students/school",
         iconR: <FaGoogleScholar />,
         iconL: <IoIosArrowForward />,
@@ -168,7 +168,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
             }}
           >
             <RiLogoutCircleLine className="mr-3 text-blue-500" />
-            <p className="text-md font-medium">Sign Out</p>
+            <p className="text-md font-medium">Sohoka</p>
           </div>
         </ul>
       </div>
@@ -216,7 +216,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
               <div className="icon">
                 <MdMoreHoriz size={24} />
               </div>
-              <span className="text-xs font-bold">More</span>
+              <span className="text-xs font-bold">Ibindi</span>
             </button>
           </li>
         </ul>

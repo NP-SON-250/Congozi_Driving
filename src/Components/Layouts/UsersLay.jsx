@@ -8,12 +8,12 @@ const UsersLay = ({ role }) => {
   const location = useLocation();
 
   const sectionMap = {
-    "/students/home": "Studend Dashboard",
-    "/students/market": "Examination Market",
-    "/students/online": "Do Exams Online",
-    "/students/exams": "My Examinations",
-    "/students/profile": "My Account",
-    "/students/school": "School Account",
+    "/students/home": "Ibigigenewe Umunyeshuri",
+    "/students/market": "Isoko ry'ibizamni",
+    "/students/online": "Aho Bakorera Ikizamini",
+    "/students/exams": "Ibizamini Byanjye",
+    "/students/profile": "Umwirondoro Wanjye",
+    "/students/school": "Aho Bagurira Konti Y'shuri",
 
     "/admins/home": "Admin Dashboard",
     "/admins/exams": "Exams",
@@ -33,7 +33,7 @@ const UsersLay = ({ role }) => {
 
   // Get current year for footer
   const getCurrentYear = () => new Date().getFullYear();
-  const currentSection = sectionMap[location.pathname] || "Dashboard";
+  const currentSection = sectionMap[location.pathname] || "Ibigigenewe Umunyeshuri";
 
   return (
     <>

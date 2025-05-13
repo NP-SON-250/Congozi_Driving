@@ -119,14 +119,14 @@ const StudentUnpaid = () => {
       <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
         <input
           type="text"
-          placeholder="---Select Exam Type---"
+          placeholder="--ubwoko bw'ikizami--"
           value={type}
           onChange={(e) => setType(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer"
         />
         <input
           type="text"
-          placeholder="---Filter Exam Fees---"
+          placeholder="---Shaka n'igiciro---"
           value={fees}
           onChange={(e) => setFees(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer"
@@ -134,7 +134,7 @@ const StudentUnpaid = () => {
         <div className="w-full px-3 md:flex justify-center items-center hidden">
           <input
             type="search"
-            placeholder="Search Everything"
+            placeholder="---Ubwoko, igiciro, nimero byikizami---"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -145,7 +145,7 @@ const StudentUnpaid = () => {
       <div className="w-full px-3 pb-3 flex justify-center items-center md:hidden">
         <input
           type="search"
-          placeholder="Search Everything"
+          placeholder="---Ubwoko, igiciro, nimero byikizami---"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -171,7 +171,7 @@ const StudentUnpaid = () => {
                 type={exam.itemId.type}
                 onPurchase={() => handlePurchaseClick(exam)}
                 icon={<FaHandHoldingDollar />}
-                button={"Proceed Payment"}
+                button={"Soza Kwishyura"}
                 buttonColor={buttonColor}
               />
             );

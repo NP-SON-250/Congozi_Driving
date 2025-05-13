@@ -96,14 +96,14 @@ const StudentWaiting = () => {
           <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
             <input
               type="text"
-              placeholder="---Select Exam Type---"
+              placeholder="--ubwoko bw'ikizami--"
               value={type}
               onChange={(e) => setType(e.target.value)}
               className="border-2 border-blue-500 p-2 rounded-xl"
             />
             <input
               type="text"
-              placeholder="---Filter Exam Fees---"
+              placeholder="---Shaka n'igiciro---"
               value={fees}
               onChange={(e) => setFees(e.target.value)}
               className="border-2 border-blue-500 p-2 rounded-xl"
@@ -111,7 +111,7 @@ const StudentWaiting = () => {
             <div className="w-full px-3 md:flex hidden">
               <input
                 type="search"
-                placeholder="Search Everything"
+                placeholder="---Ubwoko, igiciro, nimero byikizami---"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -122,7 +122,7 @@ const StudentWaiting = () => {
           <div className="w-full px-3 pb-3 flex md:hidden">
             <input
               type="search"
-              placeholder="Search Everything"
+              placeholder="---Ubwoko, igiciro, nimero byikizami---"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -138,7 +138,7 @@ const StudentWaiting = () => {
                   .toLowerCase()
                   .includes("learn");
                 const buttonColor = isLearn ? "bg-yellow-500" : "bg-green-500";
-                const buttonText = isLearn ? "Learn Exam" : "Do Exam";
+                const buttonText = isLearn ? "Iga ikizami" : "Kora ikizami";
                 return (
                   <ExamsCard
                     key={index}

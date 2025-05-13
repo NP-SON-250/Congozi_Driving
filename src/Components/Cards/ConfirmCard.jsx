@@ -24,16 +24,16 @@ const ConfirmCard = ({ code, onClick, onClose,onChange }) => {
           />
           <div className="flex justify-around gap-5 pb-4">
             <button
-              className="flex justify-center items-center text-Total font-semibold bg-white rounded-full py-1 md:px-6 px-2"
+              className="flex justify-center items-center text-Total font-semibold bg-yellow-500 rounded-full py-1 md:px-6 px-2"
               onClick={onClose}
             >
-              Choose to Back
+              Subira Inyuma
             </button>
             <button
-              className="flex justify-center items-center text-Total font-semibold bg-white rounded-full py-1 md:px-6 px-2"
+              className="flex justify-center items-center text-Total font-semibold bg-green-500 rounded-full py-1 md:px-6 px-2"
               onClick={onClick}
             >
-              Choose to Start
+            Gutangira Ikizami
             </button>
           </div>
         </div>

@@ -17,13 +17,13 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
   const studentTop = [
     {
       id: 1,
-      name: "Notification",
+      name: "Ubutumwa",
       path: "/students/notifications",
       icon: <AiOutlineNotification />,
     },
     {
       id: 2,
-      name: "Language",
+      name: "Indimi",
       path: "#",
       icon: <IoLanguageOutline />,
     },
@@ -151,7 +151,7 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
               }}
             >
               <PiFolderOpenDuotone className="mr-3 text-whte" />
-              <p className="text-md font-medium">Log Out</p>
+              <p className="text-md font-medium">Sohoka</p>
             </div>
           </ul>
         </div>

@@ -324,7 +324,7 @@ const LiveExam = () => {
                   <div className="mt-4 md:flex md:justify-between grid grid-cols-2 gap-4 md:pb-0 pb-4">
                     <button
                       onClick={confirmFinishExam}
-                      className="bg-blue-900 text-white px-4 py-1 rounded flex justify-center items-center gap-2"
+                      className="bg-blue-900 text-white px-2 py-1 rounded flex justify-center items-center gap-2"
                     >
                       <GrSend />
                       Soza Ikizamini
@@ -333,7 +333,7 @@ const LiveExam = () => {
                       onClick={() =>
                         setSelectedQuestion((prev) => Math.max(prev - 1, 0))
                       }
-                      className={`bg-blue-900 text-white px-4 py-1 rounded flex jus items-center gap-2
+                      className={`bg-blue-900 text-white px-2 py-1 rounded flex jus items-center gap-2
                               ${
                                 selectedQuestion === 0
                                   ? "bg-gray-500 cursor-not-allowed"
@@ -342,7 +342,7 @@ const LiveExam = () => {
                       disabled={selectedQuestion === 0}
                     >
                       <LuCircleArrowLeft />
-                      Ikibanza
+                      Ikibanza / Prev
                     </button>
                     <button
                       onClick={() =>
@@ -350,7 +350,7 @@ const LiveExam = () => {
                           Math.min(prev + 1, examQuestions.length - 1)
                         )
                       }
-                      className={`bg-blue-900 text-white px-4 py-1 rounded flex jus items-center gap-2
+                      className={`bg-blue-900 text-white px-2 py-1 rounded flex jus items-center gap-2
                               ${
                                 selectedQuestion === examQuestions.length - 1
                                   ? "bg-gray-500 cursor-not-allowed"
@@ -358,7 +358,7 @@ const LiveExam = () => {
                               }`}
                       disabled={selectedQuestion === examQuestions.length - 1}
                     >
-                      <FiArrowRightCircle /> Igikurikira
+                      <FiArrowRightCircle /> Igikurikira / Next
                     </button>
                   </div>
                 )}
@@ -406,25 +406,25 @@ const LiveExam = () => {
                       <div className="bg-white rounded-md md:w-[60%] w-full pb-4">
                         <div className="p-2 w-full bg-green-700 rounded-md text-center">
                           <h1 className="md:text-lg text-sm font-bold text-blue-900">
-                            Attention
+                            Itonde!!
                           </h1>
                         </div>
                         <h3 className="md:text-lg text-sm font-bold my-3 text-center">
-                          Are you sure to finish Exam now?
+                          Ese Urashaka Gusoza Ikizamini?
                         </h3>
                         <div className="flex justify-between p-6">
                           <button
                             onClick={() => handleModalResponse("no")}
-                            className="bg-Total text-white px-4 py-1 rounded"
+                            className="bg-yellow-500 text-white px-4 py-1 rounded"
                           >
-                            No, Back
+                            Oya, Subira inyuma
                           </button>
                           <button
                             onClick={() => handleModalResponse("yes")}
                             disabled={isSubmitting}
-                            className="bg-Total text-white px-4 py-1 rounded disabled:opacity-50"
+                            className="bg-green-500 text-white px-4 py-1 rounded disabled:opacity-50"
                           >
-                            {isSubmitting ? "Submitting..." : "Yes, I finish"}
+                            {isSubmitting ? "Submitting..." : "Yego, Ndasoje"}
                           </button>
                         </div>
                       </div>
@@ -522,11 +522,11 @@ const LiveExam = () => {
                         >
                           <div className="text-center md:text-base text-sm text-blue-900">
                             {totalMarks >= 10
-                              ? "Conglaturations you have made it 🙌🙌🙌"
-                              : "You failed this exam, You need to learn more!!"}
+                              ? "Watsinze wabikoze neza 🙌🙌🙌"
+                              : "Watsinzwe ikizamini iga cyane!!"}
                           </div>
                           <div className="text-md text-orange-500 font-medium">
-                            Total Marks: {totalMarks}/{examQuestions.length} |{" "}
+                            Amanota wabonye: {totalMarks}/{examQuestions.length} |{" "}
                             {(
                               (totalMarks / examQuestions.length) *
                               100
@@ -545,7 +545,7 @@ const LiveExam = () => {
                       localStorage.removeItem(`examTimeLeft_${examCode}`);
                       navigate("/students/waitingexams");
                     }}
-                    className="bg-red-300 text-white py-2 px-4 rounded"
+                    className="bg-red-500 text-white py-2 px-4 rounded"
                   >
                     Kuraho iyi paje
                   </button>

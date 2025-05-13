@@ -89,7 +89,7 @@ const StudentExams = () => {
     <div className="md:p-2 flex gap-2 flex-col">
       <WelcomeDear />
       <div className="flex justify-center items-center gap-4 text-blue-900 font-bold py-2 border bg-gray-100 rounded-md">
-        <h1>My Examinations</h1>
+        <h1>Ibizamini Byanjye</h1>
       </div>
 
       <div className="overflow-x-auto rounded-lg shadow border border-blue-900">
@@ -98,12 +98,14 @@ const StudentExams = () => {
             <thead>
               <tr className="bg-gray-100 border text-blue-900 md:text-base text-xs font-bold">
                 <th className="text-center p-2 whitespace-nowrap">No.</th>
-                <th className="text-center p-2 whitespace-nowrap">Exam Title</th>
-                <th className="text-center p-2 whitespace-nowrap">Type</th>
-                <th className="text-center p-2 whitespace-nowrap">Date</th>
-                <th className="text-center p-2 whitespace-nowrap">Fees</th>
-                <th className="text-center p-2 whitespace-nowrap">Status</th>
-                <th className="text-center p-2 whitespace-nowrap">Actions</th>
+                <th className="text-center p-2 whitespace-nowrap">
+                  Umutwe w'ikizami
+                </th>
+                <th className="text-center p-2 whitespace-nowrap">Ubwoko</th>
+                <th className="text-center p-2 whitespace-nowrap">Itariki</th>
+                <th className="text-center p-2 whitespace-nowrap">Igiciro</th>
+                <th className="text-center p-2 whitespace-nowrap">Imimerere</th>
+                <th className="text-center p-2 whitespace-nowrap">Igikorwa</th>
               </tr>
             </thead>
             <tbody>
@@ -190,21 +192,25 @@ const StudentExams = () => {
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
             >
-              <FaArrowAltCircleLeft size={24} />Ibibanza
+              <FaArrowAltCircleLeft size={24} />
+              Ibibanza
             </button>
           </div>
           <div>
             <button
-            className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
-              currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-          >
-            Ibikurikira<FaArrowAltCircleRight size={24} />
-          </button>
+              className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
+                currentPage === totalPages
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }`}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+            >
+              Ibikurikira
+              <FaArrowAltCircleRight size={24} />
+            </button>
           </div>
         </div>
       )}
@@ -222,32 +228,33 @@ const StudentExams = () => {
             {paymentStep === "confirmation" ? (
               <>
                 <h2 className="text-lg text-start font-bold text-white px-6 pt-6">
-                  Dear {selectedExam.purchasedBy?.lName},
+                  Mukiriya {selectedExam.purchasedBy?.lName},
                 </h2>
                 <p className="mt-0 text-start text-white px-6">
-                  Your Exam {selectedExam.itemId?.number} for{" "}
-                  {selectedExam.itemId?.type} has been successfully purchased!
-                  Please make payment for your bill ({selectedExam.itemId?.fees}{" "}
-                  RWF) to get exam access code.
+                  Ugiye kugura ikizamini {selectedExam.itemId?.number} cyo{" "}
+                  {selectedExam.itemId?.type} ishyura ayamafaranga (
+                  {selectedExam.itemId?.fees} RWF) maze uhabwe kode yo gufungura
+                  ikizamini cyawe. Ufite ikibazo hamagara kiri iyi nimero:
+                  0783905790.
                 </p>
-                <div className="flex justify-center p-6 mt-12 gap-6">
+                <div className="flex justify-center md:p-6 p-2 md:mt-12 mt-6 mb-2 md:gap-6 gap-2">
                   <button
                     className="bg-red-500 text-white px-2 py-1 rounded"
                     onClick={closePopup}
                   >
-                    Close
+                    Funga
                   </button>
                   <button
                     className="bg-yellow-500 text-white px-2 py-1 rounded"
                     onClick={closePopup}
                   >
-                    Pay Later
+                    PIshyura Mukanya
                   </button>
                   <button
                     className="bg-green-500 text-white px-2 py-1 rounded"
                     onClick={handleProceedToPayment}
                   >
-                    Pay Now
+                    Ishyura Nonaha
                   </button>
                 </div>
               </>

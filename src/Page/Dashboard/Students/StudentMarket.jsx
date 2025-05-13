@@ -145,14 +145,14 @@ const StudentMarket = () => {
       <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
         <input
           type="text"
-          placeholder="---Select Exam Type---"
+          placeholder="--ubwoko bw'ikizami--"
           value={type}
           onChange={(e) => setType(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer"
         />
         <input
           type="text"
-          placeholder="---Filter Exam Fees---"
+          placeholder="---Shaka n'igiciro---"
           value={fees}
           onChange={(e) => setFees(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer"
@@ -160,7 +160,7 @@ const StudentMarket = () => {
         <div className="w-full px-3 md:flex justify-center items-center hidden md:bloc">
           <input
             type="search"
-            placeholder="Search Everything"
+            placeholder=""
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -171,7 +171,7 @@ const StudentMarket = () => {
       <div className="w-full px-3 pb-3 flex justify-center items-center md:hidden">
         <input
           type="search"
-          placeholder="Search Everything"
+          placeholder="---Ubwoko, igiciro, nimero byikizami---"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -192,7 +192,7 @@ const StudentMarket = () => {
                 {...exam}
                 onPurchase={() => handlePurchaseClick(exam)}
                 icon={<BsCart />}
-                button={"Purchase"}
+                button={"Gura Ikizami"}
                 buttonColor={buttonColor}
               />
             );
@@ -242,31 +242,30 @@ const StudentMarket = () => {
             {paymentStep === "confirmation" ? (
               <>
                 <h2 className="text-lg text-start font-bold text-white px-6 pt-6">
-                  Dear {userName?.fName} {userName?.lName},
+                  Mukiriya {userName?.fName} {userName?.lName},
                 </h2>
                 <p className="mt-0 text-start text-white px-6">
-                  Your Exam {selectedExam.number} for {selectedExam.type} has
-                  been successfully purchased! Please make payment for your bill
-                  ({selectedExam.fees} RWF) to get exam access code.
+                  Ugiye kugura ikizamini {selectedExam.number} cyo {selectedExam.type} ishyura ayamafaranga
+                  ({selectedExam.fees} RWF) maze uhabwe kode yo gufungura ikizamini cyawe. Ufite ikibazo hamagara kiri iyi nimero: 0783905790
                 </p>
-                <div className="flex justify-center p-6 mt-12 gap-6">
+                <div className="flex justify-center md:p-6 p-2 md:mt-12 mt-6 mb-2 md:gap-6 gap-2">
                   <button
                     className="bg-red-500 text-white px-2 py-1 rounded md:text-base text-xs"
                     onClick={closePopup}
                   >
-                    Close
+                    Funga
                   </button>
                   <button
                     className="bg-yellow-500 text-white px-2 py-1 rounded"
                     onClick={handlePayLaterClick}
                   >
-                    Pay Later
+                    Ishyura Mukanya
                   </button>
                   <button
                     className="bg-green-500 text-white px-2 py-1 rounded"
                     onClick={handleProceedToPayment}
                   >
-                    Pay Now
+                    Ishyura Nonaha
                   </button>
                 </div>
               </>

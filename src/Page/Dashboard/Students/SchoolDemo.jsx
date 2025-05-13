@@ -84,14 +84,14 @@ const SchoolDemo = () => {
       <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
         <input
           type="text"
-          placeholder="---Select account valid time---"
+          placeholder="---iminsi---"
           value={valid}
           onChange={(e) => setValid(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer text-bold"
         />
         <input
           type="text"
-          placeholder="---Filter account Fees---"
+          placeholder="---igiciro---"
           value={fees}
           onChange={(e) => setFees(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer"
@@ -99,7 +99,7 @@ const SchoolDemo = () => {
         <div className="w-full px-3 md:flex justify-center items-center hidden md:bloc">
           <input
             type="search"
-            placeholder="Search Everything"
+            placeholder="---Ubwoko, igiciro, nimero byikizami---"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -110,7 +110,7 @@ const SchoolDemo = () => {
       <div className="w-full px-3 pb-3 flex justify-center items-center md:hidden">
         <input
           type="search"
-          placeholder="Search Everything"
+          placeholder="---iminsi, igiciro, umutwe byikizami---"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -131,7 +131,7 @@ const SchoolDemo = () => {
                 {...account}
                 onPurchase={() => handlePurchaseClick(account)}
                 icon={<BsCart />}
-                button={"Purchase"}
+                button={"Gura Konte"}
                 buttonColor={buttonColor}
               />
             );
@@ -163,7 +163,7 @@ const SchoolDemo = () => {
             }
             disabled={currentPage === totalPages - 1}
           >
-            Izikurira <FaArrowAltCircleRight size={24} />
+            Izikurikira <FaArrowAltCircleRight size={24} />
           </button>
         </div>
       )}
