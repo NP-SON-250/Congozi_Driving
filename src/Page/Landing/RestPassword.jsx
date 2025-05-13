@@ -22,15 +22,15 @@ const RestPassword = () => {
             </p>
           </div>
           <p className=" text-lg md:px-20 p-2">
-            Andika nomero ya telefone ukoresha cya imeri yawe maze wemeze
+            Andika nomero ya telefone ukoresha cyangwa imeri yawe maze wemeze
             kohererezwa ijambobanga rishya!
           </p>
           <div className="flex flex-col items-start gap-4 md:w-[70%] w-full">
             <LoginInputs
-              label="Nomero Yawe Ya Telefone"
+              label="Telefone cg Email"
               type="text"
               icon={<FaUser />}
-              placeholder="07XXXXXXXX"
+              placeholder="07XXX cg Email"
             />
 
             {/* Radio Buttons for SMS or Email */}
