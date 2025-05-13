@@ -50,7 +50,7 @@ const WelcomeDear = () => {
   return (
     <div className="flex justify-between text-white w-full items-center bg-blue-900 md:px-2 md:py-0 py-3 rounded-sm">
       <p className="flex justify-center md:text-md text-xs gap-2 p-1">
-        Iaze,{" "}
+        Ikaze,{" "}
         <span className="md:text-md text-xs">
           {userName.fName || userName.lName
             ? `${userName.fName || ""} ${userName.lName || ""}`
