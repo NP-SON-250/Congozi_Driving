@@ -331,10 +331,10 @@ const LiveLearn = () => {
                   </h1>
                   <div className="flex flex-col justify-center items-start">
                     <p className="text-Total">
-                      Exam Fees:{" "}
+                      Igiciro:{" "}
                       <span className="font-bold">{testExam.fees} Rwf</span>
                     </p>
-                    <p className="text-Total">Exam Type: {testExam.type}</p>
+                    <p className="text-Total">Ubwoko: {testExam.type}</p>
                   </div>
                 </div>
                 <div className="pt-1">
@@ -342,7 +342,7 @@ const LiveLearn = () => {
                     className="flex items-center justify-center gap-4 text-lg py-1 px-4 rounded-md w-full text-white bg-yellow-500"
                     onClick={handlePayLaterClick}
                   >
-                    <BsCart /> Confirm Purchase
+                    <BsCart /> Saba Kwishyura
                   </button>
                 </div>
               </div>

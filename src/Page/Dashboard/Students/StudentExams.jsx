@@ -10,6 +10,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import Irembo from "../../../assets/irembopay.png";
 import Mtn from "../../../assets/MTN.jpg";
+import { toast, ToastContainer } from "react-toastify";
 
 const getCurrentDate = () => {
   const today = new Date();
@@ -85,6 +86,27 @@ const StudentExams = () => {
     setPaymentStep("confirmation");
   };
 
+  const handlePayment = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const purchaseId = selectedExam._id;
+
+      const response = await axios.put(
+        `https://congozi-backend.onrender.com/api/v1/purchases/${purchaseId}`,
+        { status: "complete" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      closePopup();
+      fetchExams();
+    } catch (error) {
+      toast.error("Kwishyura byanze.");
+      console.error("Payment error:", error);
+    }
+  };
   return (
     <div className="md:p-2 flex gap-2 flex-col">
       <WelcomeDear />
@@ -248,7 +270,7 @@ const StudentExams = () => {
                     className="bg-yellow-500 text-white px-2 py-1 rounded"
                     onClick={closePopup}
                   >
-                    PIshyura Mukanya
+                    Ishyura Mukanya
                   </button>
                   <button
                     className="bg-green-500 text-white px-2 py-1 rounded"
@@ -302,7 +324,8 @@ const StudentExams = () => {
                       placeholder="ex: 0789xxxxxxx"
                       className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
                     />
-                    <button className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full">
+                    <button className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full"
+                    onClick={handlePayment}>
                       Ishyura {selectedExam.itemId?.fees} RWF
                     </button>
                     <p className="text-start py-2 font-medium">
@@ -317,6 +340,7 @@ const StudentExams = () => {
           </div>
         </div>
       )}
+      <ToastContainer/>
     </div>
   );
 };
