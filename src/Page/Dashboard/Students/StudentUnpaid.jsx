@@ -116,7 +116,7 @@ const StudentUnpaid = () => {
       <WelcomeDear />
 
       {/* Filters */}
-      <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
+      <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-12 gap-1 px-3 py-4">
         <input
           type="text"
           placeholder="--ubwoko bw'ikizami--"
@@ -196,7 +196,9 @@ const StudentUnpaid = () => {
           <div>
             <button
               className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
-                currentPage === totalPages - 1 ? "opacity-50 cursor-not-allowed" : ""
+                currentPage === totalPages - 1
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
               }`}
               onClick={() =>
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))

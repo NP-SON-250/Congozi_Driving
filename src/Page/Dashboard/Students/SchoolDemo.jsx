@@ -81,7 +81,7 @@ const SchoolDemo = () => {
       <WelcomeDear />
 
       {/* Filters */}
-      <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
+      <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-12 gap-1 px-3 py-4">
         <input
           type="text"
           placeholder="---iminsi---"

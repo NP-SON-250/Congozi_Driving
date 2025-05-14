@@ -98,7 +98,7 @@ const SchoolAccessableExams = () => {
   return (
     <div className="flex flex-col justify-around items-center md:px-5 gap-1 bg-white md:p-2">
       <WelcomeDear />
-      <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
+      <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-12 gap-1 px-3 py-4">
         <input
           type="text"
           placeholder="---Select Exam Type---"
