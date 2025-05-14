@@ -415,14 +415,14 @@ const LiveExam = () => {
                         <div className="flex justify-between p-6">
                           <button
                             onClick={() => handleModalResponse("no")}
-                            className="bg-yellow-500 text-white px-4 py-1 rounded"
+                            className="bg-yellow-500 text-white px-1 py-1 rounded"
                           >
                             Oya, Subira inyuma
                           </button>
                           <button
                             onClick={() => handleModalResponse("yes")}
                             disabled={isSubmitting}
-                            className="bg-green-500 text-white px-4 py-1 rounded disabled:opacity-50"
+                            className="bg-green-500 text-white px-1 py-1 rounded disabled:opacity-50"
                           >
                             {isSubmitting ? "Submitting..." : "Yego, Ndasoje"}
                           </button>

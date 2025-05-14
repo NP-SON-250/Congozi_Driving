@@ -93,7 +93,7 @@ const Login = () => {
 
           <p className="text-lg md:px-20 p-2 text-center">
             Kugirango ubone amakuru yawe n'ibizamini ndetse na serivisi zitangwa
-            na Congozi Exapert. Ugomba kubanza kwinjira
+            na Congozi Expert. Ugomba kubanza kwinjira
           </p>
 
           <div className="flex flex-col items-start gap-4 md:w-[70%] w-full">

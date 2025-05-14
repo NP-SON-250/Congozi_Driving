@@ -30,7 +30,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "Isoko ry'ibizamni",
+        name: "Isoko ry'ibizamini",
         path: "/students/market",
         iconR: <BsCart />,
         iconL: <IoIosArrowForward />,
@@ -54,7 +54,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "Aho Bagurira Konti Y'shuri",
+        name: "Aho Bagurira konti y'ishuri",
         path: "/students/school",
         iconR: <FaGoogleScholar />,
         iconL: <IoIosArrowForward />,

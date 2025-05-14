@@ -245,8 +245,10 @@ const StudentMarket = () => {
                   Mukiriya {userName?.fName} {userName?.lName},
                 </h2>
                 <p className="mt-0 text-start text-white px-6">
-                  Ugiye kugura ikizamini {selectedExam.number} cyo {selectedExam.type} ishyura ayamafaranga
-                  ({selectedExam.fees} RWF) maze uhabwe kode yo gufungura ikizamini cyawe. Ufite ikibazo hamagara kiri iyi nimero: 0783905790
+                  Ugiye kugura ikizamini {selectedExam.number} cyo{" "}
+                  {selectedExam.type} ishyura ayamafaranga ({selectedExam.fees}{" "}
+                  RWF) maze uhabwe kode yo gufungura ikizamini cyawe. Ufite
+                  ikibazo hamagara kuri iyi nimero: 0783905790
                 </p>
                 <div className="flex justify-center md:p-6 p-2 md:mt-12 mt-6 mb-2 md:gap-6 gap-2">
                   <button
