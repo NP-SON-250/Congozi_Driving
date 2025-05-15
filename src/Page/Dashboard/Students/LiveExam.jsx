@@ -218,6 +218,26 @@ const LiveExam = () => {
       setShowNoQuestionsMessage(true);
     }
   }, [examToDo]);
+  useEffect(() => {
+  const reloadFlag = sessionStorage.getItem("reloaded");
+
+  if (!reloadFlag) {
+    sessionStorage.setItem("reloaded", "true");
+  } else {
+    sessionStorage.removeItem("reloaded");
+
+    if (!examFinished) {
+      // Maybe alert first or autosubmit
+      handleSubmitExam();
+      if (user?.role === 'student') {
+      navigate('/students/home');
+    } else if (user?.role === 'school') {
+      navigate('/schools/home');
+    } 
+    }
+  }
+}, [navigate, examFinished, handleSubmitExam]);
+
 
   const currentQuestion = examQuestions[selectedQuestion];
 
