@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+
 
 const Timer = ({ initialTime, onTimeEnd, examId, examFinished }) => {
   const [timeLeft, setTimeLeft] = useState(initialTime);
   const [timeEnded, setTimeEnded] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (examFinished || !examId) return;

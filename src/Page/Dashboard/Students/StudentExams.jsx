@@ -28,27 +28,26 @@ const StudentExams = () => {
   const examsPerPage = 5;
   const navigate = useNavigate();
 
+  const fetchExams = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.get(
+        "https://congozi-backend.onrender.com/api/v1/purchases/user",
+        config
+      );
+      const result = response.data?.data;
+      setAllExams(Array.isArray(result) ? result : [result]);
+    } catch (error) {
+      console.error("Error fetching exam data:", error);
+    }
+  };
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    const fetchExams = async () => {
-      try {
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-        const response = await axios.get(
-          "https://congozi-backend.onrender.com/api/v1/purchases/user",
-          config
-        );
-        const result = response.data?.data;
-        setAllExams(Array.isArray(result) ? result : [result]);
-      } catch (error) {
-        console.error("Error fetching exam data:", error);
-      }
-    };
-
     fetchExams();
   }, []);
 
@@ -64,6 +63,7 @@ const StudentExams = () => {
       console.error("No access code available for this exam.");
     }
   };
+
   const handleDoExam = (exam) => {
     if (exam.accessCode && exam.accessCode.length > 0) {
       navigate(`/liveExam?code=${exam.accessCode}`);
@@ -101,7 +101,8 @@ const StudentExams = () => {
         }
       );
       closePopup();
-      fetchExams();
+      await fetchExams();
+      toast.success("Kwishyura byakunze!");
     } catch (error) {
       toast.error("Kwishyura byanze.");
       console.error("Payment error:", error);
@@ -159,7 +160,7 @@ const StudentExams = () => {
                       {getCurrentDate()}
                     </td>
                     <td className="text-start md:tex-md text-xs px-2 whitespace-nowrap">
-                      {exam.amount}
+                      {exam.amount} Rwf
                     </td>
                     <td className="text-start md:tex-md text-xs px-2 whitespace-nowrap">
                       {exam.status}
@@ -324,8 +325,10 @@ const StudentExams = () => {
                       placeholder="ex: 0789xxxxxxx"
                       className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
                     />
-                    <button className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full"
-                    onClick={handlePayment}>
+                    <button
+                      className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full"
+                      onClick={handlePayment}
+                    >
                       Ishyura {selectedExam.itemId?.fees} RWF
                     </button>
                     <p className="text-start py-2 font-medium">
@@ -340,7 +343,7 @@ const StudentExams = () => {
           </div>
         </div>
       )}
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 };
