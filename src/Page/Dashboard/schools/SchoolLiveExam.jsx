@@ -191,7 +191,6 @@ const SchoolLiveExam = () => {
       setShowNoQuestionsMessage(true);
     }
   }, [examToDo]);
-
   const currentQuestion = examQuestions[selectedQuestion];
   return (
     <div className="flex flex-col bg-white md:p-2 gap-2">
