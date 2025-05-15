@@ -19,7 +19,9 @@ const AdminProfile = () => {
   });
 
   const [passwordData, setPasswordData] = useState({
-    password: "",
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
 
   const [profile, setProfile] = useState(null);
@@ -58,31 +60,92 @@ const AdminProfile = () => {
     }
   };
 
+  const validatePasswordChange = () => {
+    if (!passwordData.currentPassword) {
+      toast.error("Please enter your current password");
+      return false;
+    }
+    if (!passwordData.newPassword) {
+      toast.error("Please enter a new password");
+      return false;
+    }
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      toast.error("New passwords don't match");
+      return false;
+    }
+    if (passwordData.newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!user?._id) return toast.error("User not logged in");
+  e.preventDefault();
+  if (!user?._id) return toast.error("User not logged in");
 
-    try {
-      const form = new FormData();
+  try {
+    const token = localStorage.getItem("token");
 
-      if (showPasswordForm) {
-        if (!passwordData.password) {
-          return toast.error("Please fill in password field");
-        }
+    if (showPasswordForm) {
+      if (!validatePasswordChange()) return;
 
-        form.append("password", passwordData.password);
-      } else {
-        for (let key in formData) {
-          if (formData[key]) {
-            form.append(key, formData[key]);
+      // First verify the current password with the server
+      try {
+        await axios.post(
+          `https://congozi-backend.onrender.com/api/v1/users/verify-password`,
+          {
+            userId: user._id,
+            password: passwordData.currentPassword
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        }
-        if (profile) {
-          form.append("profile", profile);
-        }
+        );
+      } catch (error) {
+        toast.error("Current password is incorrect");
+        return;
       }
 
-      const token = localStorage.getItem("token");
+      // If verification succeeds, proceed with password change
+      const form = new FormData();
+      form.append("password", passwordData.newPassword);
+
+      const response = await axios.put(
+        `https://congozi-backend.onrender.com/api/v1/users/${user._id}`,
+        form,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setMessage("Password updated successfully");
+      setMessageType("success");
+
+      setTimeout(() => {
+        setShowPasswordForm(false);
+        setPasswordData({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
+      }, 1000);
+    } else {
+      // Original profile update logic
+      const form = new FormData();
+      for (let key in formData) {
+        if (formData[key]) {
+          form.append(key, formData[key]);
+        }
+      }
+      if (profile) {
+        form.append("profile", profile);
+      }
 
       const response = await axios.put(
         `https://congozi-backend.onrender.com/api/v1/users/${user._id}`,
@@ -96,33 +159,23 @@ const AdminProfile = () => {
       );
 
       const updatedUser = response.data.data;
-      if (!showPasswordForm) {
-        localStorage.setItem("user", JSON.stringify(updatedUser));
-      }
+      localStorage.setItem("user", JSON.stringify(updatedUser));
 
-      setMessage(
-        showPasswordForm
-          ? "Password updated successfully"
-          : "Profile updated successfully"
-      );
+      setMessage("Profile updated successfully");
       setMessageType("success");
 
       setTimeout(() => {
-        if (!showPasswordForm) {
-          window.location.reload();
-        } else {
-          setShowPasswordForm(false);
-          setPasswordData({ password: "" });
-        }
+        window.location.reload();
       }, 1000);
-    } catch (error) {
-      console.error(error);
-      setMessage(
-        error?.response?.data?.message || "Failed to update information"
-      );
-      setMessageType("error");
     }
-  };
+  } catch (error) {
+    console.error(error);
+    setMessage(
+      error?.response?.data?.message || "Failed to update information"
+    );
+    setMessageType("error");
+  }
+};
 
   return (
     <div className="flex items-center justify-center">
@@ -224,11 +277,30 @@ const AdminProfile = () => {
             <>
               <input
                 type="password"
-                name="password"
-                value={passwordData.password}
+                name="currentPassword"
+                value={passwordData.currentPassword}
+                onChange={handleChange}
+                placeholder="Current Password"
+                className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
+                required
+              />
+              <input
+                type="password"
+                name="newPassword"
+                value={passwordData.newPassword}
                 onChange={handleChange}
                 placeholder="New Password"
                 className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
+                required
+              />
+              <input
+                type="password"
+                name="confirmPassword"
+                value={passwordData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Confirm New Password"
+                className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
+                required
               />
             </>
           )}
@@ -243,7 +315,14 @@ const AdminProfile = () => {
 
             <button
               type="button"
-              onClick={() => setShowPasswordForm((prev) => !prev)}
+              onClick={() => {
+                setShowPasswordForm((prev) => !prev);
+                setPasswordData({
+                  currentPassword: "",
+                  newPassword: "",
+                  confirmPassword: "",
+                });
+              }}
               className="text-blue-600 hover:text-yellow-600"
             >
               {showPasswordForm ? "Back to Profile" : "Change Password?"}
