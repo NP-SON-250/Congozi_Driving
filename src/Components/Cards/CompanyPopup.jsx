@@ -50,6 +50,16 @@ const CompanyPopup = ({ onClose }) => {
       toast.error(errMsg);
     }
   };
+  useEffect(() => {
+    // Redirect if user is already logged out
+    const token = localStorage.getItem("token");
+    if (!token) {
+      window.history.pushState(null, "", window.location.href);
+      window.onpopstate = () => {
+        window.history.go(1);
+      };
+    }
+  }, []);
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[999]">
       <div className="bg-[#1e2a87] text-white rounded-2xl p-6 w-[90%] md:w-[500px] relative">
