@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
@@ -33,12 +33,15 @@ const CompanyPopup = ({ onClose }) => {
       switch (data.role) {
         case "student":
           navigate("/students/home");
+          window.location.reload();
           break;
         case "admin":
           navigate("/admins/home");
+          window.location.reload();
           break;
         case "school":
           navigate("/schools/home");
+          window.location.reload();
           break;
         default:
           toast.error("User role not recognized.");
@@ -50,16 +53,7 @@ const CompanyPopup = ({ onClose }) => {
       toast.error(errMsg);
     }
   };
-  useEffect(() => {
-    // Redirect if user is already logged out
-    const token = localStorage.getItem("token");
-    if (!token) {
-      window.history.pushState(null, "", window.location.href);
-      window.onpopstate = () => {
-        window.history.go(1);
-      };
-    }
-  }, []);
+  
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[999]">
       <div className="bg-[#1e2a87] text-white rounded-2xl p-6 w-[90%] md:w-[500px] relative">
@@ -95,7 +89,7 @@ const CompanyPopup = ({ onClose }) => {
             className="p-2 rounded-md text-black"
           />
           <input
-            type="text"
+            type="password"
             placeholder="Ijambo Banga Winjiriraho"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
