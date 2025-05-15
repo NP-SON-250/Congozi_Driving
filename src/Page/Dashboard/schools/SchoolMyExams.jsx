@@ -134,7 +134,7 @@ const SchoolMyExams = () => {
                 <th className="px-6 py-2 whitespace-nowrap">No.</th>
                 <th className="px-6 py-2 whitespace-nowrap">Account Name</th>
                 <th className="px-6 py-2 whitespace-nowrap">Valid In</th>
-                <th className="px-6 py-2 whitespace-nowrap">Days Remain</th>
+                <th className="px-6 py-2 whitespace-nowrap">Expires</th>
                 <th className="px-6 py-2 whitespace-nowrap">Date</th>
                 <th className="px-6 py-2 whitespace-nowrap">Fees</th>
                 <th className="px-6 py-2 whitespace-nowrap">Status</th>
