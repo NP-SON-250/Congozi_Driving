@@ -271,120 +271,7 @@ const LiveExam = () => {
             kuri: <span className="text-orange-500">0783905790</span>
           </p>
         </div>
-      ) : examFinished ? (
-        <>
-          <div className="w-full bg-green-500 text-blue-900 font-bold text-xl rounded-md text-center mb-4">
-            <h2 className="font-bold py-2">Exam Review</h2>
-          </div>
-          <div className="overflow-x-auto rounded-lg shadow border border-blue-900 w-full">
-            <table className="w-full text-left table-auto">
-              <thead className="bg-gray-300 text-blue-900">
-                <tr>
-                  <th className="border p-1 text-bold md:text-lg text-sm">
-                    Ibibazo
-                  </th>
-                  <th className="border p-1 text-bold md:text-lg text-sm">
-                    Ibisubizo
-                  </th>
-                  <th className="border p-1 text-bold md:text-lg text-sm">
-                    Amanota
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {examQuestions.map((q) => {
-                  const selectedOptionId = selectedOptions[q._id];
-                  const correctOption = q.options.find((opt) => opt.isCorrect);
-                  const correct = selectedOptionId === correctOption?._id;
-
-                  return (
-                    <tr key={q._id}>
-                      <td className="border px-2">
-                        <div>{q.phrase}</div>
-                        {q.image && (
-                          <img
-                            src={q.image}
-                            alt=""
-                            className="w-16 h-16 rounded-full"
-                          />
-                        )}
-                      </td>
-                      <td className="border px-2">
-                        {q.options.map((opt, i) => {
-                          const isSelected = selectedOptionId === opt._id;
-                          const isCorrect = opt._id === correctOption?._id;
-
-                          return (
-                            <div
-                              key={opt._id}
-                              className={`p-1 ${
-                                isCorrect
-                                  ? "text-green-500"
-                                  : isSelected
-                                  ? "text-red-500"
-                                  : ""
-                              }`}
-                            >
-                              {String.fromCharCode(97 + i)}. {opt.text}
-                            </div>
-                          );
-                        })}
-                      </td>
-                      <td className="border border-gray-300">
-                        <div
-                          className={`text-center -mt-12 font-semibold ${
-                            correct ? "text-green-500" : "text-red-500"
-                          }`}
-                        >
-                          {correct ? "Wagikoze" : "Wakishe"}
-                        </div>
-                        <div className="text-center font-semibold whitespace-nowrap px-2">
-                          {selectedOptionId == null
-                            ? "Ntiwagisubije"
-                            : correct
-                            ? "Amanota: 1/20 | 5%"
-                            : "Amanota: 0/20 | 0%"}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td
-                    colSpan="3"
-                    className="text-center font-bold md:text-lg text-sm p-4 bg-gray-100"
-                  >
-                    <div className="text-center md:text-base text-sm text-blue-900">
-                      {totalMarks >= 10
-                        ? "Watsinze wabikoze neza 🙌🙌🙌"
-                        : "Watsinzwe ikizamini iga cyane!!"}
-                    </div>
-                    <div className="text-md text-orange-500 font-medium">
-                      Amanota wabonye: {totalMarks}/{examQuestions.length} |{" "}
-                      {((totalMarks / examQuestions.length) * 100).toFixed(0)}
-                      /100
-                    </div>
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-          <div className="flex justify-center mt-4">
-            <button
-              onClick={() => {
-                localStorage.removeItem("selectedOptions");
-                localStorage.removeItem(`examTimeLeft_${examCode}`);
-                navigate("/students/waitingexams");
-              }}
-              className="bg-red-500 text-white py-2 px-4 rounded"
-            >
-              Kuraho iyi paje
-            </button>
-          </div>
-        </>
-      ) : (
+      ) : !examFinished ? (
         <>
           <DescriptionCard
             questions={examQuestions.length}
@@ -557,7 +444,120 @@ const LiveExam = () => {
             )}
           </div>
         </>
-      )}
+      ) : examFinished ? (
+        <>
+          <div className="w-full bg-green-500 text-blue-900 font-bold text-xl rounded-md text-center mb-4">
+            <h2 className="font-bold py-2">Exam Review</h2>
+          </div>
+          <div className="overflow-x-auto rounded-lg shadow border border-blue-900 w-full">
+            <table className="w-full text-left table-auto">
+              <thead className="bg-gray-300 text-blue-900">
+                <tr>
+                  <th className="border p-1 text-bold md:text-lg text-sm">
+                    Ibibazo
+                  </th>
+                  <th className="border p-1 text-bold md:text-lg text-sm">
+                    Ibisubizo
+                  </th>
+                  <th className="border p-1 text-bold md:text-lg text-sm">
+                    Amanota
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {examQuestions.map((q) => {
+                  const selectedOptionId = selectedOptions[q._id];
+                  const correctOption = q.options.find((opt) => opt.isCorrect);
+                  const correct = selectedOptionId === correctOption?._id;
+
+                  return (
+                    <tr key={q._id}>
+                      <td className="border px-2">
+                        <div>{q.phrase}</div>
+                        {q.image && (
+                          <img
+                            src={q.image}
+                            alt=""
+                            className="w-16 h-16 rounded-full"
+                          />
+                        )}
+                      </td>
+                      <td className="border px-2">
+                        {q.options.map((opt, i) => {
+                          const isSelected = selectedOptionId === opt._id;
+                          const isCorrect = opt._id === correctOption?._id;
+
+                          return (
+                            <div
+                              key={opt._id}
+                              className={`p-1 ${
+                                isCorrect
+                                  ? "text-green-500"
+                                  : isSelected
+                                  ? "text-red-500"
+                                  : ""
+                              }`}
+                            >
+                              {String.fromCharCode(97 + i)}. {opt.text}
+                            </div>
+                          );
+                        })}
+                      </td>
+                      <td className="border border-gray-300">
+                        <div
+                          className={`text-center -mt-12 font-semibold ${
+                            correct ? "text-green-500" : "text-red-500"
+                          }`}
+                        >
+                          {correct ? "Wagikoze" : "Wakishe"}
+                        </div>
+                        <div className="text-center font-semibold whitespace-nowrap px-2">
+                          {selectedOptionId == null
+                            ? "Ntiwagisubije"
+                            : correct
+                            ? "Amanota: 1/20 | 5%"
+                            : "Amanota: 0/20 | 0%"}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td
+                    colSpan="3"
+                    className="text-center font-bold md:text-lg text-sm p-4 bg-gray-100"
+                  >
+                    <div className="text-center md:text-base text-sm text-blue-900">
+                      {totalMarks >= 10
+                        ? "Watsinze wabikoze neza 🙌🙌🙌"
+                        : "Watsinzwe ikizamini iga cyane!!"}
+                    </div>
+                    <div className="text-md text-orange-500 font-medium">
+                      Amanota wabonye: {totalMarks}/{examQuestions.length} |{" "}
+                      {((totalMarks / examQuestions.length) * 100).toFixed(0)}
+                      /100
+                    </div>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={() => {
+                localStorage.removeItem("selectedOptions");
+                localStorage.removeItem(`examTimeLeft_${examCode}`);
+                navigate("/students/waitingexams");
+              }}
+              className="bg-red-500 text-white py-2 px-4 rounded"
+            >
+              Kuraho iyi paje
+            </button>
+          </div>
+        </>
+      ) : null}
       <ToastContainer />
     </div>
   );

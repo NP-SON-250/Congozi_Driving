@@ -51,6 +51,10 @@ const Login = () => {
           navigate("/admins/home");
           window.location.reload();
           break;
+        case "supperAdmin":
+          navigate("/admins/home");
+          window.location.reload();
+          break;
         case "school":
           navigate("/schools/home");
           window.location.reload();
@@ -77,7 +81,7 @@ const Login = () => {
   }, []);
 
   return (
-    <div className="pt-24 md:px-12">
+    <div className="pt-[73px] md:px-12">
       <div className="grid md:grid-cols-2 grid-cols-1 rounded-r-md rounded-b-none md:border border-blue-700">
         <div className="flex justify-end md:h-[60vh]">
           <img src={Injira} alt="Login Illustration" />

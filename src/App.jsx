@@ -86,6 +86,19 @@ const App = () => {
               </Route>
             </Route>
           )}
+          {/* Supper Admin Routes */}
+          {userRole === "supperAdmin"  && (
+            <Route element={<ProtectedRoute allowedRole="supperAdmin" />}>
+              <Route element={<UserAdmin />}>
+                <Route path="/admins/home" element={<AdminDashboard />} />
+                <Route path="/admins/exams" element={<AdminExams />} />
+                <Route path="/admins/accounts" element={<AdminAccounts />} />
+                <Route path="/admins/users" element={<AdminUsers />} />
+                <Route path="/admins/profile" element={<AdminProfile />} />
+                <Route path="/admins/payments" element={<AdminsPayments />} />
+              </Route>
+            </Route>
+          )}
           {/* Admin Routes */}
           {userRole === "admin" && (
             <Route element={<ProtectedRoute allowedRole="admin" />}>

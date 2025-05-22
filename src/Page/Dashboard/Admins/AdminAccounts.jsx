@@ -17,8 +17,24 @@ const AdminAccounts = () => {
   const [editedFees, setEditedFees] = useState("");
   const [editedValidIn, setEditedValidIn] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
+    // Get user data from localStorage when component mounts
+    const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
+
+    if (!token) {
+      navigate("/kwinjira");
+      return;
+    }
+    if (userData) {
+      try {
+        setCurrentUser(JSON.parse(userData));
+      } catch (error) {
+        console.error("Failed to parse user data:", error);
+      }
+    }
     fetchAccounts();
   }, []);
 
@@ -54,8 +70,19 @@ const AdminAccounts = () => {
 
   const handleDeleteAccount = async () => {
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/kwinjira");
+        return;
+      }
+
       await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/accounts/${accountToDelete._id}`
+        `https://congozi-backend.onrender.com/api/v1/accounts/${accountToDelete._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       fetchAccounts();
     } catch (error) {
@@ -72,12 +99,23 @@ const AdminAccounts = () => {
 
   const handleSaveEdit = async () => {
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/kwinjira");
+        return;
+      }
+
       await axios.put(
         `https://congozi-backend.onrender.com/api/v1/accounts/${accountToEdit._id}`,
         {
           title: editedTitle,
           fees: editedFees,
           validIn: editedValidIn,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       fetchAccounts();
@@ -100,16 +138,24 @@ const AdminAccounts = () => {
     setSelectedMenu(null);
   };
 
+  // Check user roles
+  const isAdmin = currentUser?.role === "admin";
+  const isSuperAdmin = currentUser?.role === "supperAdmin";
+  const canAddOrEdit = isAdmin || isSuperAdmin;
+  const canDelete = isSuperAdmin;
+
   return (
     <div className="md:px-6 py-6 px-1">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Manage All Accounts</h2>
-        <button
-          onClick={() => setShowAddAccountPopup(true)}
-          className="bg-blue-600 text-white px-2 py-1 rounded-lg hover:bg-blue-700 transition"
-        >
-          Add New
-        </button>
+        {canAddOrEdit && (
+          <button
+            onClick={() => setShowAddAccountPopup(true)}
+            className="bg-blue-600 text-white px-2 py-1 rounded-lg hover:bg-blue-700 transition"
+          >
+            Add New Account
+          </button>
+        )}
       </div>
 
       <div className="overflow-x-auto rounded-lg shadow border border-blue-900">
@@ -121,9 +167,11 @@ const AdminAccounts = () => {
               <th className="px-6 py-1 whitespace-nowrap">Fees</th>
               <th className="px-6 py-1 whitespace-nowrap">Valid Time</th>
               <th className="px-6 py-1 whitespace-nowrap">Granted Exams</th>
-              <th className="px-6 py-1 text-right whitespace-nowrap">
-                Actions
-              </th>
+              {(canAddOrEdit || canDelete) && ( 
+                <th className="px-6 py-1 text-right whitespace-nowrap">
+                  Actions
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -138,32 +186,38 @@ const AdminAccounts = () => {
                   {account.validIn} Days
                 </td>
                 <td className="px-6 py-1 whitespace-nowrap text-center">All</td>
-                <td className="px-6 py-1 text-right relative">
-                  <button
-                    onClick={() => toggleMenu(index)}
-                    className="p-2 hover:bg-gray-200 rounded-full"
-                  >
-                    <MdMoreHoriz size={22} />
-                  </button>
-                  {selectedMenu === index && (
-                    <div className="absolute right-6 mt-2 w-52 bg-white border border-gray-300 rounded-md shadow-lg z-10">
-                      <ul className="text-sm text-blue-900">
-                        <li
-                          onClick={() => handleEditClick(account)}
-                          className="hover:bg-gray-100 px-4 py-1 cursor-pointer"
-                        >
-                          Edit
-                        </li>
-                        <li
-                          onClick={() => handleDeleteClick(account)}
-                          className="hover:bg-gray-100 text-red-500 px-4 py-1 cursor-pointer"
-                        >
-                          Delete
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </td>
+                {(canAddOrEdit || canDelete) && (
+                  <td className="px-6 py-1 text-right relative">
+                    <button
+                      onClick={() => toggleMenu(index)}
+                      className="p-2 hover:bg-gray-200 rounded-full"
+                    >
+                      <MdMoreHoriz size={22} />
+                    </button>
+                    {selectedMenu === index && (
+                      <div className="absolute right-6 mt-2 w-52 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                        <ul className="text-sm text-blue-900">
+                          {canAddOrEdit && (
+                            <li
+                              onClick={() => handleEditClick(account)}
+                              className="hover:bg-gray-100 px-4 py-1 cursor-pointer"
+                            >
+                              Edit
+                            </li>
+                          )}
+                          {canDelete && (
+                            <li
+                              onClick={() => handleDeleteClick(account)}
+                              className="hover:bg-gray-100 text-red-500 px-4 py-1 cursor-pointer"
+                            >
+                              Delete
+                            </li>
+                          )}
+                        </ul>
+                      </div>
+                    )}
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -199,16 +253,16 @@ const AdminAccounts = () => {
         </button>
       </div>
 
-      {/* Add New Account Popup */}
-      {showAddAccountPopup && (
+      {/* Add New Account Popup - Show for both admin and superAdmin */}
+      {canAddOrEdit && showAddAccountPopup && (
         <AddNewAccountPopup
           setShowAddAccountPopup={setShowAddAccountPopup}
           onAccountAdded={fetchAccounts}
         />
       )}
 
-      {/* Edit Account Popup */}
-      {accountToEdit && (
+      {/* Edit Account Popup - Show for both admin and superAdmin */}
+      {canAddOrEdit && accountToEdit && (
         <EditAccountPopup
           accountToEdit={accountToEdit}
           editedTitle={editedTitle}
@@ -222,8 +276,8 @@ const AdminAccounts = () => {
         />
       )}
 
-      {/* Delete Confirmation Popup */}
-      {showDeleteConfirm && (
+      {/* Delete Confirmation Popup - Show only for superAdmin */}
+      {canDelete && showDeleteConfirm && (
         <div className="fixed inset-0 z-[999] bg-black bg-opacity-40 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
             <h2 className="text-lg font-semibold text-gray-800 mb-4">

@@ -237,7 +237,7 @@ const Register = () => {
                     className="lg:w-6 lg:h-6 w-12 h-12 rounded-full object-cover ml-2"
                   />
                 ) : (
-                  <span className="text-pcolor text-sm lg:mt-0 mt-1 md:text-xl font-bold">
+                  <span className="text-pcolor text-sm lg:mt-0 mt-1 md:text-sm">
                     Hitamo..
                   </span>
                 )}
