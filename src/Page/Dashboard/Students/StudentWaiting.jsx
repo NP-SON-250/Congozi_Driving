@@ -134,11 +134,9 @@ const StudentWaiting = () => {
           ) : (
             <div className="grid md:grid-cols-3 w-full gap-4 md:gap-3 py-1">
               {currentExams.map((exam, index) => {
-                const isLearn = exam.itemId.type
-                  .toLowerCase()
-                  .includes("learn");
-                const buttonColor = isLearn ? "bg-yellow-500" : "bg-green-500";
-                const buttonText = isLearn ? "Iga ikizami" : "Kora ikizami";
+                const isiga = exam.itemId.type.toLowerCase().includes("iga");
+                const buttonColor = isiga ? "bg-yellow-500" : "bg-green-500";
+                const buttonText = isiga ? "Iga ikizami" : "Kora ikizami";
                 return (
                   <ExamsCard
                     key={index}

@@ -5,7 +5,6 @@ import axios from "axios";
 import EditUserPopup from "./EditUserPopup";
 import DeleteUserPopup from "./DeleteUserPopup";
 
-
 const USERS_PER_PAGE = 4;
 
 const Users = () => {
@@ -69,8 +68,8 @@ const Users = () => {
         "https://congozi-backend.onrender.com/api/v1/users",
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       setUsers(response.data.data || []);
@@ -135,15 +134,17 @@ const Users = () => {
         updatedUser,
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
       // Update local state
-      setUsers(users.map(user => 
-        user._id === userToEdit._id ? { ...user, ...updatedUser } : user
-      ));
+      setUsers(
+        users.map((user) =>
+          user._id === userToEdit._id ? { ...user, ...updatedUser } : user
+        )
+      );
       setShowEditPopup(false);
     } catch (error) {
       console.error("Failed to update user:", error);
@@ -178,13 +179,13 @@ const Users = () => {
         `https://congozi-backend.onrender.com/api/v1/users/${userToDelete._id}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
       // Update local state
-      setUsers(users.filter(user => user._id !== userToDelete._id));
+      setUsers(users.filter((user) => user._id !== userToDelete._id));
       setShowDeletePopup(false);
     } catch (error) {
       console.error("Failed to delete user:", error);
@@ -195,7 +196,6 @@ const Users = () => {
       }
     }
   };
-
 
   // Pagination logic
   const indexOfLastUser = currentPage * USERS_PER_PAGE;

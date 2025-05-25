@@ -28,28 +28,26 @@ const SchoolMyExams = () => {
   const accountsPerPage = 4;
   const navigate = useNavigate();
 
-  
-    
-    const fetchAccounts = async () => {
-      const token = localStorage.getItem("token");
-      try {
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-        const response = await axios.get(
-          "https://congozi-backend.onrender.com/api/v1/purchases/user",
-          config
-        );
-        const result = response.data?.data;
-        setAllAccounts(Array.isArray(result) ? result : [result]);
-      } catch (error) {
-        console.error("Error fetching exam data:", error);
-      }
-    };
+  const fetchAccounts = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.get(
+        "https://congozi-backend.onrender.com/api/v1/purchases/user",
+        config
+      );
+      const result = response.data?.data;
+      setAllAccounts(Array.isArray(result) ? result : [result]);
+    } catch (error) {
+      console.error("Error fetching exam data:", error);
+    }
+  };
 
-    useEffect(() => {
+  useEffect(() => {
     fetchAccounts();
   }, []);
 

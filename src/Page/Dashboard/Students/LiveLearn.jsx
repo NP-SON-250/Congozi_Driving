@@ -11,7 +11,7 @@ import ExamTimer from "../../../Components/ExamTimer";
 const LiveLearn = () => {
   const [examCode, setExamCode] = useState("");
   const [paidExam, setPaidExam] = useState(null);
-  const [testExam, setTestExam] = useState(null);
+  const [koraExam, setkoraExam] = useState(null);
   const [examToDo, setExamToDo] = useState(null);
   const [examQuestions, setExamQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(0);
@@ -82,7 +82,7 @@ const LiveLearn = () => {
     }
   }, [examToDo, examCode]);
 
-  const fetchTestExam = useCallback(async () => {
+  const fetchkoraExam = useCallback(async () => {
     try {
       const number = paidExam?.number;
       if (!number) return;
@@ -99,22 +99,22 @@ const LiveLearn = () => {
       if (!examPurchased) return;
 
       const res = await axios.get(
-        `https://congozi-backend.onrender.com/api/v1/exams/test/${number}`,
+        `https://congozi-backend.onrender.com/api/v1/exams/kora/${number}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      const testData = res.data.data;
-      setTestExam(testData);
+      const koraData = res.data.data;
+      setkoraExam(koraData);
       if (typeof window !== "undefined") {
-        localStorage.setItem("test_exam_data", JSON.stringify(testData));
+        localStorage.setItem("kora_exam_data", JSON.stringify(koraData));
       }
     } catch (error) {
-      console.error("Error fetching test exam:", error);
+      console.error("Error fetching kora exam:", error);
     }
   }, [examCode, paidExam, token]);
 
   const handleShowPaymentPopup = async () => {
-    await fetchTestExam();
-    if (testExam) {
+    await fetchkoraExam();
+    if (koraExam) {
       setPaymentPopup(true);
     }
   };
@@ -122,7 +122,7 @@ const LiveLearn = () => {
   const handlePayLaterClick = async () => {
     try {
       await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${testExam._id}`,
+        `https://congozi-backend.onrender.com/api/v1/purchases/${koraExam._id}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -313,7 +313,7 @@ const LiveLearn = () => {
         </>
       )}
 
-      {paymentPopup && testExam && (
+      {paymentPopup && koraExam && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
           <div className="bg-Total p-4 rounded-lg md:w-1/2 h-1/2 flex justify-center items-center w-full relative">
             <button
@@ -327,14 +327,14 @@ const LiveLearn = () => {
               <div className="flex w-full flex-col bg-gray-300 rounded-lg">
                 <div className="flex flex-col justify-center items-center gap-1 py-5">
                   <h1 className="text-xl pt-1 text-Total font-bold">
-                    {testExam.title}: {testExam.number}
+                    {koraExam.title}: {koraExam.number}
                   </h1>
                   <div className="flex flex-col justify-center items-start">
                     <p className="text-Total">
                       Igiciro:{" "}
-                      <span className="font-bold">{testExam.fees} Rwf</span>
+                      <span className="font-bold">{koraExam.fees} Rwf</span>
                     </p>
-                    <p className="text-Total">Ubwoko: {testExam.type}</p>
+                    <p className="text-Total">Ubwoko: {koraExam.type}</p>
                   </div>
                 </div>
                 <div className="pt-1">

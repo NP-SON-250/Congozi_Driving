@@ -46,15 +46,15 @@ const Register = () => {
   const validateInputs = () => {
     let newErrors = {};
 
-    if (!/^1\d{15}$/.test(formData.idCard)) {
+    if (!/^1\d{15}$/.kora(formData.idCard)) {
       newErrors.idCard = <IoClose size={24} />;
     }
 
-    if (!/^(072|073|078)\d{7}$/.test(formData.phone)) {
+    if (!/^(072|073|078)\d{7}$/.kora(formData.phone)) {
       newErrors.phone = <IoClose size={24} />;
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.kora(formData.email)) {
       newErrors.email = <IoClose size={24} />;
     }
 

@@ -56,9 +56,9 @@ const StudentExams = () => {
   const currentExams = allExams.slice(indexOfFirstExam, indexOfLastExam);
   const totalPages = Math.ceil(allExams.length / examsPerPage);
 
-  const handleLearnExam = (exam) => {
+  const handleigaExam = (exam) => {
     if (exam.accessCode && exam.accessCode.length > 0) {
-      navigate(`/liveLearn?code=${exam.accessCode}`);
+      navigate(`/liveiga?code=${exam.accessCode}`);
     } else {
       console.error("No access code available for this exam.");
     }
@@ -175,7 +175,7 @@ const StudentExams = () => {
                           <FaCartPlus />
                         </button>
                       ) : exam.status === "complete" &&
-                        exam.itemId?.type === "test" ? (
+                        exam.itemId?.type === "kora" ? (
                         <button
                           onClick={() => handleDoExam(exam)}
                           className="text-blue-900 py-1 px-3 md:tex-xs text-xs flex items-center gap-2"
@@ -183,9 +183,9 @@ const StudentExams = () => {
                           <FaEdit />
                         </button>
                       ) : exam.status === "complete" &&
-                        exam.itemId?.type === "learn" ? (
+                        exam.itemId?.type === "iga" ? (
                         <button
-                          onClick={() => handleLearnExam(exam)}
+                          onClick={() => handleigaExam(exam)}
                           className="text-blue-900 py-1 px-3 md:tex-xs text-xs flex items-center gap-2"
                         >
                           <FaEdit />

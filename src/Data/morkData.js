@@ -12,8 +12,8 @@ import Image8 from "../assets/trafic3.jpg";
 export const examData = [
   {
     id: "EXAM001",
-    title: "Driving Theory Test",
-    type: "Learn",
+    title: "Driving Theory kora",
+    type: "iga",
     fees: 9000,
     number: "001",
     duration: 300,
@@ -247,8 +247,8 @@ export const examData = [
   },
   {
     id: "EXAM002",
-    title: "Driving Theory Test",
-    type: "Test",
+    title: "Driving Theory kora",
+    type: "kora",
     fees: 20000,
     duration: 300,
     number: "001",
@@ -500,8 +500,8 @@ export const examData = [
   },
   {
     id: "EXAM003",
-    title: "Driving Theory Test",
-    type: "Test",
+    title: "Driving Theory kora",
+    type: "kora",
     fees: 10000,
     number: "002",
     duration: 300,
@@ -753,8 +753,8 @@ export const examData = [
   },
   {
     id: "EXAM004",
-    title: "Driving Theory Test",
-    type: "Learn",
+    title: "Driving Theory kora",
+    type: "iga",
     fees: 1000,
     number: "002",
     duration: 300,
@@ -1006,8 +1006,8 @@ export const examData = [
   },
   {
     id: "EXAM005",
-    title: "Driving Theory Test",
-    type: "Learn",
+    title: "Driving Theory kora",
+    type: "iga",
     fees: 7000,
     number: ["003"],
     duration: 300,
@@ -1259,8 +1259,8 @@ export const examData = [
   },
   {
     id: "EXAM006",
-    title: "Driving Theory Test",
-    type: "Test",
+    title: "Driving Theory kora",
+    type: "kora",
     fees: 15000,
     number: ["003"],
     duration: 300,
@@ -1512,8 +1512,8 @@ export const examData = [
   },
   {
     id: "EXAM007",
-    title: "Driving Theory Test",
-    type: "Test",
+    title: "Driving Theory kora",
+    type: "kora",
     fees: 15000,
     number: ["004"],
     duration: 300,
@@ -1765,8 +1765,8 @@ export const examData = [
   },
   {
     id: "EXAM008",
-    title: "Driving Theory Test",
-    type: "Learn",
+    title: "Driving Theory kora",
+    type: "iga",
     fees: 5000,
     number: ["004"],
     duration: 300,
@@ -2027,8 +2027,8 @@ export const accountData = [
     exams: [
       {
         id: "EXAM001",
-        title: "Driving Theory Test",
-        type: "Learn",
+        title: "Driving Theory kora",
+        type: "iga",
         fees: 9000,
         number: "001",
         questions: [
@@ -2056,8 +2056,8 @@ export const accountData = [
     exams: [
       {
         id: "EXAM002",
-        title: "Driving Theory Test",
-        type: "Test",
+        title: "Driving Theory kora",
+        type: "kora",
         fees: 10000,
         number: "003",
         questions: [
@@ -2085,8 +2085,8 @@ export const accountData = [
     exams: [
       {
         id: "EXAM002",
-        title: "Driving Theory Test",
-        type: "Test",
+        title: "Driving Theory kora",
+        type: "kora",
         fees: 90000,
         number: "003",
         questions: [
@@ -2114,8 +2114,8 @@ export const accountData = [
     exams: [
       {
         id: "EXAM002",
-        title: "Driving Theory Test",
-        type: "Test",
+        title: "Driving Theory kora",
+        type: "kora",
         fees: 10000,
         number: "003",
         questions: [
@@ -2143,8 +2143,8 @@ export const accountData = [
     exams: [
       {
         id: "EXAM002",
-        title: "Driving Theory Test",
-        type: "Test",
+        title: "Driving Theory kora",
+        type: "kora",
         fees: 10000,
         number: "003",
         questions: [
@@ -2172,8 +2172,8 @@ export const accountData = [
     exams: [
       {
         id: "EXAM002",
-        title: "Driving Theory Test",
-        type: "Test",
+        title: "Driving Theory kora",
+        type: "kora",
         fees: 90000,
         number: "003",
         questions: [
@@ -2201,8 +2201,8 @@ export const accountData = [
     exams: [
       {
         id: "EXAM002",
-        title: "Driving Theory Test",
-        type: "Test",
+        title: "Driving Theory kora",
+        type: "kora",
         fees: 10000,
         number: "003",
         questions: [

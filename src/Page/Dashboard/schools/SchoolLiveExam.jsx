@@ -491,7 +491,7 @@ const SchoolLiveExam = () => {
                           {totalMarks >=
                           ((12 / 20) * examQuestions.length).toFixed(0)
                             ? "Congratulations you have made it 🙌🙌🙌"
-                            : "You failed this exam, You need to learn more!!"}
+                            : "You failed this exam, You need to iga more!!"}
                         </div>
                         <div className="text-xl text-orange-500 font-medium">
                           Total Marks: {totalMarks}/{examQuestions.length} |{" "}

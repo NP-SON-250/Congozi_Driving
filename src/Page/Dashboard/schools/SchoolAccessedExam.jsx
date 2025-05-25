@@ -58,9 +58,9 @@ const SchoolAccessedExam = () => {
   };
 
   const handleStartExam = () => {
-    if (exam?.type === "Learn" || exam?.type === "learn") {
-      navigate(`/schoolsliveLearn?id=${examId}`);
-    } else if (exam?.type === "Test" || exam?.type === "test") {
+    if (exam?.type === "iga" || exam?.type === "iga") {
+      navigate(`/schoolsliveiga?id=${examId}`);
+    } else if (exam?.type === "kora" || exam?.type === "kora") {
       navigate(`/schoolsliveExam?id=${examId}`);
     } else {
       alert("Invalid exam type.");

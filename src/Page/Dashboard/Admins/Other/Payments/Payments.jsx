@@ -157,7 +157,7 @@ const Payments = () => {
               <th className="px-6 py-1 whitespace-nowrap">Fees</th>
               <th className="px-6 py-1 whitespace-nowrap">Valid Time</th>
               <th className="px-6 py-1 whitespace-nowrap">Granted Exams</th>
-              {(canAddOrEdit || canDelete) && ( 
+              {(canAddOrEdit || canDelete) && (
                 <th className="px-6 py-1 text-right whitespace-nowrap">
                   Actions
                 </th>

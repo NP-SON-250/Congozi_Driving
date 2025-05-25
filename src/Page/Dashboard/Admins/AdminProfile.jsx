@@ -81,101 +81,101 @@ const AdminProfile = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!user?._id) return toast.error("User not logged in");
+    e.preventDefault();
+    if (!user?._id) return toast.error("User not logged in");
 
-  try {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
 
-    if (showPasswordForm) {
-      if (!validatePasswordChange()) return;
+      if (showPasswordForm) {
+        if (!validatePasswordChange()) return;
 
-      // First verify the current password with the server
-      try {
-        await axios.post(
-          `https://congozi-backend.onrender.com/api/v1/users/verify-password`,
-          {
-            userId: user._id,
-            password: passwordData.currentPassword
-          },
+        // First verify the current password with the server
+        try {
+          await axios.post(
+            `https://congozi-backend.onrender.com/api/v1/users/verify-password`,
+            {
+              userId: user._id,
+              password: passwordData.currentPassword,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+        } catch (error) {
+          toast.error("Current password is incorrect");
+          return;
+        }
+
+        // If verification succeeds, proceed with password change
+        const form = new FormData();
+        form.append("password", passwordData.newPassword);
+
+        const response = await axios.put(
+          `https://congozi-backend.onrender.com/api/v1/users/${user._id}`,
+          form,
           {
             headers: {
+              "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,
             },
           }
         );
-      } catch (error) {
-        toast.error("Current password is incorrect");
-        return;
-      }
 
-      // If verification succeeds, proceed with password change
-      const form = new FormData();
-      form.append("password", passwordData.newPassword);
+        setMessage("Password updated successfully");
+        setMessageType("success");
 
-      const response = await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/users/${user._id}`,
-        form,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
+        setTimeout(() => {
+          setShowPasswordForm(false);
+          setPasswordData({
+            currentPassword: "",
+            newPassword: "",
+            confirmPassword: "",
+          });
+        }, 1000);
+      } else {
+        // Original profile update logic
+        const form = new FormData();
+        for (let key in formData) {
+          if (formData[key]) {
+            form.append(key, formData[key]);
+          }
         }
+        if (profile) {
+          form.append("profile", profile);
+        }
+
+        const response = await axios.put(
+          `https://congozi-backend.onrender.com/api/v1/users/${user._id}`,
+          form,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const updatedUser = response.data.data;
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+
+        setMessage("Profile updated successfully");
+        setMessageType("success");
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
+    } catch (error) {
+      console.error(error);
+      setMessage(
+        error?.response?.data?.message || "Failed to update information"
       );
-
-      setMessage("Password updated successfully");
-      setMessageType("success");
-
-      setTimeout(() => {
-        setShowPasswordForm(false);
-        setPasswordData({
-          currentPassword: "",
-          newPassword: "",
-          confirmPassword: "",
-        });
-      }, 1000);
-    } else {
-      // Original profile update logic
-      const form = new FormData();
-      for (let key in formData) {
-        if (formData[key]) {
-          form.append(key, formData[key]);
-        }
-      }
-      if (profile) {
-        form.append("profile", profile);
-      }
-
-      const response = await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/users/${user._id}`,
-        form,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const updatedUser = response.data.data;
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-
-      setMessage("Profile updated successfully");
-      setMessageType("success");
-
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      setMessageType("error");
     }
-  } catch (error) {
-    console.error(error);
-    setMessage(
-      error?.response?.data?.message || "Failed to update information"
-    );
-    setMessageType("error");
-  }
-};
+  };
 
   return (
     <div className="flex items-center justify-center">

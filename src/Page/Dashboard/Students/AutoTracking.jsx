@@ -61,9 +61,9 @@ const AutoTracking = () => {
   };
 
   const handleStartExam = () => {
-    if (examDetails?.type === "Learn" || examDetails?.type === "learn") {
-      navigate(`/liveLearn?code=${examCode}`);
-    } else if (examDetails?.type === "Test" || examDetails?.type === "test") {
+    if (examDetails?.type === "iga" || examDetails?.type === "iga") {
+      navigate(`/liveiga?code=${examCode}`);
+    } else if (examDetails?.type === "kora" || examDetails?.type === "kora") {
       navigate(`/liveExam?code=${examCode}`);
     } else {
       alert("Invalid exam type.");
@@ -206,7 +206,6 @@ const AutoTracking = () => {
             <div className="flex md:flex-row flex-col justify-center w-full items-center gap-4 md:py-2 py-6">
               <p>Ese witeguye gutangira ikizamini?</p>
               <div className="flex gap-6">
-                
                 <button
                   className="bg-yellow-500 text-white px-2 py-1 md:w-[100px] w-[80px] rounded-full"
                   onClick={handleNotReady}

@@ -96,7 +96,7 @@ const SchoolMyAccount = () => {
             `https://congozi-backend.onrender.com/api/v1/users/verify-password`,
             {
               userId: user._id,
-              password: passwordData.currentPassword
+              password: passwordData.currentPassword,
             },
             {
               headers: {

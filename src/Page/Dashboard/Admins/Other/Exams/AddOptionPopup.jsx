@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import LoadingSpinner from "../../../../../Components/LoadingSpinner ";
 
 const AddOptionPopup = ({ question, onClose, onSave }) => {
   const [optionText, setOptionText] = useState("");
@@ -30,10 +31,6 @@ const AddOptionPopup = ({ question, onClose, onSave }) => {
       onClose();
     } catch (error) {
       console.error("Failed to add options:", error);
-      alert(
-        error?.response?.data?.message ||
-          "Failed to add option. Please try again."
-      );
     } finally {
       setIsLoading(false);
     }
@@ -75,7 +72,13 @@ const AddOptionPopup = ({ question, onClose, onSave }) => {
             disabled={isLoading}
             className="ml-2 px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
-            {isLoading ? "Saving..." : "Save"}
+            {isLoading ? (
+              <>
+                <LoadingSpinner size={5} strokeWidth={2} />
+              </>
+            ) : (
+              "Save Option"
+            )}
           </button>
         </div>
       </div>

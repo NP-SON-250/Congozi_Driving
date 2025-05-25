@@ -67,8 +67,8 @@ const AdminExams = () => {
         "https://congozi-backend.onrender.com/api/v1/exams",
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       setExams(res.data.data || []);
@@ -125,13 +125,13 @@ const AdminExams = () => {
         `https://congozi-backend.onrender.com/api/v1/exams/${examToDelete._id}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
       // Update local state
-      setExams(exams.filter(e => e._id !== examToDelete._id));
+      setExams(exams.filter((e) => e._id !== examToDelete._id));
       setExamToDelete(null);
       setShowDeleteConfirm(false);
     } catch (error) {
@@ -161,20 +161,24 @@ const AdminExams = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
       // Update local state
-      setExams(exams.map(exam => 
-        exam._id === editingExam._id ? { 
-          ...exam, 
-          title: editedTitle,
-          fees: editedFees,
-          type: editedType 
-        } : exam
-      ));
+      setExams(
+        exams.map((exam) =>
+          exam._id === editingExam._id
+            ? {
+                ...exam,
+                title: editedTitle,
+                fees: editedFees,
+                type: editedType,
+              }
+            : exam
+        )
+      );
       setShowEditPopup(false);
       setEditingExam(null);
     } catch (error) {
@@ -207,7 +211,7 @@ const AdminExams = () => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="font-semibold">Manage All Exams</h2>
       </div>
-      
+
       <div className="overflow-x-auto rounded-lg shadow border border-blue-900">
         <table className="w-full text-left table-auto">
           <thead className="bg-gray-100 text-gray-700">

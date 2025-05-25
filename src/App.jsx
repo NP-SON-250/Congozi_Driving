@@ -50,9 +50,7 @@ const App = () => {
   if (loading) return <div>Loading...</div>;
   return (
     <>
-      <div
-        className="overflow-x-hidden font-Poppins select-none"
-      >
+      <div className="overflow-x-hidden font-Poppins select-none">
         <Routes>
           {/* Landing Routes */}
           <Route element={<LandingLay />}>
@@ -81,13 +79,13 @@ const App = () => {
                   element={<StudentWaiting />}
                 />
                 <Route path="/liveExam" element={<LiveExam />} />
-                <Route path="/liveLearn" element={<LiveLearn />} />
+                <Route path="/liveiga" element={<LiveLearn />} />
                 <Route path="/students/school" element={<SchoolDemo />} />
               </Route>
             </Route>
           )}
           {/* Supper Admin Routes */}
-          {userRole === "supperAdmin"  && (
+          {userRole === "supperAdmin" && (
             <Route element={<ProtectedRoute allowedRole="supperAdmin" />}>
               <Route element={<UserAdmin />}>
                 <Route path="/admins/home" element={<AdminDashboard />} />
@@ -141,7 +139,7 @@ const App = () => {
                   element={<SchoolAccessedExam />}
                 />
                 <Route path="/schoolsliveExam" element={<SchoolLiveExam />} />
-                <Route path="/schoolsliveLearn" element={<SchoolLiveLearn />} />
+                <Route path="/schoolsliveiga" element={<SchoolLiveLearn />} />
               </Route>
             </Route>
           )}

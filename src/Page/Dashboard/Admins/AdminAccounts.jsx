@@ -153,7 +153,7 @@ const AdminAccounts = () => {
             onClick={() => setShowAddAccountPopup(true)}
             className="bg-blue-600 text-white px-2 py-1 rounded-lg hover:bg-blue-700 transition"
           >
-            Add New Account
+            Add Account
           </button>
         )}
       </div>
@@ -167,7 +167,7 @@ const AdminAccounts = () => {
               <th className="px-6 py-1 whitespace-nowrap">Fees</th>
               <th className="px-6 py-1 whitespace-nowrap">Valid Time</th>
               <th className="px-6 py-1 whitespace-nowrap">Granted Exams</th>
-              {(canAddOrEdit || canDelete) && ( 
+              {(canAddOrEdit || canDelete) && (
                 <th className="px-6 py-1 text-right whitespace-nowrap">
                   Actions
                 </th>

@@ -55,9 +55,9 @@ const ManualTracking = () => {
   };
 
   const handleStartExam = () => {
-    if (examDetails?.type === "Learn" || examDetails?.type === "learn") {
-      navigate(`/liveLearn?code=${examCode}`);
-    } else if (examDetails?.type === "Test" || examDetails?.type === "test") {
+    if (examDetails?.type === "iga" || examDetails?.type === "iga") {
+      navigate(`/liveiga?code=${examCode}`);
+    } else if (examDetails?.type === "kora" || examDetails?.type === "kora") {
       navigate(`/liveExam?code=${examCode}`);
     } else {
       alert("Invalid exam type.");
@@ -133,7 +133,9 @@ const ManualTracking = () => {
                   <td className="border border-gray-400 p-1">{examCode}</td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-400 p-1 font-bold">Igiciro cy'ikizamini</td>
+                  <td className="border border-gray-400 p-1 font-bold">
+                    Igiciro cy'ikizamini
+                  </td>
                   <td className="border border-gray-400 p-1">
                     {examDetails?.fees}
                   </td>
@@ -158,17 +160,13 @@ const ManualTracking = () => {
                       </td>
                     </tr>
                     <tr>
-                      <td className="border border-gray-400 px-1">
-                        Aho aba
-                      </td>
+                      <td className="border border-gray-400 px-1">Aho aba</td>
                       <td className="border border-gray-400 px-1">
                         {grantedUsers?.address}
                       </td>
                     </tr>
                     <tr>
-                      <td className="border border-gray-400 px-1">
-                        Telefone
-                      </td>
+                      <td className="border border-gray-400 px-1">Telefone</td>
                       <td className="border border-gray-400 px-1">
                         {grantedUsers?.phone}
                       </td>
@@ -181,7 +179,6 @@ const ManualTracking = () => {
             <div className="flex md:flex-row flex-col justify-center w-full items-center gap-4 md:py-2 py-6">
               <p>Ese witeguye gutangira ikizamini?</p>
               <div className="flex gap-6">
-                
                 <button
                   className="bg-yellow-500 text-white px-2 py-1 md:w-[100px] w-[80px] rounded-full"
                   onClick={handleNotReady}

@@ -81,8 +81,8 @@ const AdminUsers = () => {
         "https://congozi-backend.onrender.com/api/v1/users",
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       setUsers(response.data.data || []);
@@ -147,15 +147,17 @@ const AdminUsers = () => {
         updatedUser,
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
       // Update local state
-      setUsers(users.map(user => 
-        user._id === userToEdit._id ? { ...user, ...updatedUser } : user
-      ));
+      setUsers(
+        users.map((user) =>
+          user._id === userToEdit._id ? { ...user, ...updatedUser } : user
+        )
+      );
       setShowEditPopup(false);
     } catch (error) {
       console.error("Failed to update user:", error);
@@ -190,13 +192,13 @@ const AdminUsers = () => {
         `https://congozi-backend.onrender.com/api/v1/users/${userToDelete._id}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
       // Update local state
-      setUsers(users.filter(user => user._id !== userToDelete._id));
+      setUsers(users.filter((user) => user._id !== userToDelete._id));
       setShowDeletePopup(false);
     } catch (error) {
       console.error("Failed to delete user:", error);
@@ -232,8 +234,8 @@ const AdminUsers = () => {
         newUser,
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
