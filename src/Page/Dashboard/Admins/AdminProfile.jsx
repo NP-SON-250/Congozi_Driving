@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { FaCamera } from "react-icons/fa";
-
+import LoadingSpinner from "../../../Components/LoadingSpinner ";
 const AdminProfile = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState("");
   const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     fName: "",
@@ -85,6 +86,7 @@ const AdminProfile = () => {
     if (!user?._id) return toast.error("User not logged in");
 
     try {
+      setIsLoading(true);
       const token = localStorage.getItem("token");
 
       if (showPasswordForm) {
@@ -174,6 +176,8 @@ const AdminProfile = () => {
         error?.response?.data?.message || "Failed to update information"
       );
       setMessageType("error");
+    }finally {
+      setIsLoading(false);
     }
   };
 
@@ -310,7 +314,27 @@ const AdminProfile = () => {
               type="submit"
               className="bg-blue-900 text-white px-6 py-1 rounded hover:bg-blue-800 mb-3"
             >
-              {showPasswordForm ? "Update Password" : "Save Changes"}
+              {showPasswordForm ? (
+                <>
+                  {isLoading ? (
+                    <>
+                      <LoadingSpinner size={5} strokeWidth={2} />
+                    </>
+                  ) : (
+                    <>Update Password</>
+                  )}
+                </>
+              ) : (
+                <>
+                  {isLoading ? (
+                    <>
+                      <LoadingSpinner size={5} strokeWidth={2} />
+                    </>
+                  ) : (
+                    <>Save Changes</>
+                  )}
+                </>
+              )}
             </button>
 
             <button

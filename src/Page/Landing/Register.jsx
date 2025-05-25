@@ -8,8 +8,8 @@ import FullInput from "../../Components/Inputs/Studentnputs/FullInput";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link, useNavigate } from "react-router-dom";
-
+import {  useNavigate } from "react-router-dom";
+import LoadingSpinner from "../../Components/LoadingSpinner ";
 const Register = () => {
   const [formData, setFormData] = useState({
     fName: "",
@@ -26,6 +26,8 @@ const Register = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [errors, setErrors] = useState({});
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  
 
   const navigate = useNavigate();
   const handleInputChange = (e) => {
@@ -46,15 +48,15 @@ const Register = () => {
   const validateInputs = () => {
     let newErrors = {};
 
-    if (!/^1\d{15}$/.kora(formData.idCard)) {
+    if (!/^1\d{15}$/.test(formData.idCard)) {
       newErrors.idCard = <IoClose size={24} />;
     }
 
-    if (!/^(072|073|078)\d{7}$/.kora(formData.phone)) {
+    if (!/^(072|073|078)\d{7}$/.test(formData.phone)) {
       newErrors.phone = <IoClose size={24} />;
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.kora(formData.email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = <IoClose size={24} />;
     }
 
@@ -86,6 +88,7 @@ const Register = () => {
     });
 
     try {
+      setIsLoading(true);
       const res = await axios.post(
         "https://congozi-backend.onrender.com/api/v1/users",
         data
@@ -96,6 +99,8 @@ const Register = () => {
       const msg =
         error.response?.data?.message || "Habayeho ikosa mu gihe cyo kohereza.";
       notifyError(msg);
+    }finally {
+      setIsLoading(false);
     }
   };
 
@@ -268,8 +273,16 @@ const Register = () => {
                 type="submit"
                 className="text-white flex justify-center items-center gap-2 px-4 py-1 rounded-md bg-Total hover:bg-blue-800"
               >
-                <ImUserPlus className="text-white" />
-                Emeza Kwiyandikisha
+                {isLoading ? (
+                  <>
+                    <LoadingSpinner size={5} strokeWidth={2} />
+                  </>
+                ) : (
+                  <>
+                    <ImUserPlus className="text-white" />
+                    Emeza Kwiyandikisha
+                  </>
+                )}
               </button>
             </div>
           </form>
