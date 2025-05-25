@@ -5,7 +5,7 @@ import axios from "axios";
 import EditUserPopup from "./Other/Users/EditUserPopup";
 import DeleteUserPopup from "./Other/Users/DeleteUserPopup";
 import AddUserPopup from "./Other/Users/AddUserPopup";
-
+import LoadingSpinner from "../../../Components/LoadingSpinner ";
 const USERS_PER_PAGE = 4;
 
 const AdminUsers = () => {
@@ -40,6 +40,7 @@ const AdminUsers = () => {
   const [newIdcard, setNewIdcard] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newAddress, setNewAddress] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   // Role checks
   const isAdmin = currentUser?.role === "admin";
@@ -130,6 +131,7 @@ const AdminUsers = () => {
     }
 
     try {
+      setIsLoading(true);
       const updatedUser = {
         companyName: editedCompanyName,
         tin: editedTin,
@@ -166,6 +168,8 @@ const AdminUsers = () => {
         localStorage.removeItem("user");
         navigate("/kwinjira");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -218,6 +222,7 @@ const AdminUsers = () => {
     }
 
     try {
+      setIsLoading(true);
       const newUser = {
         companyName: newCompanyName,
         tin: newTin,
@@ -250,6 +255,8 @@ const AdminUsers = () => {
         localStorage.removeItem("user");
         navigate("/kwinjira");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -412,6 +419,15 @@ const AdminUsers = () => {
           setEditedIdcard={setEditedIdcard}
           setShowEditPopup={setShowEditPopup}
           handleSaveUserEdit={handleSaveUserEdit}
+          onValue={
+            isLoading ? (
+              <>
+                <LoadingSpinner size={5} strokeWidth={2} />
+              </>
+            ) : (
+              "Save Changes"
+            )
+          }
         />
       )}
 
@@ -436,6 +452,15 @@ const AdminUsers = () => {
           setNewPassword={setNewPassword}
           setShowAddPopup={setShowAddPopup}
           handleAddUser={handleAddUser}
+          onValue={
+            isLoading ? (
+              <>
+                <LoadingSpinner size={5} strokeWidth={2} />
+              </>
+            ) : (
+              "Add Company"
+            )
+          }
         />
       )}
 
@@ -445,6 +470,15 @@ const AdminUsers = () => {
           user={userToDelete}
           onCancel={() => setShowDeletePopup(false)}
           onConfirm={handleConfirmDelete}
+          onValue={
+            isLoading ? (
+              <>
+                <LoadingSpinner size={5} strokeWidth={2} />
+              </>
+            ) : (
+              "Delete User"
+            )
+          }
         />
       )}
     </div>

@@ -10,12 +10,13 @@ import { FaQuestionCircle } from "react-icons/fa";
 import LoginInputs from "../../Components/Inputs/Studentnputs/LoginInputs";
 import Injira from "../../assets/Injira.png";
 import { useUserContext } from "../../Components/useUserContext";
-
+import LoadingSpinner from "../../Components/LoadingSpinner ";
 const Login = () => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const { setUser } = useUserContext();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
     if (!identifier || !password) {
@@ -24,6 +25,7 @@ const Login = () => {
     }
 
     try {
+      setIsLoading(true);
       const response = await axios.post(
         "https://congozi-backend.onrender.com/api/v1/users/auth",
         {
@@ -66,6 +68,8 @@ const Login = () => {
       const errMsg =
         error?.response?.data?.message || "Kwinjira byanze ongera ugerageze.";
       toast.error(errMsg);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -123,8 +127,16 @@ const Login = () => {
             onClick={handleLogin}
             className="flex justify-center items-center gap-2 px-4 py-1 rounded-md bg-Total hover:bg-blue-800 text-white mt-4"
           >
-            <FaCircleArrowRight className="text-white" />
-            Saba Kwinjira
+            {isLoading ? (
+              <>
+                <LoadingSpinner size={5} strokeWidth={2} />
+              </>
+            ) : (
+              <>
+                <FaCircleArrowRight className="text-white" />
+                Saba Kwinjira
+              </>
+            )}
           </button>
 
           <div className="md:flex-row flex-col flex justify-center items-center md:gap-10 gap-4 mt-4">
