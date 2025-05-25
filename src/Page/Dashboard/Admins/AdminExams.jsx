@@ -33,7 +33,7 @@ const AdminExams = () => {
   const isAdmin = currentUser?.role === "admin";
   const isSuperAdmin = currentUser?.role === "supperAdmin";
   const canAdd = isAdmin || isSuperAdmin;
-  const canEdit = isSuperAdmin;
+  const canEdit = isAdmin || isSuperAdmin;
   const canDelete = isSuperAdmin;
 
   useEffect(() => {

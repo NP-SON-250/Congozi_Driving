@@ -104,7 +104,7 @@ const AdminDashboard = () => {
             </div>
             <div className="w-full md:px-0 px-4 cursor-pointer">
               <CurrentData
-                title={"Total Payments"}
+                title={"Total Accounts"}
                 value={TotalPayments.length}
                 icon={<FcSalesPerformance size={26} />}
                 indicator={<PiArrowBendDoubleUpRightLight size={24} />}
@@ -116,12 +116,7 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          {/* Request Table */}
-          <div className="flex flex-col justify-center items-center md:py-4 pb-24 px-4 ">
-            <h2 className="text-center md:text-xl text-blue-900 font-bold">
-              Current Requests Made
-            </h2>
-          </div>
+          
         </>
       )}
 
