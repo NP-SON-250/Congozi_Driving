@@ -19,7 +19,9 @@ const LiveExam = () => {
     return JSON.parse(localStorage.getItem("selectedOptions")) || {};
   });
   const [examFinished, setExamFinished] = useState(() => {
-    const saved = localStorage.getItem(`examFinished_${examCode}`);
+    const saved = localStorage.getItem(
+      `examFinished_${examCode}_${paidExam?._id}`
+    );
     return saved ? JSON.parse(saved) : false;
   });
   const [showModal, setShowModal] = useState(false);
@@ -29,6 +31,7 @@ const LiveExam = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [userName, setUserName] = useState("");
+  const [showCongrats, setShowCongrats] = useState(false);
 
   const hasShownSuccess = useRef(false);
   const location = useLocation();
@@ -64,14 +67,19 @@ const LiveExam = () => {
     const params = new URLSearchParams(location.search);
     const code = params.get("code") || "";
     setExamCode(code);
-
-    // Check if exam was already finished
-    const isFinished = localStorage.getItem(`examFinished_${code}`);
-    if (isFinished === "true") {
-      setExamFinished(true);
-      setReviewResults(true);
-    }
   }, [location.search]);
+
+  useEffect(() => {
+    if (examCode && paidExam) {
+      const isFinished = localStorage.getItem(
+        `examFinished_${examCode}_${paidExam._id}`
+      );
+      if (isFinished === "true") {
+        setExamFinished(true);
+        setReviewResults(true);
+      }
+    }
+  }, [examCode, paidExam]);
 
   useEffect(() => {
     const fetchPaidExam = async () => {
@@ -191,6 +199,7 @@ const LiveExam = () => {
 
       const payload = {
         examId: examToDo._id,
+        purchaseId: paidExam._id,
         responses,
       };
 
@@ -218,14 +227,9 @@ const LiveExam = () => {
         hasShownSuccess.current = true;
       }
 
-      localStorage.setItem(`examFinished_${examCode}`, "true");
-      localStorage.removeItem("selectedOptions");
-      localStorage.removeItem(`examTimeLeft_${examCode}`);
-      setSelectedOption(null);
       setTotalMarks(score);
-      setExamFinished(true);
+      setShowCongrats(true);
       setShowModal(false);
-      setReviewResults(true);
     } catch (error) {
       console.error("Submission error:", error);
       errors(error.message || "Habaye ikibazo mu kohereza ibisubizo.");
@@ -240,6 +244,7 @@ const LiveExam = () => {
     selectedOptions,
     examFinished,
     isSubmitting,
+    paidExam,
   ]);
 
   const handleAnswerChange = (questionId, optionId) => {
@@ -262,8 +267,57 @@ const LiveExam = () => {
 
   const currentQuestion = examQuestions[selectedQuestion];
 
+  const CongratsMessage = () => {
+    const score20 = totalMarks;
+    const score100 = Math.round((totalMarks / examQuestions.length) * 100);
+    
+    return (
+      <div className="fixed inset-0 bg-black/60 flex justify-center items-center p-2 z-[9999]">
+        <div className="bg-white rounded-lg p-6 max-w-md w-full text-center">
+          <h2 className="text-2xl font-bold mb-4">Amanota wabonye</h2>
+          <div className="text-xl mb-4">
+            <span className="font-bold">{score20}/{examQuestions.length}</span>{" "}
+            <span className="text-gray-600">|</span>{" "}
+            <span className="font-bold">{score100}/100</span>
+          </div>
+          <p className="mb-6">Watsinze ikizamini</p>
+          
+          <div className="flex flex-col gap-3">
+            <button 
+              onClick={() => {
+                setShowCongrats(false);
+                setExamFinished(true);
+                setReviewResults(true);
+                localStorage.setItem(`examFinished_${examCode}_${examToDo._id}`, true);
+                localStorage.removeItem("selectedOptions");
+                localStorage.removeItem(`examTimeLeft_${examCode}_${examToDo._id}`);
+              }}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+            >
+              Reba ibisubizo
+            </button>
+            <button 
+              onClick={() => {
+                setShowCongrats(false);
+                localStorage.removeItem(`examFinished_${examCode}_${examToDo._id}`);
+                localStorage.removeItem("selectedOptions");
+                localStorage.removeItem(`examTimeLeft_${examCode}_${examToDo._id}`);
+                navigate("/students/waitingexams");
+              }}
+              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition"
+            >
+              Kuraho iyi paje
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col bg-white md:p-2 gap-2">
+      {showCongrats && <CongratsMessage />}
+      
       {showNoQuestionsMessage ? (
         <div className="text-center mt-10 text-Total font-semibold">
           <p>Ikikizami ntabibazo gifite. Hamagara Admin</p>
@@ -285,7 +339,7 @@ const LiveExam = () => {
               <Timer
                 initialTime={1200}
                 onTimeEnd={handleSubmitExam}
-                examId={examCode}
+                examId={`${examCode}_${examToDo?._id}`}
                 examFinished={examFinished}
               />
             }
@@ -547,8 +601,14 @@ const LiveExam = () => {
           <div className="flex justify-center mt-4">
             <button
               onClick={() => {
+                localStorage.removeItem(
+                  `examFinished_${examCode}_${examToDo._id}`,
+                  true
+                );
                 localStorage.removeItem("selectedOptions");
-                localStorage.removeItem(`examTimeLeft_${examCode}`);
+                localStorage.removeItem(
+                  `examTimeLeft_${examCode}_${examToDo._id}`
+                );
                 navigate("/students/waitingexams");
               }}
               className="bg-red-500 text-white py-2 px-4 rounded"
