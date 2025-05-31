@@ -155,7 +155,10 @@ const LiveLearn = () => {
         await axios.delete(
           `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`
         );
-        navigate("/students/market");
+        navigate("/students/waitingexams", {
+          replace: true,
+          state: { reset: true },
+        });
       }
     } catch (error) {
       console.error("Error deleting exam purchase on timeout:", error);

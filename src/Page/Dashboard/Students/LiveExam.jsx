@@ -232,7 +232,6 @@ const LiveExam = () => {
             },
           }
         );
-        console.log("Purchase record deleted successfully", deleted.data);
       } catch (deleteError) {
         console.error("Error deleting purchase record:", deleteError);
         // Continue even if deletion fails, as the exam is already submitted
