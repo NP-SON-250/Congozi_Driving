@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { GoPaperclip } from "react-icons/go";
 import { ImUserPlus } from "react-icons/im";
-import { IoClose } from "react-icons/io5";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 import Police from "../../assets/Policelogo.png";
 import HalfInput from "../../Components/Inputs/Studentnputs/HalfInput";
 import FullInput from "../../Components/Inputs/Studentnputs/FullInput";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../Components/LoadingSpinner ";
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -27,7 +27,6 @@ const Register = () => {
   const [errors, setErrors] = useState({});
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
 
   const navigate = useNavigate();
   const handleInputChange = (e) => {
@@ -49,19 +48,20 @@ const Register = () => {
     let newErrors = {};
 
     if (!/^1\d{15}$/.test(formData.idCard)) {
-      newErrors.idCard = <IoClose size={24} />;
+      newErrors.idCard = <AiOutlineCloseCircle size={24} />;
     }
 
     if (!/^(072|073|078)\d{7}$/.test(formData.phone)) {
-      newErrors.phone = <IoClose size={24} />;
+      newErrors.phone = <AiOutlineCloseCircle size={24} />;
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = <IoClose size={24} />;
+    // Only validate email if it's provided and invalid
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = <AiOutlineCloseCircle size={24} />;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = <IoClose size={24} />;
+      newErrors.confirmPassword = <AiOutlineCloseCircle size={24} />;
     }
 
     if (!agreedToTerms) {
@@ -99,7 +99,7 @@ const Register = () => {
       const msg =
         error.response?.data?.message || "Habayeho ikosa mu gihe cyo kohereza.";
       notifyError(msg);
-    }finally {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -164,7 +164,7 @@ const Register = () => {
               />
             </div>
             <p
-              className="absolute md:top-[195px] md:right-0 top-[602px] right-0 cursor-pointer text-red-500 px-4"
+              className="absolute md:top-[195px] top-[594.5px] md:-right-[8px] -right-3 cursor-pointer text-red-500 px-4"
               title="Andika nimero ya telefone muri uburyo: 07..."
             >
               {errors.phone && <ErrorMessage message={errors.phone} />}
@@ -186,7 +186,7 @@ const Register = () => {
               />
             </div>
             <p
-              className="text-red-500 absolute md:top-[237px] top-[750px] right-0  md:text-base text-2xl cursor-pointer px-4"
+              className="text-red-500 absolute md:top-[238.5px] top-[742.5px] md:-right-[8px] -right-3  md:text-base text-2xl cursor-pointer px-4"
               title="Ijambobanga ntirihuye"
             >
               {errors.confirmPassword && (
@@ -200,7 +200,7 @@ const Register = () => {
               onChange={handleInputChange}
             />
             <p
-              className="absolute md:top-[282px] top-[839px] right-0  cursor-pointer md:text-base text-2xl text-red-500 px-4"
+              className="absolute md:top-[282.5px] top-[830.5px] md:-right-[12px] -right-3  cursor-pointer md:text-base text-2xl text-red-500 px-4"
               title="Irangamuntu ntiyuzuye, igomba kuba ari imibare 16"
             >
               {errors.idCard && <ErrorMessage message={errors.idCard} />}
@@ -210,10 +210,10 @@ const Register = () => {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              type="email"
+              type="text"
             />
             <p
-              className="absolute md:top-[326px]  top-[928px] right-0 md:text-base text-2xl cursor-pointer text-red-500 px-4"
+              className="absolute md:top-[326px]  top-[919px] md:-right-[12px] -right-3 md:text-base text-2xl cursor-pointer text-red-500 px-4"
               title="Emeri igomba kuba yanditse irimo @, akadomo (.com / .net nibindi)"
             >
               {errors.email && <ErrorMessage message={errors.email} />}
