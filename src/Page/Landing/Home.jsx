@@ -11,24 +11,19 @@ const Home = () => {
   return (
     <div className="grid md:grid-cols-1 justify-center items-center pt-16">
       <div className="grid md:grid-cols-2 grid-cols-1">
-        {/* Image section */}
         <div className="">
           <img src={Homes} alt="" className="md:h-[50vh] md:w-[90%]" />
         </div>
-        {/* Home Content */}
         <div className="flex flex-col justify-start px-5 py-5 md:-ml-12">
           <h1 className="md:text-2xl uppercase flex gap-1 font-semibold pb-2 text-center">
             Ukeneye Gutsindira
             <span className="text-Passed">Provisoir</span> ?
           </h1>
           <div className="flex items-center w-full justify-center gap-4">
-            {/* Left Line */}
             <div className="w-20 h-[2px] bg-blue-500 md:w-[30%] mt-2"></div>
 
-            {/* Text Content */}
             <h3 className="md:text-2xl text-Unpaid font-bold">Twagufasha</h3>
 
-            {/* Right Line */}
             <div className="w-20 h-[2px] bg-blue-500 md:w-[30%] mt-2"></div>
           </div>
           <div>
@@ -52,13 +47,10 @@ const Home = () => {
         </div>
       </div>
       <div className="grid md:grid-cols-2 grid-cols-1">
-        {/* Image */}
         <div>
           <img src={Young} alt="" className="h-[35vh] md:w-[50%] w-full" />
         </div>
-        {/* Insipirations */}
         <div className=" md:-ml-[320px] flex flex-col justify-center bg-blue-500 pb-[50px] ">
-          {/* Paragraph */}
           <div className="flex flex-col">
             <p className="text-white text-start md:px-16 px-5 py-2 font-semibold">
               Ubu nawe wakoresha igihe cyawe neza! Hamwe na Congozi Expert,
@@ -68,7 +60,6 @@ const Home = () => {
             </p>
             <div className="w-[80%] h-[2px] bg-Passed md:w-[83%] md:ml-16 ml-5 mt-2"></div>
           </div>
-          {/* Contact Information */}
           <div className="grid md:grid-cols-3 grid-cols-1 gap-1 justify-center pt-4">
             <div className="flex justify-start md:px-2 px-5 items-center text-start gap-4 ">
               <LuPhoneCall className="text-white text-2xl font-semibold" />

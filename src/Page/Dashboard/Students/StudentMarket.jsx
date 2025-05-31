@@ -6,7 +6,6 @@ import Irembo from "../../../assets/irembopay.png";
 import Mtn from "../../../assets/MTN.jpg";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
 
 const StudentMarket = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -19,7 +18,6 @@ const StudentMarket = () => {
 
   const [exam, setExam] = useState({ data: [] });
   const [userName, setUserName] = useState("");
-  // Get user info from localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser && storedUser !== "undefined") {
@@ -31,7 +29,6 @@ const StudentMarket = () => {
     }
   }, []);
 
-  // Fetch paid exams
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -141,7 +138,6 @@ const StudentMarket = () => {
     <div className="flex flex-col justify-center items-center md:px-5 gap-1 bg-white md:p-2">
       <WelcomeDear />
 
-      {/* Filters */}
       <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-12 gap-1 px-3 py-4">
         <input
           type="text"
@@ -178,7 +174,6 @@ const StudentMarket = () => {
         />
       </div>
 
-      {/* Exam Cards */}
       {filteredExams.length === 0 ? (
         <p className="text-center py-4 text-red-500">No data found</p>
       ) : (
@@ -200,7 +195,6 @@ const StudentMarket = () => {
         </div>
       )}
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-around md:gap-[700px] gap-[120px] md:pb-0 pt-3 px-10">
           <button
@@ -229,7 +223,6 @@ const StudentMarket = () => {
         </div>
       )}
 
-      {/* Payment Popup */}
       {selectedExam && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[999]">
           <div className="bg-Total rounded-lg shadow-lg md:max-w-3xl w-full text-center relative">
@@ -333,7 +326,6 @@ const StudentMarket = () => {
           </div>
         </div>
       )}
-      <ToastContainer />
     </div>
   );
 };

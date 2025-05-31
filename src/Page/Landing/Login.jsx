@@ -36,14 +36,12 @@ const Login = () => {
 
       const { token, data, message } = response.data;
 
-      // Update both localStorage and context
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(data));
       setUser(data);
 
       toast.success(message || "Kwinjira byakunze");
 
-      // Role-based redirect
       switch (data.role) {
         case "student":
           navigate("/students/home");
@@ -74,7 +72,6 @@ const Login = () => {
   };
 
   useEffect(() => {
-    // Redirect if user is already logged out
     const token = localStorage.getItem("token");
     if (!token) {
       window.history.pushState(null, "", window.location.href);

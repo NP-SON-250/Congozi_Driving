@@ -204,7 +204,6 @@ const StudentExams = () => {
         </div>
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-around md:gap-[700px] gap-[120px] md:pb-0 pt-3 px-10">
           <div>
@@ -238,7 +237,6 @@ const StudentExams = () => {
         </div>
       )}
 
-      {/* Payment Popup */}
       {selectedExam && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[999]">
           <div className="bg-Total rounded-lg shadow-lg md:max-w-3xl w-full text-center relative">

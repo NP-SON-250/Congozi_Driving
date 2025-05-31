@@ -81,8 +81,6 @@ const SchoolAccessedExam = () => {
   const handleCloseConfirmCard = () => {
     setShowConfirmCard(false);
   };
-
-  // Get user info from localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser && storedUser !== "undefined") {
@@ -230,8 +228,6 @@ const SchoolAccessedExam = () => {
           </div>
         )}
       </div>
-
-      {/* Continue Card Popup */}
       {showContinueCard && (
         <ContinueCard
           code={examId}
@@ -240,8 +236,6 @@ const SchoolAccessedExam = () => {
           onChange={(e) => setExamId(e.target.value)}
         />
       )}
-
-      {/* Confirm Card Popup */}
       {showConfirmCard && (
         <ConfirmCard
           code={examId}

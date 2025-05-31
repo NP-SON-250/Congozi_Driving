@@ -115,14 +115,11 @@ const Register = () => {
         </h1>
       </div>
       <div className="flex md:flex-row flex-col">
-        {/* Logo Section */}
         <div className="flex justify-center items-center bg-Total md:h-[75vh] md:w-[45%]">
           <img src={Police} alt="" className="h-[200px]" />
         </div>
 
-        {/* Form Section */}
         <div className="border border-b-blue-500 border-r-blue-500 rounded-t-md w-full">
-          {/* Form Header */}
           <div className="bg-Passed flex justify-center items-center gap-3 py-1 rounded-r-md">
             <div className="bg-white px-2 rounded-full">
               <p className="text-lg text-Passed">+</p>
@@ -130,7 +127,6 @@ const Register = () => {
             <h4 className="text-white text-xl font-semibold">Kwiyandikisha</h4>
           </div>
 
-          {/* Form Fields */}
           <form
             className="w-full pb-5 flex flex-col gap-4"
             onSubmit={handleSubmit}
@@ -249,7 +245,6 @@ const Register = () => {
               </div>
             </div>
             <div className="flex md:flex-row flex-col justify-center items-center md:mr-[150px] pt-6 md:gap-20 gap-6">
-              {/* Terms & Conditions Checkbox */}
               <div className="flex items-center gap-2 px-4">
                 <input
                   type="checkbox"

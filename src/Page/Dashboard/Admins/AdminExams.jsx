@@ -16,7 +16,6 @@ const AdminExams = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
 
-  // Form states
   const [editingExam, setEditingExam] = useState(null);
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [addQuestion, setAddQuestion] = useState(false);
@@ -28,8 +27,6 @@ const AdminExams = () => {
   const [viewingExam, setViewingExam] = useState(null);
   const [showAddExamPopup, setShowAddExamPopup] = useState(false);
   const [selectedExam, setSelectedExam] = useState(null);
-
-  // Role checks
   const isAdmin = currentUser?.role === "admin";
   const isSuperAdmin = currentUser?.role === "supperAdmin";
   const canAdd = isAdmin || isSuperAdmin;
@@ -37,7 +34,6 @@ const AdminExams = () => {
   const canDelete = isSuperAdmin;
 
   useEffect(() => {
-    // Check authentication
     const token = localStorage.getItem("token");
     const userData = localStorage.getItem("user");
 
@@ -131,8 +127,6 @@ const AdminExams = () => {
           },
         }
       );
-
-      // Update local state
       setExams(exams.filter((e) => e._id !== examToDelete._id));
       setExamToDelete(null);
       setShowDeleteConfirm(false);
@@ -167,8 +161,6 @@ const AdminExams = () => {
           },
         }
       );
-
-      // Update local state
       setExams(
         exams.map((exam) =>
           exam._id === editingExam._id
@@ -192,8 +184,6 @@ const AdminExams = () => {
       }
     }
   };
-
-  // Pagination logic
   const indexOfLastExam = currentPage * EXAMS_PER_PAGE;
   const indexOfFirstExam = indexOfLastExam - EXAMS_PER_PAGE;
   const currentExams = exams.slice(indexOfFirstExam, indexOfLastExam);
@@ -317,8 +307,6 @@ const AdminExams = () => {
           </tbody>
         </table>
       </div>
-
-      {/* Pagination */}
       <div className="flex justify-center items-center mt-6 space-x-4">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
@@ -348,8 +336,6 @@ const AdminExams = () => {
           Next
         </button>
       </div>
-
-      {/* Edit Exam Popup */}
       {showEditPopup && (
         <EditExamPopup
           editingExam={editingExam}
@@ -363,8 +349,6 @@ const AdminExams = () => {
           handleSaveEdit={handleSaveEdit}
         />
       )}
-
-      {/* Add Questions Popup */}
       {addQuestion && (
         <AddQuestionPopup
           setAddQuestion={setAddQuestion}
@@ -372,8 +356,6 @@ const AdminExams = () => {
           refreshQuestions={fetchExams}
         />
       )}
-
-      {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-[999] bg-black bg-opacity-40 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
@@ -401,8 +383,6 @@ const AdminExams = () => {
           </div>
         </div>
       )}
-
-      {/* Add New Exam Popup */}
       {showAddExamPopup && (
         <AddNewExamPopup
           setShowAddExamPopup={setShowAddExamPopup}

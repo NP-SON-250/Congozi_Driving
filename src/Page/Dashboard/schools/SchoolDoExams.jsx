@@ -14,7 +14,6 @@ const SchoolDoExams = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [validIn, setValidIn] = useState("");
   const [fees, setFees] = useState("");
-  //   const [isaccountStarted, setIsaccountStarted] = useState(false);
 
   const location = useLocation();
   const { accessCode } = queryString.parse(location.search);

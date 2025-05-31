@@ -55,14 +55,12 @@ const LiveExam = () => {
     });
   };
 
-  // Load initial state from localStorage
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const code = params.get("code") || "";
     setExamCode(code);
   }, [location.search]);
 
-  // Load exam progress when examCode or paidExam changes
   useEffect(() => {
     if (examCode && paidExam?._id) {
       const savedOptions = localStorage.getItem(
@@ -78,7 +76,6 @@ const LiveExam = () => {
     }
   }, [examCode, paidExam]);
 
-  // Fetch purchased exam details
   useEffect(() => {
     const fetchPaidExam = async () => {
       try {
@@ -97,7 +94,6 @@ const LiveExam = () => {
     if (examCode) fetchPaidExam();
   }, [examCode]);
 
-  // Fetch exam questions
   useEffect(() => {
     const fetchExamDetails = async () => {
       try {
@@ -124,14 +120,12 @@ const LiveExam = () => {
     if (paidExam) fetchExamDetails();
   }, [paidExam]);
 
-  // Set exam questions when examToDo changes
   useEffect(() => {
     if (examToDo) {
       setExamQuestions(examToDo.questions || []);
     }
   }, [examToDo]);
 
-  // Save selected options to localStorage
   useEffect(() => {
     if (examCode && paidExam?._id && !examFinished) {
       localStorage.setItem(
@@ -141,7 +135,6 @@ const LiveExam = () => {
     }
   }, [selectedOptions, examCode, paidExam, examFinished]);
 
-  // Load user data
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser && storedUser !== "undefined") {
@@ -153,7 +146,6 @@ const LiveExam = () => {
     }
   }, []);
 
-  // Prevent page refresh during exam
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (examFinished) return;
@@ -181,7 +173,6 @@ const LiveExam = () => {
     setIsSubmitting(true);
 
     try {
-      // Calculate score
       let score = 0;
       examQuestions.forEach((q) => {
         const selectedOptionId = selectedOptions[q._id];
@@ -199,7 +190,6 @@ const LiveExam = () => {
         return;
       }
 
-      // Prepare responses
       const responses = Object.keys(selectedOptions).map((questionId) => ({
         questionId,
         selectedOptionId: selectedOptions[questionId],
@@ -211,7 +201,6 @@ const LiveExam = () => {
         responses,
       };
 
-      // Submit exam
       const res = await axios.post(
         "https://congozi-backend.onrender.com/api/v1/responses/add",
         payload,
@@ -222,7 +211,6 @@ const LiveExam = () => {
         }
       );
 
-      // Delete the purchased record after successful submission
       try {
         const deleted = await axios.delete(
           `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
@@ -234,7 +222,6 @@ const LiveExam = () => {
         );
       } catch (deleteError) {
         console.error("Error deleting purchase record:", deleteError);
-        // Continue even if deletion fails, as the exam is already submitted
       }
 
       if (!hasShownSuccess.current) {
@@ -242,7 +229,6 @@ const LiveExam = () => {
         hasShownSuccess.current = true;
       }
 
-      // Update state and localStorage
       setTotalMarks(score);
       setShowCongrats(true);
       setShowModal(false);
@@ -251,7 +237,6 @@ const LiveExam = () => {
 
       localStorage.setItem(`examFinished_${examCode}_${paidExam._id}`, "true");
 
-      // Clear the accessCode from URL
       navigate(location.pathname, { replace: true });
     } catch (error) {
       console.error("Submission error:", error);
@@ -374,7 +359,6 @@ const LiveExam = () => {
             access={examCode}
           />
 
-          {/* Question navigation buttons */}
           <div className="flex flex-wrap justify-start py-1 md:gap-4 gap-2">
             {examQuestions.map((q, idx) => {
               const isAnswered = selectedOptions[q._id];
@@ -395,7 +379,6 @@ const LiveExam = () => {
             })}
           </div>
 
-          {/* Current question */}
           <div className="w-full px-3">
             {currentQuestion && (
               <>
@@ -441,7 +424,6 @@ const LiveExam = () => {
                   })}
                 </div>
 
-                {/* Navigation buttons */}
                 {!examFinished && (
                   <div className="mt-4 md:flex md:justify-between grid grid-cols-2 gap-4 md:pb-0 pb-4">
                     <button
@@ -487,7 +469,6 @@ const LiveExam = () => {
               </>
             )}
 
-            {/* Confirmation modal */}
             {showModal && (
               <div className="fixed inset-0 bg-black/60 flex justify-center items-center p-2 z-[9999]">
                 <div className="bg-Total rounded-lg flex md:flex-row flex-col items-center justify-around shadow-lg md:w-[60%] md:py-14 py-0 w-full text-center relative">

@@ -13,8 +13,6 @@ const Timer = ({ initialTime, onTimeEnd, examId, examFinished }) => {
       ? parseInt(storedTime, 10)
       : initialTime;
     setTimeLeft(initialTimeValue);
-    
-    // If stored time is 0, immediately end the exam
     if (storedTime && parseInt(storedTime, 10) <= 0) {
       setTimeEnded(true);
       onTimeEnd();

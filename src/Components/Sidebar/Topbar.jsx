@@ -56,15 +56,12 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
       className={`fixed top-0 right-0 md:px-24 px-4 flex justify-between items-center w-full h-[11vh] shadow bg-Total`}
       style={{ zIndex: 999 }}
     >
-      {/* Logo and Role */}
       <div className="flex justify-center items-center gap-5">
         <Link to={`/${role}/home`}>
           <img src={Police} alt="Logo" className="h-12 text-center" />
         </Link>
         <div className="text-xs font-bold text-white">{currentSection}</div>
       </div>
-
-      {/* Menu Items */}
       <div className="flex justify-between items-center">
         <div className="hidden md:block">
           <ul className="flex items-center gap-6 text-gray-600 border border-Waiting rounded-md">
@@ -81,8 +78,6 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
             ))}
           </ul>
         </div>
-
-        {/* Mobile Profile */}
         <div
           className="flex justify-center items-center gap-2 cursor-pointer md:hidden"
           onClick={toggleMenu}
@@ -105,8 +100,6 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
           )}
         </div>
       </div>
-
-      {/* Mobile Dropdown Menu */}
       {menuVisible && (
         <div className="absolute top-[11vh] right-0 w-full bg-gray-800 py-4 md:hidden z-[999]">
           <div className="flex  flex-col justify-center items-center gap-1 mb-4">
@@ -156,8 +149,6 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
           </ul>
         </div>
       )}
-
-      {/* Desktop Profile */}
       <div className="hidden md:flex flex-col justify-center items-center gap-0">
         {user?.profile ? (
           <img

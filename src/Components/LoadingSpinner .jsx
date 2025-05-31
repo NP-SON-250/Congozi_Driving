@@ -1,6 +1,4 @@
 const LoadingSpinner = ({ size = 6, strokeWidth = 2 }) => {
-  // Convert size from arbitrary units to rem (Tailwind uses rem)
-  // Default size-6 = 1.5rem (24px)
   const sizeInRem = `${size * 0.3}rem`;
   const strokeInRem = `${strokeWidth * 0.1}rem`;
 

@@ -7,8 +7,6 @@ import Image6 from "../assets/trafic4.jpg";
 import Image7 from "../assets/trafic1.jpg";
 import Image8 from "../assets/trafic3.jpg";
 
-//Exams data
-
 export const examData = [
   {
     id: "EXAM001",
@@ -2223,8 +2221,6 @@ export const accountData = [
     ],
   },
 ];
-
-//Navbar
 
 export const navContents = [
   {

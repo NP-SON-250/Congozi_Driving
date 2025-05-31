@@ -15,7 +15,6 @@ const AdminUsers = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
 
-  // Form states
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
   const [editedCompanyName, setEditedCompanyName] = useState("");
@@ -42,7 +41,6 @@ const AdminUsers = () => {
   const [newAddress, setNewAddress] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // Role checks
   const isAdmin = currentUser?.role === "admin";
   const isSuperAdmin = currentUser?.role === "supperAdmin";
   const canAdd = isAdmin || isSuperAdmin;
@@ -50,7 +48,6 @@ const AdminUsers = () => {
   const canDelete = isSuperAdmin;
 
   useEffect(() => {
-    // Check authentication
     const token = localStorage.getItem("token");
     const userData = localStorage.getItem("user");
 
@@ -102,7 +99,6 @@ const AdminUsers = () => {
   };
 
   const handleEditClick = (user) => {
-    // Check authentication and permissions
     const token = localStorage.getItem("token");
     if (!token || !isSuperAdmin) {
       navigate("/kwinjira");
@@ -153,8 +149,6 @@ const AdminUsers = () => {
           },
         }
       );
-
-      // Update local state
       setUsers(
         users.map((user) =>
           user._id === userToEdit._id ? { ...user, ...updatedUser } : user
@@ -200,8 +194,6 @@ const AdminUsers = () => {
           },
         }
       );
-
-      // Update local state
       setUsers(users.filter((user) => user._id !== userToDelete._id));
       setShowDeletePopup(false);
     } catch (error) {
@@ -243,8 +235,6 @@ const AdminUsers = () => {
           },
         }
       );
-
-      // Update local state
       setUsers([...users, response.data.data]);
       setShowAddPopup(false);
       resetAddForm();
@@ -270,8 +260,6 @@ const AdminUsers = () => {
     setNewIdcard("");
     setNewTin("");
   };
-
-  // Pagination logic
   const indexOfLastUser = currentPage * USERS_PER_PAGE;
   const indexOfFirstUser = indexOfLastUser - USERS_PER_PAGE;
   const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
@@ -363,8 +351,6 @@ const AdminUsers = () => {
           </tbody>
         </table>
       </div>
-
-      {/* Pagination */}
       <div className="flex justify-center items-center mt-6 space-x-4">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
@@ -394,8 +380,6 @@ const AdminUsers = () => {
           Next
         </button>
       </div>
-
-      {/* Edit Popup */}
       {showEditPopup && (
         <EditUserPopup
           userToEdit={userToEdit}
@@ -430,8 +414,6 @@ const AdminUsers = () => {
           }
         />
       )}
-
-      {/* Add User Popup */}
       {showAddPopup && (
         <AddUserPopup
           newCompanyName={newCompanyName}
@@ -463,8 +445,6 @@ const AdminUsers = () => {
           }
         />
       )}
-
-      {/* Delete Popup */}
       {showDeletePopup && userToDelete && (
         <DeleteUserPopup
           user={userToDelete}

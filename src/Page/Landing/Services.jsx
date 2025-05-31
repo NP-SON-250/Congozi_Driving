@@ -7,7 +7,6 @@ const Services = () => {
   return (
     <div className="pt-20 px-4">
       <div className="flex flex-col justify-center items-center border border-blue-500 rounded-md px-10 pt-4">
-        {/* Title */}
         <div className="flex justify-center items-center gap-4 bg-Total md:w-[30%] py-1 px-5 rounded-full">
           <CgAlbum className="text-white text-xl" />
           <p
@@ -17,7 +16,6 @@ const Services = () => {
             Serivisi zacu
           </p>
         </div>
-        {/* Service contents */}
         <div className="flex md:flex-row flex-col justify-center items-center pt-2 gap-8">
           <div className="flex justify-center items-center flex-col gap-2">
             <img src={Service1} alt="" className="md:h-[40vh] rounded-md" />
@@ -38,7 +36,6 @@ const Services = () => {
             </p>
           </div>
         </div>
-        {/* Descriptions */}
         <div className=" pb-4 text-md px-10">
           <p>
             Singombwa ko uvunwa no kuza mw'ishuri, twakira n'abifuza kwiga

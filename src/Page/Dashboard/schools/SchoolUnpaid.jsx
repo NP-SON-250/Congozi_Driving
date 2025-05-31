@@ -19,14 +19,12 @@ const SchoolUnpaid = () => {
 
   const [account, setAccount] = useState({ data: [] });
   const [userName, setUserName] = useState("");
-  // Get user info from localStorage
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
       setUserName(`${user.companyName}`);
     }
   }, []);
-  // Fetch unpaid accounts
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -48,7 +46,6 @@ const SchoolUnpaid = () => {
     fetchData();
   }, []);
 
-  // Adjust items per page on screen resize
   useEffect(() => {
     const updateaccountsPerPage = () => {
       setAccountsPerPage(window.innerWidth >= 768 ? 6 : 2);
@@ -110,7 +107,6 @@ const SchoolUnpaid = () => {
     <div className="flex flex-col justify-center items-center md:px-5 gap-1 bg-white md:p-2">
       <WelcomeDear />
 
-      {/* Filters */}
       <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-12 gap-1 px-3 py-4">
         <input
           type="text"
@@ -147,7 +143,6 @@ const SchoolUnpaid = () => {
         />
       </div>
 
-      {/* account Cards */}
       {filteredAccounts.length === 0 ? (
         <p className="text-center py-4 text-red-500">No data found</p>
       ) : (
@@ -174,7 +169,6 @@ const SchoolUnpaid = () => {
         </div>
       )}
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-around md:gap-[700px] gap-[120px] md:pb-0 pt-3 px-10">
           <div>
@@ -205,7 +199,6 @@ const SchoolUnpaid = () => {
         </div>
       )}
 
-      {/* Payment Popup */}
       {selectedAccount && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[999]">
           <div className="bg-white rounded-lg shadow-lg md:max-w-3xl w-full text-center relative">

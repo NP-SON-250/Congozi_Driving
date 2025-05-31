@@ -14,7 +14,6 @@ const StudentHome = () => {
   const [failedExams, setFailedExams] = useState([]);
 
   useEffect(() => {
-    // Fetch exam data once the component is mounted
     const token = localStorage.getItem("token");
 
     const fetchAllExams = async () => {

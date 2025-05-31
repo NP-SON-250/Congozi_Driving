@@ -104,8 +104,6 @@ const AdminsPayments = () => {
           </tbody>
         </table>
       </div>
-
-      {/* Pagination */}
       <div className="flex justify-center items-center gap-4 mt-4">
         <button
           onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}

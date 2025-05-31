@@ -25,18 +25,15 @@ const AdminDashboard = () => {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    // Load user data from localStorage if available
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-        setUserData(parsedUser); // Set the user data to state
+        setUserData(parsedUser);
       } catch (err) {
         console.error("Failed to load user data:", err);
       }
     }
-
-    // Fetch data once the component is mounted
     const token = localStorage.getItem("token");
 
     const fetchAllData = async () => {
@@ -76,7 +73,6 @@ const AdminDashboard = () => {
     <>
       {activeSection === "dashboard" && (
         <>
-          {/* Summary Cards */}
           <div className="md:py-2 py-6 w-full gap-6 justify-center items-center flex md:flex-row flex-col">
             <div className="w-full md:px-4 px-4 cursor-pointer">
               <CurrentData
@@ -117,20 +113,16 @@ const AdminDashboard = () => {
           </div>
         </>
       )}
-
-      {/* Users Section */}
       {activeSection === "users" && (
         <div className="p-4 w-full">
           <Users />
         </div>
       )}
-      {/* Exam Section */}
       {activeSection === "Exams" && (
         <div className="p-4 w-full">
           <Exams />
         </div>
       )}
-      {/* Payments Section */}
       {activeSection === "Payments" && (
         <div className="p-4 w-full">
           <Payments />

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { GoPaperclip } from "react-icons/go";
-import axios from "axios"; // <-- import axios here
+import axios from "axios";
 
 const AddQuestionPopup = ({
   setAddQuestion,
@@ -15,7 +15,7 @@ const AddQuestionPopup = ({
     image: null,
   });
 
-  if (!selectedExam) return null; // prevent crash if exam is missing
+  if (!selectedExam) return null;
 
   const handleFileTrigger = () => {
     document.getElementById("file-upload").click();
@@ -55,8 +55,6 @@ const AddQuestionPopup = ({
           },
         }
       );
-
-      // Refresh and close
       if (typeof refreshQuestions === "function") {
         await refreshQuestions();
       }

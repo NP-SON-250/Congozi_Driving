@@ -199,7 +199,6 @@ const ManualTracking = () => {
         )}
       </div>
 
-      {/* Continue Card Popup */}
       {showContinueCard && (
         <ContinueCard
           code={examCode}
@@ -212,7 +211,6 @@ const ManualTracking = () => {
         />
       )}
 
-      {/* Confirm Card Popup */}
       {showConfirmCard && (
         <ConfirmCard
           code={examCode}

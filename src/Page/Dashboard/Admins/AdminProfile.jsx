@@ -91,8 +91,6 @@ const AdminProfile = () => {
 
       if (showPasswordForm) {
         if (!validatePasswordChange()) return;
-
-        // First verify the current password with the server
         try {
           await axios.post(
             `https://congozi-backend.onrender.com/api/v1/users/verify-password`,
@@ -110,8 +108,6 @@ const AdminProfile = () => {
           toast.error("Current password is incorrect");
           return;
         }
-
-        // If verification succeeds, proceed with password change
         const form = new FormData();
         form.append("password", passwordData.newPassword);
 
@@ -138,7 +134,6 @@ const AdminProfile = () => {
           });
         }, 1000);
       } else {
-        // Original profile update logic
         const form = new FormData();
         for (let key in formData) {
           if (formData[key]) {
@@ -184,7 +179,6 @@ const AdminProfile = () => {
   return (
     <div className="flex items-center justify-center">
       <div className="bg-white shadow-md rounded-lg md:p-1 p-6 w-full max-w-xl text-center">
-        {/* Message */}
         {message && (
           <div
             className={`text-sm mb-3 px-2 py-1 rounded ${
@@ -207,7 +201,6 @@ const AdminProfile = () => {
         >
           {!showPasswordForm ? (
             <>
-              {/* Profile Image */}
               <div className="relative w-24 h-24 mx-auto mb-1">
                 {preview && (
                   <img
@@ -226,8 +219,6 @@ const AdminProfile = () => {
                   />
                 </label>
               </div>
-
-              {/* Profile Form Fields */}
               <input
                 type="text"
                 name="fName"

@@ -14,7 +14,6 @@ const Users = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
 
-  // Form states
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
   const [editedCompanyName, setEditedCompanyName] = useState("");
@@ -30,13 +29,11 @@ const Users = () => {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
 
-  // Role checks
   const isSuperAdmin = currentUser?.role === "supperAdmin";
   const canEdit = isSuperAdmin;
   const canDelete = isSuperAdmin;
 
   useEffect(() => {
-    // Check authentication
     const token = localStorage.getItem("token");
     const userData = localStorage.getItem("user");
 
@@ -88,7 +85,6 @@ const Users = () => {
   };
 
   const handleEditClick = (user) => {
-    // Check authentication and permissions
     const token = localStorage.getItem("token");
     if (!token || !isSuperAdmin) {
       navigate("/kwinjira");
@@ -138,8 +134,6 @@ const Users = () => {
           },
         }
       );
-
-      // Update local state
       setUsers(
         users.map((user) =>
           user._id === userToEdit._id ? { ...user, ...updatedUser } : user
@@ -183,8 +177,6 @@ const Users = () => {
           },
         }
       );
-
-      // Update local state
       setUsers(users.filter((user) => user._id !== userToDelete._id));
       setShowDeletePopup(false);
     } catch (error) {
@@ -196,8 +188,6 @@ const Users = () => {
       }
     }
   };
-
-  // Pagination logic
   const indexOfLastUser = currentPage * USERS_PER_PAGE;
   const indexOfFirstUser = indexOfLastUser - USERS_PER_PAGE;
   const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
@@ -281,8 +271,6 @@ const Users = () => {
           </tbody>
         </table>
       </div>
-
-      {/* Pagination */}
       <div className="flex justify-center items-center mt-6 space-x-4">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
@@ -312,8 +300,6 @@ const Users = () => {
           Next
         </button>
       </div>
-
-      {/* Edit Popup */}
       {showEditPopup && (
         <EditUserPopup
           userToEdit={userToEdit}
@@ -339,7 +325,6 @@ const Users = () => {
           handleSaveUserEdit={handleSaveUserEdit}
         />
       )}
-      {/* Delete Popup */}
       {showDeletePopup && userToDelete && (
         <DeleteUserPopup
           user={userToDelete}

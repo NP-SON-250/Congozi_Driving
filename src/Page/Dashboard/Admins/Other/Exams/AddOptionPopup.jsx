@@ -25,8 +25,6 @@ const AddOptionPopup = ({ question, onClose, onSave }) => {
         `https://congozi-backend.onrender.com/api/v1/options/${question._id}`,
         payload
       );
-
-      // Trigger refresh with the newly added option
       onSave(question._id, response.data.Option);
       onClose();
     } catch (error) {

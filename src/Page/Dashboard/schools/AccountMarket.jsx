@@ -17,7 +17,6 @@ const AccountMarket = () => {
 
   const [account, setAccount] = useState({ data: [] });
   const [userName, setUserName] = useState("");
-  // Get user info from localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser && storedUser !== "undefined") {
@@ -28,7 +27,6 @@ const AccountMarket = () => {
       }
     }
   }, []);
-  // Fetch all accounts
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -138,8 +136,6 @@ const AccountMarket = () => {
   return (
     <div className="flex flex-col justify-center items-center md:px-5 gap-1 bg-white">
       <WelcomeDear />
-
-      {/* Filters */}
       <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-12 gap-1 px-3 py-4">
         <input
           type="text"
@@ -175,8 +171,6 @@ const AccountMarket = () => {
           className="border-2 border-blue-500 p-2 rounded-xl w-full"
         />
       </div>
-
-      {/* account Cards */}
       {filteredAccounts.length === 0 ? (
         <p className="text-center py-4 text-red-500">No data found</p>
       ) : (
@@ -201,8 +195,6 @@ const AccountMarket = () => {
           })}
         </div>
       )}
-
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-around md:gap-[700px] gap-[70px] md:pb-0 pt-3 px-10 ">
           <button
@@ -230,8 +222,6 @@ const AccountMarket = () => {
           </button>
         </div>
       )}
-
-      {/* Payment Popup */}
       {selectedAccount && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[999]">
           <div className="bg-Total rounded-lg shadow-lg md:max-w-3xl w-full text-center relative">

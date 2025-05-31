@@ -21,8 +21,6 @@ const SchoolAccessableExams = () => {
   const location = useLocation();
   const { accessCode } = queryString.parse(location.search);
   const navigate = useNavigate();
-
-  // Fetch all granted exams
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -43,8 +41,6 @@ const SchoolAccessableExams = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  // Check accessCode validity
   useEffect(() => {
     if (accessCode && exam.data.length > 0) {
       const matchedExam = exam.data.find((e) => e.accessCode === accessCode);

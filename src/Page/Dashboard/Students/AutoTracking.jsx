@@ -231,7 +231,6 @@ const AutoTracking = () => {
         )}
       </div>
 
-      {/* Continue Card Popup */}
       {showContinueCard && (
         <ContinueCard
           code={examCode}
@@ -241,7 +240,6 @@ const AutoTracking = () => {
         />
       )}
 
-      {/* Confirm Card Popup */}
       {showConfirmCard && (
         <ConfirmCard
           code={examCode}

@@ -34,8 +34,6 @@ const WelcomeDear = () => {
 
     return () => clearInterval(interval);
   }, []);
-
-  // Get user info from localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser && storedUser !== "undefined") {

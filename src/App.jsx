@@ -9,7 +9,6 @@ import Login from "./Page/Landing/Login";
 import RestPassword from "./Page/Landing/RestPassword";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import { useUserContext } from "./Components/useUserContext";
-// Student Imports
 import UserStudent from "./Components/Users/Students/UserStudent";
 import StudentHome from "./Page/Dashboard/Students/StudentHome";
 import StudentMarket from "./Page/Dashboard/Students/StudentMarket";
@@ -20,7 +19,6 @@ import StudentUnpaid from "./Page/Dashboard/Students/StudentUnpaid";
 import StudentWaiting from "./Page/Dashboard/Students/StudentWaiting";
 import LiveExam from "./Page/Dashboard/Students/LiveExam";
 
-// Admin Imports
 import AdminDashboard from "./Page/Dashboard/Admins/AdminDashboard";
 import AdminExams from "./Page/Dashboard/Admins/AdminExams";
 import AdminAccounts from "./Page/Dashboard/Admins/AdminAccounts";
@@ -28,7 +26,6 @@ import AdminUsers from "./Page/Dashboard/Admins/AdminUsers";
 import AdminProfile from "./Page/Dashboard/Admins/AdminProfile";
 import UserAdmin from "./Components/Users/Admins/UserAdmin";
 
-//School Account Imports
 import SchoolsDashboard from "./Page/Dashboard/schools/SchoolsDashboard";
 import UserSchool from "./Components/Users/Schools/UserSchool";
 import AccountMarket from "./Page/Dashboard/schools/AccountMarket";
@@ -46,13 +43,13 @@ import SchoolLiveLearn from "./Page/Dashboard/schools/SchoolLiveLearn";
 import LiveLearn from "./Page/Dashboard/Students/LiveLearn";
 const App = () => {
   const { userRole, loading } = useUserContext();
-  // onContextMenu={(e) => e.preventDefault()}
   if (loading) return <div>Loading...</div>;
   return (
     <>
-      <div className="overflow-x-hidden font-Poppins select-none">
+      <div className="overflow-x-hidden font-Poppins select-none"
+      onContextMenu={(e) => e.preventDefault()}
+      >
         <Routes>
-          {/* Landing Routes */}
           <Route element={<LandingLay />}>
             <Route path="/" element={<Home />}></Route>
             <Route path="/serivisi" element={<Services />}></Route>
@@ -61,7 +58,7 @@ const App = () => {
             <Route path="/kwinjira" element={<Login />}></Route>
             <Route path="/hindura" element={<RestPassword />}></Route>
           </Route>
-          {/* Student Market Routes */}
+
           {userRole === "student" && (
             <Route element={<ProtectedRoute allowedRole="student" />}>
               <Route element={<UserStudent />}>
@@ -84,7 +81,7 @@ const App = () => {
               </Route>
             </Route>
           )}
-          {/* Supper Admin Routes */}
+
           {userRole === "supperAdmin" && (
             <Route element={<ProtectedRoute allowedRole="supperAdmin" />}>
               <Route element={<UserAdmin />}>
@@ -97,7 +94,7 @@ const App = () => {
               </Route>
             </Route>
           )}
-          {/* Admin Routes */}
+
           {userRole === "admin" && (
             <Route element={<ProtectedRoute allowedRole="admin" />}>
               <Route element={<UserAdmin />}>
@@ -110,7 +107,7 @@ const App = () => {
               </Route>
             </Route>
           )}
-          {/* School Routes */}
+
           {userRole === "school" && (
             <Route element={<ProtectedRoute allowedRole="school" />}>
               <Route element={<UserSchool />}>

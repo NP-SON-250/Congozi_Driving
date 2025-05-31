@@ -16,7 +16,6 @@ const SchoolDemo = () => {
 
   const [account, setAccount] = useState({ data: [] });
 
-  // Fetch all accounts
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -80,7 +79,6 @@ const SchoolDemo = () => {
     <div className="flex flex-col justify-center items-center md:px-5 gap-1 bg-white md:p-2 ">
       <WelcomeDear />
 
-      {/* Filters */}
       <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-12 gap-1 px-3 py-4">
         <input
           type="text"
@@ -117,7 +115,6 @@ const SchoolDemo = () => {
         />
       </div>
 
-      {/* account Cards */}
       {filteredAccounts.length === 0 ? (
         <p className=" py-4 text-red-500">Not data found</p>
       ) : (
@@ -139,7 +136,6 @@ const SchoolDemo = () => {
         </div>
       )}
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-around md:gap-[700px] gap-[110px] md:pb-0 pt-3 px-10 ">
           <button
@@ -168,7 +164,6 @@ const SchoolDemo = () => {
         </div>
       )}
 
-      {/* Payment Popup */}
       {selectedAccount && <CompanyPopup onClose={closePopup} />}
     </div>
   );

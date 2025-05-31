@@ -48,7 +48,6 @@ const StudentUnpaid = () => {
     fetchData();
   }, []);
 
-  // Adjust items per page on screen resize
   useEffect(() => {
     const updateExamsPerPage = () => {
       setExamsPerPage(window.innerWidth >= 768 ? 6 : 2);
@@ -115,7 +114,6 @@ const StudentUnpaid = () => {
     <div className="flex flex-col justify-center items-center md:px-5 gap-1 bg-white md:p-2">
       <WelcomeDear />
 
-      {/* Filters */}
       <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-12 gap-1 px-3 py-4">
         <input
           type="text"
@@ -152,7 +150,6 @@ const StudentUnpaid = () => {
         />
       </div>
 
-      {/* Exam Cards */}
       {filteredExams.length === 0 ? (
         <p className="text-center py-4 text-red-500">
           Nta kizamini kitishyuye ufite
@@ -179,7 +176,6 @@ const StudentUnpaid = () => {
         </div>
       )}
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-around md:gap-[700px] gap-[120px] md:pb-0 pt-3 px-10">
           <div>
@@ -212,7 +208,6 @@ const StudentUnpaid = () => {
         </div>
       )}
 
-      {/* Payment Popup */}
       {selectedExam && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[999]">
           <div className="bg-white rounded-lg shadow-lg md:max-w-3xl w-full text-center relative">

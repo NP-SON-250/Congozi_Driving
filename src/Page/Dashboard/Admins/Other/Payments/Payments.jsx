@@ -18,7 +18,6 @@ const Payments = () => {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    // Get user data from localStorage when component mounts
     const token = localStorage.getItem("token");
     const userData = localStorage.getItem("user");
 
@@ -135,8 +134,6 @@ const Payments = () => {
     setCurrentPage(pageNumber);
     setSelectedMenu(null);
   };
-
-  // Check user roles
   const isAdmin = currentUser?.role === "admin";
   const isSuperAdmin = currentUser?.role === "supperAdmin";
   const canAddOrEdit = isAdmin || isSuperAdmin;
@@ -213,8 +210,6 @@ const Payments = () => {
           </tbody>
         </table>
       </div>
-
-      {/* Pagination */}
       <div className="flex justify-center items-center mt-6 space-x-4">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
@@ -242,8 +237,6 @@ const Payments = () => {
           Next
         </button>
       </div>
-
-      {/* Edit Account Popup - Show for both admin and superAdmin */}
       {canAddOrEdit && accountToEdit && (
         <EditAccountPopup
           accountToEdit={accountToEdit}
@@ -257,8 +250,6 @@ const Payments = () => {
           handleSaveEdit={handleSaveEdit}
         />
       )}
-
-      {/* Delete Confirmation Popup - Show only for superAdmin */}
       {canDelete && showDeleteConfirm && (
         <div className="fixed inset-0 z-[999] bg-black bg-opacity-40 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">

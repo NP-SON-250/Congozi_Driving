@@ -20,7 +20,6 @@ const StudentWaiting = () => {
   const { accessCode } = queryString.parse(location.search);
   const [exam, setExam] = useState({ data: [] });
 
-  // Fetch paid exams
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");

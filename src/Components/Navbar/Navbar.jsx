@@ -16,14 +16,11 @@ const Navbar = () => {
     <>
       <div className="fixed top-0 left-0 bg-Total z-50 w-full shadow-md">
         <div className="flex container justify-between items-center">
-          {/* Logo Section */}
           <div className="flex justify-center items-center md:px-0 px-4">
             <Link to={"/"}>
               <img src={Logo} alt="" className="w-14 py-1" />
             </Link>
           </div>
-
-          {/* Menu Section */}
           <div className="md:block hidden border border-Waiting rounded-md py-1 px-10">
             <ul className="flex items-center gap-6 text-white">
               {navContents.map((items) => {
@@ -43,8 +40,6 @@ const Navbar = () => {
               })}
             </ul>
           </div>
-
-          {/* Button Section */}
           <Link to={"/kwinjira"}>
             <div
               className={`flex justify-center items-center gap-2 px-2 py-1 rounded-3xl cursor-pointer ${
@@ -53,7 +48,6 @@ const Navbar = () => {
                   : "bg-Unpaid/95 hover:bg-yellow-700"
               }`}
             >
-              {/* Icon */}
               <div className="bg-white w-6 h-6 p-2 flex justify-center items-center rounded-full">
                 <FaUser />
               </div>
@@ -67,8 +61,6 @@ const Navbar = () => {
               </button>
             </div>
           </Link>
-
-          {/* Mobile hamburger menu Section */}
           <div className="md:hidden" onClick={() => setIsOpen((prev) => !prev)}>
             {isOpen ? (
               <MdOutlineClose className=" text-white hover:text-Unpaid/95 pr-4 cursor-pointer text-5xl" />
@@ -78,8 +70,6 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-
-      {/* Responsive side */}
       <ResponsiveMenu isOpen={isOpen} />
     </>
   );

@@ -7,7 +7,7 @@ import { FaUsersCog } from "react-icons/fa";
 import { PiFolderSimpleUserLight, PiExam } from "react-icons/pi";
 import { IoIosMenu, IoIosArrowForward } from "react-icons/io";
 import { MdDashboard } from "react-icons/md";
-import { MdManageAccounts, MdAccountBalance } from "react-icons/md";
+import { MdAccountBalance } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
 import { FcSalesPerformance } from "react-icons/fc";
 import { FaGoogleScholar } from "react-icons/fa6";
@@ -138,7 +138,6 @@ const Sidebar = ({ role = "students", onSignOut }) => {
 
   return (
     <div className="container relative">
-      {/* Desktop Sidebar */}
       <div className="w-[300px] h-[82vh] px-4 py-4 overflow-y-auto shadow fixed bottom-[45px] left-0 md:block hidden z-[50]">
         <ul>
           {items.map((item, index) => (
@@ -172,8 +171,6 @@ const Sidebar = ({ role = "students", onSignOut }) => {
           </div>
         </ul>
       </div>
-
-      {/* Mobile Bottom Navigation */}
       <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-400 py-1 px-1 md:hidden z-[999]">
         <ul className="flex justify-around items-center">
           {visibleItems.map((item, index) => (
@@ -220,8 +217,6 @@ const Sidebar = ({ role = "students", onSignOut }) => {
             </button>
           </li>
         </ul>
-
-        {/* More Items Dropdown */}
         {showAll && (
           <ul className="fixed bottom-[80px] left-0 w-full bg-white py-1 px-0 grid grid-cols-2 gap-4">
             {hiddenItems.map((item, index) => (
