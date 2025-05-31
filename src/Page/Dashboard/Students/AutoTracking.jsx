@@ -54,10 +54,17 @@ const AutoTracking = () => {
     setIsSearched(true);
   };
 
+  useEffect(() => {
+    if (!location.search.includes("accessCode")) {
+      setIsSearched(false);
+      setExamCode("");
+    }
+  }, [location.search]);
+
   const handleNotReady = () => {
     setExamCode("");
     setIsSearched(false);
-    navigate(`/students/tracking`);
+    navigate("/students/waitingexams", { replace: true });
   };
 
   const handleStartExam = () => {

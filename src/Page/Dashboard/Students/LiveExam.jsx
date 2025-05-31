@@ -15,21 +15,13 @@ const LiveExam = () => {
   const [examToDo, setExamToDo] = useState(null);
   const [examQuestions, setExamQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(0);
-  const [selectedOptions, setSelectedOptions] = useState(() => {
-    return JSON.parse(localStorage.getItem("selectedOptions")) || {};
-  });
-  const [examFinished, setExamFinished] = useState(() => {
-    const saved = localStorage.getItem(
-      `examFinished_${examCode}_${paidExam?._id}`
-    );
-    return saved ? JSON.parse(saved) : false;
-  });
+  const [selectedOptions, setSelectedOptions] = useState({});
+  const [examFinished, setExamFinished] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [reviewResults, setReviewResults] = useState(false);
   const [totalMarks, setTotalMarks] = useState(0);
   const [showNoQuestionsMessage, setShowNoQuestionsMessage] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
   const [userName, setUserName] = useState("");
   const [showCongrats, setShowCongrats] = useState(false);
 
@@ -63,24 +55,30 @@ const LiveExam = () => {
     });
   };
 
+  // Load initial state from localStorage
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const code = params.get("code") || "";
     setExamCode(code);
   }, [location.search]);
 
+  // Load exam progress when examCode or paidExam changes
   useEffect(() => {
-    if (examCode && paidExam) {
+    if (examCode && paidExam?._id) {
+      const savedOptions = localStorage.getItem(
+        `selectedOptions_${examCode}_${paidExam._id}`
+      );
       const isFinished = localStorage.getItem(
         `examFinished_${examCode}_${paidExam._id}`
       );
-      if (isFinished === "true") {
-        setExamFinished(true);
-        setReviewResults(true);
-      }
+
+      setSelectedOptions(savedOptions ? JSON.parse(savedOptions) : {});
+      setExamFinished(isFinished === "true");
+      setReviewResults(isFinished === "true");
     }
   }, [examCode, paidExam]);
 
+  // Fetch purchased exam details
   useEffect(() => {
     const fetchPaidExam = async () => {
       try {
@@ -99,12 +97,14 @@ const LiveExam = () => {
     if (examCode) fetchPaidExam();
   }, [examCode]);
 
+  // Fetch exam questions
   useEffect(() => {
     const fetchExamDetails = async () => {
       try {
         const token = localStorage.getItem("token");
         const examId = paidExam?.examId || paidExam?._id;
         if (!examId) return;
+
         const res = await axios.get(
           `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
           {
@@ -113,7 +113,10 @@ const LiveExam = () => {
         );
         const examData = res.data.data;
         setExamToDo(examData);
-        localStorage.setItem("live_exam_data", JSON.stringify(examData));
+
+        if (examData.questions?.length === 0) {
+          setShowNoQuestionsMessage(true);
+        }
       } catch (error) {
         console.error("Error fetching exam details:", error);
       }
@@ -121,22 +124,24 @@ const LiveExam = () => {
     if (paidExam) fetchExamDetails();
   }, [paidExam]);
 
+  // Set exam questions when examToDo changes
   useEffect(() => {
-    if (examToDo && examCode) {
+    if (examToDo) {
       setExamQuestions(examToDo.questions || []);
-    }
-  }, [examToDo, examCode]);
-
-  useEffect(() => {
-    localStorage.setItem("selectedOptions", JSON.stringify(selectedOptions));
-  }, [selectedOptions]);
-
-  useEffect(() => {
-    if (examToDo && examToDo.questions?.length === 0) {
-      setShowNoQuestionsMessage(true);
     }
   }, [examToDo]);
 
+  // Save selected options to localStorage
+  useEffect(() => {
+    if (examCode && paidExam?._id && !examFinished) {
+      localStorage.setItem(
+        `selectedOptions_${examCode}_${paidExam._id}`,
+        JSON.stringify(selectedOptions)
+      );
+    }
+  }, [selectedOptions, examCode, paidExam, examFinished]);
+
+  // Load user data
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser && storedUser !== "undefined") {
@@ -148,12 +153,10 @@ const LiveExam = () => {
     }
   }, []);
 
+  // Prevent page refresh during exam
   useEffect(() => {
     const handleBeforeUnload = (e) => {
-      if (examFinished) {
-        return;
-      }
-
+      if (examFinished) return;
       if (!examFinished && examQuestions.length > 0) {
         e.preventDefault();
         e.returnValue =
@@ -168,11 +171,17 @@ const LiveExam = () => {
     };
   }, [examFinished, examQuestions]);
 
+  const handleAnswerChange = (questionId, optionId) => {
+    if (examFinished) return;
+    setSelectedOptions((prev) => ({ ...prev, [questionId]: optionId }));
+  };
+
   const handleSubmitExam = useCallback(async () => {
-    if (examFinished || !examToDo || isSubmitting) return;
+    if (examFinished || !examToDo || isSubmitting || !paidExam) return;
     setIsSubmitting(true);
 
     try {
+      // Calculate score
       let score = 0;
       examQuestions.forEach((q) => {
         const selectedOptionId = selectedOptions[q._id];
@@ -190,11 +199,10 @@ const LiveExam = () => {
         return;
       }
 
-      const savedOptions =
-        JSON.parse(localStorage.getItem("selectedOptions")) || {};
-      const responses = Object.keys(savedOptions).map((questionId) => ({
+      // Prepare responses
+      const responses = Object.keys(selectedOptions).map((questionId) => ({
         questionId,
-        selectedOptionId: savedOptions[questionId],
+        selectedOptionId: selectedOptions[questionId],
       }));
 
       const payload = {
@@ -203,23 +211,31 @@ const LiveExam = () => {
         responses,
       };
 
-      const res = await fetch(
-        `https://congozi-backend.onrender.com/api/v1/responses/add`,
+      // Submit exam
+      const res = await axios.post(
+        "https://congozi-backend.onrender.com/api/v1/responses/add",
+        payload,
         {
-          method: "POST",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(payload),
         }
       );
 
-      const data = await res.json();
-
-      if (!res.ok || data.status !== "200") {
-        const message = data.message || "Gutanga ibisubizo byanze.";
-        throw new Error(message);
+      // Delete the purchased record after successful submission
+      try {
+        const deleted = await axios.delete(
+          `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("Purchase record deleted successfully", deleted.data);
+      } catch (deleteError) {
+        console.error("Error deleting purchase record:", deleteError);
+        // Continue even if deletion fails, as the exam is already submitted
       }
 
       if (!hasShownSuccess.current) {
@@ -227,12 +243,22 @@ const LiveExam = () => {
         hasShownSuccess.current = true;
       }
 
+      // Update state and localStorage
       setTotalMarks(score);
       setShowCongrats(true);
       setShowModal(false);
+      setExamFinished(true);
+      setReviewResults(true);
+
+      localStorage.setItem(`examFinished_${examCode}_${paidExam._id}`, "true");
+
+      // Clear the accessCode from URL
+      navigate(location.pathname, { replace: true });
     } catch (error) {
       console.error("Submission error:", error);
-      errors(error.message || "Habaye ikibazo mu kohereza ibisubizo.");
+      errors(
+        error.response?.data?.message || "Habaye ikibazo mu kohereza ibisubizo."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -245,16 +271,8 @@ const LiveExam = () => {
     examFinished,
     isSubmitting,
     paidExam,
+    location.pathname,
   ]);
-
-  const handleAnswerChange = (questionId, optionId) => {
-    if (examFinished) return;
-    setSelectedOptions((prev) => {
-      const updated = { ...prev, [questionId]: optionId };
-      localStorage.setItem("selectedOptions", JSON.stringify(updated));
-      return updated;
-    });
-  };
 
   const confirmFinishExam = () => setShowModal(true);
 
@@ -270,39 +288,50 @@ const LiveExam = () => {
   const CongratsMessage = () => {
     const score20 = totalMarks;
     const score100 = Math.round((totalMarks / examQuestions.length) * 100);
-    
+
     return (
       <div className="fixed inset-0 bg-black/60 flex justify-center items-center p-2 z-[9999]">
         <div className="bg-white rounded-lg p-6 max-w-md w-full text-center">
           <h2 className="text-2xl font-bold mb-4">Amanota wabonye</h2>
-          <div className="text-xl mb-4">
-            <span className="font-bold">{score20}/{examQuestions.length}</span>{" "}
+          <div className="text-xl mb-4 flex justify-center gap-12">
+            <span className="font-bold">
+              {score20}/{examQuestions.length}
+            </span>{" "}
             <span className="text-gray-600">|</span>{" "}
             <span className="font-bold">{score100}/100</span>
           </div>
-          <p className="mb-6">Watsinze ikizamini</p>
-          
+
           <div className="flex flex-col gap-3">
-            <button 
+            <button
               onClick={() => {
                 setShowCongrats(false);
-                setExamFinished(true);
-                setReviewResults(true);
-                localStorage.setItem(`examFinished_${examCode}_${examToDo._id}`, true);
-                localStorage.removeItem("selectedOptions");
-                localStorage.removeItem(`examTimeLeft_${examCode}_${examToDo._id}`);
+                localStorage.removeItem(
+                  `selectedOptions_${examCode}_${paidExam._id}`
+                );
+                localStorage.removeItem(
+                  `examTimeLeft_${examCode}_${paidExam._id}`
+                );
               }}
               className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
             >
               Reba ibisubizo
             </button>
-            <button 
+            <button
               onClick={() => {
                 setShowCongrats(false);
-                localStorage.removeItem(`examFinished_${examCode}_${examToDo._id}`);
-                localStorage.removeItem("selectedOptions");
-                localStorage.removeItem(`examTimeLeft_${examCode}_${examToDo._id}`);
-                navigate("/students/waitingexams");
+                localStorage.removeItem(
+                  `examFinished_${examCode}_${paidExam._id}`
+                );
+                localStorage.removeItem(
+                  `selectedOptions_${examCode}_${paidExam._id}`
+                );
+                localStorage.removeItem(
+                  `examTimeLeft_${examCode}_${paidExam._id}`
+                );
+                navigate("/students/waitingexams", {
+                  replace: true,
+                  state: { reset: true },
+                });
               }}
               className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition"
             >
@@ -317,7 +346,7 @@ const LiveExam = () => {
   return (
     <div className="flex flex-col bg-white md:p-2 gap-2">
       {showCongrats && <CongratsMessage />}
-      
+
       {showNoQuestionsMessage ? (
         <div className="text-center mt-10 text-Total font-semibold">
           <p>Ikikizami ntabibazo gifite. Hamagara Admin</p>
@@ -339,12 +368,14 @@ const LiveExam = () => {
               <Timer
                 initialTime={1200}
                 onTimeEnd={handleSubmitExam}
-                examId={`${examCode}_${examToDo?._id}`}
+                examId={`${examCode}_${paidExam?._id}`}
                 examFinished={examFinished}
               />
             }
             access={examCode}
           />
+
+          {/* Question navigation buttons */}
           <div className="flex flex-wrap justify-start py-1 md:gap-4 gap-2">
             {examQuestions.map((q, idx) => {
               const isAnswered = selectedOptions[q._id];
@@ -365,6 +396,7 @@ const LiveExam = () => {
             })}
           </div>
 
+          {/* Current question */}
           <div className="w-full px-3">
             {currentQuestion && (
               <>
@@ -409,6 +441,8 @@ const LiveExam = () => {
                     );
                   })}
                 </div>
+
+                {/* Navigation buttons */}
                 {!examFinished && (
                   <div className="mt-4 md:flex md:justify-between grid grid-cols-2 gap-4 md:pb-0 pb-4">
                     <button
@@ -454,6 +488,7 @@ const LiveExam = () => {
               </>
             )}
 
+            {/* Confirmation modal */}
             {showModal && (
               <div className="fixed inset-0 bg-black/60 flex justify-center items-center p-2 z-[9999]">
                 <div className="bg-Total rounded-lg flex md:flex-row flex-col items-center justify-around shadow-lg md:w-[60%] md:py-14 py-0 w-full text-center relative">
@@ -602,14 +637,18 @@ const LiveExam = () => {
             <button
               onClick={() => {
                 localStorage.removeItem(
-                  `examFinished_${examCode}_${examToDo._id}`,
-                  true
+                  `examFinished_${examCode}_${paidExam._id}`
                 );
-                localStorage.removeItem("selectedOptions");
                 localStorage.removeItem(
-                  `examTimeLeft_${examCode}_${examToDo._id}`
+                  `selectedOptions_${examCode}_${paidExam._id}`
                 );
-                navigate("/students/waitingexams");
+                localStorage.removeItem(
+                  `examTimeLeft_${examCode}_${paidExam._id}`
+                );
+                navigate("/students/waitingexams", {
+                  replace: true,
+                  state: { reset: true },
+                });
               }}
               className="bg-red-500 text-white py-2 px-4 rounded"
             >

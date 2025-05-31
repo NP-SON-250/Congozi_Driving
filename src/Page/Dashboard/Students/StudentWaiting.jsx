@@ -76,15 +76,19 @@ const StudentWaiting = () => {
 
   const navigate = useNavigate();
 
-  const handleDoExam = (exam) => {
-    if (exam.accessCode) {
-      const accessCode = exam.accessCode;
-      navigate(`/students/waitingexams?accessCode=${accessCode}`);
-      setIsExamStarted(true);
-    } else {
-      console.error("Nta code yo gukora ikikizamini ufite.");
-    }
-  };
+ 
+useEffect(() => {
+  const params = new URLSearchParams(location.search);
+  if (params.has('accessCode')) {
+    navigate(location.pathname, { replace: true });
+  }
+}, []);
+const handleDoExam = (exam) => {
+  if (exam.accessCode) {
+    navigate(`/students/waitingexams?accessCode=${exam.accessCode}`, { replace: true });
+    setIsExamStarted(true);
+  }
+};
 
   return (
     <div>
