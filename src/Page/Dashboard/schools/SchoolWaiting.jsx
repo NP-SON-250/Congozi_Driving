@@ -111,7 +111,7 @@ const SchoolWaiting = () => {
 
         {soonToExpireAccounts.length > 0 && (
           <div className="md:w-[90%] w-full bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md mb-3">
-             <strong>Heads up!</strong> You have {soonToExpireAccounts.length}{" "}
+            <strong>Heads up!</strong> You have {soonToExpireAccounts.length}{" "}
             account
             {soonToExpireAccounts.length > 1 ? "s" : ""} expiring within 1 day.
             Make sure to use them in time!

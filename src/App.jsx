@@ -42,13 +42,12 @@ import SchoolLiveExam from "./Page/Dashboard/schools/SchoolLiveExam";
 import SchoolLiveLearn from "./Page/Dashboard/schools/SchoolLiveLearn";
 import LiveLearn from "./Page/Dashboard/Students/LiveLearn";
 const App = () => {
+  // onContextMenu={(e) => e.preventDefault()}
   const { userRole, loading } = useUserContext();
   if (loading) return <div>Loading...</div>;
   return (
     <>
-      <div className="overflow-x-hidden font-Poppins select-none"
-      onContextMenu={(e) => e.preventDefault()}
-      >
+      <div className="overflow-x-hidden font-Poppins select-none">
         <Routes>
           <Route element={<LandingLay />}>
             <Route path="/" element={<Home />}></Route>

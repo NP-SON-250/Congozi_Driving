@@ -171,7 +171,7 @@ const AdminProfile = () => {
         error?.response?.data?.message || "Failed to update information"
       );
       setMessageType("error");
-    }finally {
+    } finally {
       setIsLoading(false);
     }
   };

@@ -75,19 +75,20 @@ const StudentWaiting = () => {
 
   const navigate = useNavigate();
 
- 
-useEffect(() => {
-  const params = new URLSearchParams(location.search);
-  if (params.has('accessCode')) {
-    navigate(location.pathname, { replace: true });
-  }
-}, []);
-const handleDoExam = (exam) => {
-  if (exam.accessCode) {
-    navigate(`/students/waitingexams?accessCode=${exam.accessCode}`, { replace: true });
-    setIsExamStarted(true);
-  }
-};
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.has("accessCode")) {
+      navigate(location.pathname, { replace: true });
+    }
+  }, []);
+  const handleDoExam = (exam) => {
+    if (exam.accessCode) {
+      navigate(`/students/waitingexams?accessCode=${exam.accessCode}`, {
+        replace: true,
+      });
+      setIsExamStarted(true);
+    }
+  };
 
   return (
     <div>
