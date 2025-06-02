@@ -403,15 +403,6 @@ const AdminUsers = () => {
           setEditedIdcard={setEditedIdcard}
           setShowEditPopup={setShowEditPopup}
           handleSaveUserEdit={handleSaveUserEdit}
-          onValue={
-            isLoading ? (
-              <>
-                <LoadingSpinner size={5} strokeWidth={2} />
-              </>
-            ) : (
-              "Save Changes"
-            )
-          }
         />
       )}
       {showAddPopup && (
@@ -450,15 +441,6 @@ const AdminUsers = () => {
           user={userToDelete}
           onCancel={() => setShowDeletePopup(false)}
           onConfirm={handleConfirmDelete}
-          onValue={
-            isLoading ? (
-              <>
-                <LoadingSpinner size={5} strokeWidth={2} />
-              </>
-            ) : (
-              "Delete User"
-            )
-          }
         />
       )}
     </div>

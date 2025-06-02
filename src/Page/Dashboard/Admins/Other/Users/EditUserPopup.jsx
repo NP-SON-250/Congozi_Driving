@@ -22,7 +22,6 @@ const EditUserPopup = ({
   setEditedRole,
   setShowEditPopup,
   handleSaveUserEdit,
-  onValue
 }) => {
   if (!userToEdit) return null;
 
@@ -145,7 +144,7 @@ const EditUserPopup = ({
             onClick={handleSaveUserEdit}
             className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
-            {onValue}
+            Save Changes
           </button>
         </div>
       </div>
