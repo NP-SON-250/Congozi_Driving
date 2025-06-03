@@ -89,10 +89,7 @@ const Register = () => {
 
     try {
       setIsLoading(true);
-      const res = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/users",
-        data
-      );
+      const res = await axios.post("http://localhost:4900/api/v1/users", data);
       notifySuccess(res.data.message || "Kwiyandikisha byagenze neza!");
       navigate("/kwinjira");
     } catch (error) {

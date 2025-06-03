@@ -75,14 +75,11 @@ const AdminUsers = () => {
         return;
       }
 
-      const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/users",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get("http://localhost:4900/api/v1/users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setUsers(response.data.data || []);
     } catch (error) {
       console.error("Failed to fetch users:", error);
@@ -141,7 +138,7 @@ const AdminUsers = () => {
       };
 
       await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/users/${userToEdit._id}`,
+        `http://localhost:4900/api/v1/users/${userToEdit._id}`,
         updatedUser,
         {
           headers: {
@@ -187,7 +184,7 @@ const AdminUsers = () => {
 
     try {
       await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/users/${userToDelete._id}`,
+        `http://localhost:4900/api/v1/users/${userToDelete._id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -227,7 +224,7 @@ const AdminUsers = () => {
       };
 
       const response = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/users",
+        "http://localhost:4900/api/v1/users",
         newUser,
         {
           headers: {

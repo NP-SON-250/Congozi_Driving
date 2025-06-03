@@ -14,7 +14,7 @@ const Home = () => {
         <div className="">
           <img src={Homes} alt="" className="md:h-[50vh] md:w-[90%]" />
         </div>
-        <div className="flex flex-col justify-start px-5 py-5 md:-ml-12">
+        <div className="flex flex-col justify-start items-center px-5 py-5 md:-ml-12">
           <h1 className="md:text-2xl uppercase flex gap-1 font-semibold pb-2 text-center">
             Ukeneye Gutsindira
             <span className="text-Passed">Provisoir</span> ?

@@ -27,7 +27,7 @@ const Login = () => {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/users/auth",
+        "http://localhost:4900/api/v1/users/auth",
         {
           identifier,
           password,
@@ -136,21 +136,24 @@ const Login = () => {
             )}
           </button>
 
-          <div className="md:flex-row flex-col flex justify-center items-center md:gap-10 gap-4 mt-4">
+          <div className="md:flex-row flex-col flex justify-center items-center md:gap-10 gap-4 mt-1 mb-3">
             <Link to="/hindura">
               <p className="flex justify-center items-center gap-2 text-blue-500 text-md">
                 <FaQuestionCircle /> Wibagiwe Ijambobanga?
               </p>
             </Link>
-            <p className="flex justify-center items-center gap-2 text-blue-500 text-md">
-              Nta konti ufite?
-              <Link
-                to="/kwiyandikisha"
-                className="text-xl text-blue-800 font-semibold ml-1"
-              >
-                Yifungure
-              </Link>
-            </p>
+            <Link to={"/kwiyandikisha"}>
+              <div className="flex justify-center items-center md:ml-28 gap-2">
+                <p className="flex justify-center items-center gap-2 text-blue-500 text-md">
+                  Nta konti ufite?
+                </p>
+                <button
+                  className={`flex justify-center items-center px-4 py-1 rounded-md bg-Total hover:bg-blue-800 text-white `}
+                >
+                  Yifungure
+                </button>
+              </div>
+            </Link>
           </div>
         </div>
       </div>

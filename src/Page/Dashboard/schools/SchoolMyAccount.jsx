@@ -92,7 +92,7 @@ const SchoolMyAccount = () => {
         if (!validatePasswordChange()) return;
         try {
           await axios.post(
-            `https://congozi-backend.onrender.com/api/v1/users/verify-password`,
+            `http://localhost:4900/api/v1/users/verify-password`,
             {
               userId: user._id,
               password: passwordData.currentPassword,
@@ -111,7 +111,7 @@ const SchoolMyAccount = () => {
         form.append("password", passwordData.newPassword);
 
         const response = await axios.put(
-          `https://congozi-backend.onrender.com/api/v1/users/${user._id}`,
+          `http://localhost:4900/api/v1/users/${user._id}`,
           form,
           {
             headers: {
@@ -144,7 +144,7 @@ const SchoolMyAccount = () => {
         }
 
         const response = await axios.put(
-          `https://congozi-backend.onrender.com/api/v1/users/${user._id}`,
+          `http://localhost:4900/api/v1/users/${user._id}`,
           form,
           {
             headers: {
