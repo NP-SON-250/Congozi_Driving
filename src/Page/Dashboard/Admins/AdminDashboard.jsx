@@ -54,7 +54,7 @@ const AdminDashboard = () => {
             config
           ),
           axios.get(
-            "https://congozi-backend.onrender.com/api/v1/purchases",
+            "https://congozi-backend.onrender.com/api/v1/accounts",
             config
           ),
         ]);
