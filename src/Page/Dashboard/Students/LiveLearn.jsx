@@ -39,7 +39,7 @@ const LiveLearn = () => {
     const fetchPaidExam = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:4900/api/v1/purchases/access/${examCode}`,
+          `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setPaidExam(res.data.data.itemId);
@@ -56,7 +56,7 @@ const LiveLearn = () => {
         const examId = paidExam?.examId || paidExam?._id;
         if (!examId) return;
         const res = await axios.get(
-          `http://localhost:4900/api/v1/exams/${examId}`,
+          `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const examData = res.data.data;
@@ -88,7 +88,7 @@ const LiveLearn = () => {
       if (!number) return;
 
       const purchaseRes = await axios.get(
-        "http://localhost:4900/api/v1/purchases/user",
+        "https://congozi-backend.onrender.com/api/v1/purchases/user",
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -99,7 +99,7 @@ const LiveLearn = () => {
       if (!examPurchased) return;
 
       const res = await axios.get(
-        `http://localhost:4900/api/v1/exams/kora/${number}`,
+        `https://congozi-backend.onrender.com/api/v1/exams/kora/${number}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const koraData = res.data.data;
@@ -122,7 +122,7 @@ const LiveLearn = () => {
   const handlePayLaterClick = async () => {
     try {
       await axios.post(
-        `http://localhost:4900/api/v1/purchases/${koraExam._id}`,
+        `https://congozi-backend.onrender.com/api/v1/purchases/${koraExam._id}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -153,7 +153,7 @@ const LiveLearn = () => {
     try {
       if (examCode) {
         await axios.delete(
-          `http://localhost:4900/api/v1/purchases/access/${examCode}`
+          `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`
         );
         navigate("/students/waitingexams", {
           replace: true,

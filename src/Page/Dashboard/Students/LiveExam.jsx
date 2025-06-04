@@ -81,7 +81,7 @@ const LiveExam = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `http://localhost:4900/api/v1/purchases/access/${examCode}`,
+          `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -102,7 +102,7 @@ const LiveExam = () => {
         if (!examId) return;
 
         const res = await axios.get(
-          `http://localhost:4900/api/v1/exams/${examId}`,
+          `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -202,7 +202,7 @@ const LiveExam = () => {
       };
 
       const res = await axios.post(
-        "http://localhost:4900/api/v1/responses/add",
+        "https://congozi-backend.onrender.com/api/v1/responses/add",
         payload,
         {
           headers: {
@@ -213,7 +213,7 @@ const LiveExam = () => {
 
       try {
         const deleted = await axios.delete(
-          `http://localhost:4900/api/v1/purchases/access/${examCode}`,
+          `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

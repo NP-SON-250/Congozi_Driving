@@ -21,7 +21,7 @@ const ViewOptions = ({ question, onBack }) => {
   const fetchOptions = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:4900/api/v1/options/${question._id}`
+        `https://congozi-backend.onrender.com/api/v1/options/${question._id}`
       );
       if (res.data && res.data.data) {
         setOptions(res.data.data);
@@ -40,7 +40,7 @@ const ViewOptions = ({ question, onBack }) => {
 
     try {
       await axios.put(
-        `http://localhost:4900/api/v1/options/${optionToEdit._id}`,
+        `https://congozi-backend.onrender.com/api/v1/options/${optionToEdit._id}`,
         {
           text: editedOptionText,
           isCorrect: editedIsCorrect,
@@ -58,7 +58,7 @@ const ViewOptions = ({ question, onBack }) => {
 
     try {
       await axios.delete(
-        `http://localhost:4900/api/v1/options/${optionToDelete._id}`
+        `https://congozi-backend.onrender.com/api/v1/options/${optionToDelete._id}`
       );
       setOptionToDelete(null);
       fetchOptions();

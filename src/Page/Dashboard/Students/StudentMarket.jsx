@@ -36,11 +36,14 @@ const StudentMarket = () => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:4900/api/v1/exams", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "https://congozi-backend.onrender.com/api/v1/exams",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setExam(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -83,41 +86,40 @@ const StudentMarket = () => {
   };
 
   const handleProceedToPayment = async () => {
-  if (isProcessingPayment) return;
+    if (isProcessingPayment) return;
 
-  setIsProcessingPayment(true);
-  try {
-    const token = localStorage.getItem("token");
-    const response = await axios.post(
-      `http://localhost:4900/api/v1/purchases/${selectedExam._id}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    setIsProcessingPayment(true);
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        `https://congozi-backend.onrender.com/api/v1/purchases/${selectedExam._id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setPaymentStep("payment");
+      setPaid(response.data?.data?.purchase._id);
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        alert("You have already purchased this exam.");
+      } else {
+        console.error("Purchase request failed:", error);
+        alert("Failed to initiate purchase. Please try again.");
       }
-    );
-    setPaymentStep("payment");
-    setPaid(response.data?.data?.purchase._id);
-  } catch (error) {
-    if (error.response && error.response.status === 404) {
-      alert("You have already purchased this exam.");
-    } else {
-      console.error("Purchase request failed:", error);
-      alert("Failed to initiate purchase. Please try again.");
+    } finally {
+      setIsProcessingPayment(false);
     }
-  } finally {
-    setIsProcessingPayment(false);
-  }
-};
+  };
 
   const purchasedItem = async () => {
-    
     try {
       const token = localStorage.getItem("token");
       const purchasedId = paid;
       const response = await axios.get(
-        `http://localhost:4900/api/v1/purchases/${purchasedId}`,
+        `https://congozi-backend.onrender.com/api/v1/purchases/${purchasedId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -156,7 +158,7 @@ const StudentMarket = () => {
               const purchasedId = paid;
 
               const response = await axios.put(
-                `http://localhost:4900/api/v1/purchases/${purchasedId}`,
+                `https://congozi-backend.onrender.com/api/v1/purchases/${purchasedId}`,
                 { status: "complete" },
                 {
                   headers: {
@@ -184,7 +186,7 @@ const StudentMarket = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `http://localhost:4900/api/v1/purchases/${selectedExam._id}`,
+        `https://congozi-backend.onrender.com/api/v1/purchases/${selectedExam._id}`,
         {},
         {
           headers: {
@@ -201,7 +203,7 @@ const StudentMarket = () => {
   //   try {
   //     const token = localStorage.getItem("token");
   //     await axios.post(
-  //       `http://localhost:4900/api/v1/purchases/paid/${selectedExam._id}`,
+  //       `https://congozi-backend.onrender.com/api/v1/purchases/paid/${selectedExam._id}`,
   //       {},
   //       {
   //         headers: {

@@ -37,7 +37,9 @@ const Payments = () => {
 
   const fetchAccounts = async () => {
     try {
-      const response = await axios.get("http://localhost:4900/api/v1/accounts");
+      const response = await axios.get(
+        "https://congozi-backend.onrender.com/api/v1/accounts"
+      );
       setAccounts(response.data.data || []);
     } catch (error) {
       console.error("Failed to fetch accounts:", error);
@@ -72,7 +74,7 @@ const Payments = () => {
       }
 
       await axios.delete(
-        `http://localhost:4900/api/v1/accounts/${accountToDelete._id}`,
+        `https://congozi-backend.onrender.com/api/v1/accounts/${accountToDelete._id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -101,7 +103,7 @@ const Payments = () => {
       }
 
       await axios.put(
-        `http://localhost:4900/api/v1/accounts/${accountToEdit._id}`,
+        `https://congozi-backend.onrender.com/api/v1/accounts/${accountToEdit._id}`,
         {
           title: editedTitle,
           fees: editedFees,
