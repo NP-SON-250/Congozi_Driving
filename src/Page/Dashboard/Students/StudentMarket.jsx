@@ -345,7 +345,10 @@ const StudentMarket = () => {
                   Ugiye kugura ikizamini {selectedExam.number} cyo{" "}
                   {selectedExam.type} ishyura ayamafaranga ({selectedExam.fees}{" "}
                   RWF) maze uhabwe kode yo gufungura ikizamini cyawe. Ufite
-                  ikibazo hamagara kuri iyi nimero: 0783905790
+                  ikibazo hamagara kuri iyi nimero:{" "}
+                  <span className="text-yellow-600 font-semibold pl-2">
+                    0783905790
+                  </span>
                 </p>
                 <div className="flex justify-center md:gap-24 gap-10 pt-10">
                   <button

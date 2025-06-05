@@ -25,7 +25,7 @@ const UsersLay = ({ role }) => {
     "/schools/home": "School Dashboard",
     "/schools/account/market": "Account Market",
     "/schools/online": "Do Exams Online",
-    "/schools/exams": "My Accounts",
+    "/schools/accounts": "My Accounts",
     "/schools/account": "My Account",
   };
   const getCurrentYear = () => new Date().getFullYear();

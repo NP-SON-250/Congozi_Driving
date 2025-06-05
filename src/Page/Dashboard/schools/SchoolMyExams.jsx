@@ -66,35 +66,41 @@ const SchoolMyExams = () => {
       console.error("No access code available for this account.");
     }
   };
+  const makePayment = (invoiceNumber, account) => {
+    IremboPay.initiate({
+      publicKey: "pk_live_111e50f65489462684098ebea001da06",
+      invoiceNumber: invoiceNumber,
+      locale: IremboPay.locale.RW,
+      callback: async (err, resp) => {
+        if (!err) {
+          setSelectedAccount(account);
+          try {
+            const token = localStorage.getItem("token");
+            const purchaseId = account._id;
 
-  const handlePurchaseClick = (account) => {
-    setSelectedAccount(account);
-    setPaymentStep("confirmation");
-  };
+            const response = await axios.put(
+              `https://congozi-backend.onrender.com/api/v1/purchases/${purchaseId}`,
+              { status: "complete" },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
 
-  const handleProceedToPayment = () => {
-    setPaymentStep("payment");
-  };
-
-  const handlePayment = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const purchaseId = selectedAccount._id;
-      const response = await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${purchaseId}`,
-        { status: "complete" },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+            toast.success("Kwishyura byakunze.");
+            closePopup();
+            navigate(`/schools/accounts`);
+            fetchAccounts();
+          } catch (error) {
+            toast.error("Kwishyura byanze.");
+            console.error("Ikibazo:", error);
+          }
+        } else {
+          console.error("Payment error:", err);
         }
-      );
-      closePopup();
-      fetchAccounts();
-    } catch (error) {
-      toast.error("Kwishyura byanze.");
-      console.error("Payment error:", error);
-    }
+      },
+    });
   };
   const closePopup = () => {
     setSelectedAccount(null);
@@ -187,8 +193,10 @@ const SchoolMyExams = () => {
                         </button>
                       ) : account.status === "pending" ? (
                         <button
-                          title="Proceed to payment"
-                          onClick={() => handlePurchaseClick(account)}
+                          title="Pay"
+                          onClick={() => {
+                            makePayment(account.invoiceNumber, account);
+                          }}
                           className="text-blue-900 py-1 px-3 flex md:tex-xs text-xs items-center gap-2"
                         >
                           <FaCartPlus />
@@ -241,109 +249,6 @@ const SchoolMyExams = () => {
               Izikurira
               <FaArrowAltCircleRight size={24} />
             </button>
-          </div>
-        </div>
-      )}
-      {selectedAccount && (
-        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[999]">
-          <div className="bg-Total rounded-lg shadow-lg md:max-w-3xl w-full text-center relative">
-            <button
-              className="absolute top-1 right-1 text-xl bg-white text-red-700 border-2 border-white rounded-full w-8 h-8 flex justify-center"
-              onClick={closePopup}
-            >
-              ✖
-            </button>
-            {paymentStep === "confirmation" ? (
-              <>
-                <h2 className="text-lg text-start font-bold text-white px-6 pt-6">
-                  Dear {selectedAccount.purchasedBy?.lName},
-                </h2>
-                <p className="mt-0 text-start text-white px-6">
-                  Your {selectedAccount.itemId?.title} Account valid in{" "}
-                  {selectedAccount.itemId?.validIn} days has been successfully
-                  purchased! Please make payment for your bill (
-                  {selectedAccount.itemId?.fees} RWF) to get exam access code.
-                </p>
-                <div className="flex justify-center p-6 mt-12 gap-6">
-                  <button
-                    className="bg-red-500 text-white px-2 py-1 rounded"
-                    onClick={closePopup}
-                  >
-                    Close
-                  </button>
-                  <button
-                    className="bg-yellow-500 text-white px-2 py-1 rounded"
-                    onClick={closePopup}
-                  >
-                    Pay Later
-                  </button>
-                  <button
-                    className="bg-green-500 text-white px-2 py-1 rounded"
-                    onClick={handleProceedToPayment}
-                  >
-                    Pay Now
-                  </button>
-                </div>
-              </>
-            ) : (
-              <div className="flex md:flex-row bg-white flex-col md:gap-6 gap-1">
-                <div className="text-left">
-                  <ul className="md:space-y-6 space-y-2 bg-gray-200 h-full p-4">
-                    <li className="text-blue-900 font-bold">
-                      <input type="radio" name="payment" checked readOnly /> MTN
-                      Mobile Money
-                    </li>
-                    <li>
-                      <input type="radio" name="payment" /> Airtel Money
-                    </li>
-                    <li>
-                      <input type="radio" name="payment" /> Ikarita ya Banki
-                    </li>
-                    <li>
-                      <input type="radio" name="payment" /> Amafaranga mu ntoki
-                      / Ejenti
-                    </li>
-                    <li>
-                      <input type="radio" name="payment" /> Konti za banki
-                    </li>
-                    <img src={Irembo} alt="" className="w-24" />
-                  </ul>
-                </div>
-                <div className="flex flex-col justify-center items-start px-3 py-2">
-                  <p className="text-start">
-                    Kanda ino mibare kuri telefone yawe ya MTN maze <br />
-                    wishyure:
-                  </p>
-                  <p className="flex justify-center gap-2 md:py-6 font-bold">
-                    <img src={Mtn} alt="" className="w-10 h-6" />
-                    *182*3*7*
-                    <span className="bg-green-400/20 border px-1 border-green-600">
-                      880318112865
-                    </span>
-                    #
-                  </p>
-                  <p>Cyangwa ushyiremo nomero yawe ya MTM MoMo Maze wishyure</p>
-                  <div className="w-full">
-                    <input
-                      type="text"
-                      placeholder="ex: 0789xxxxxxx"
-                      className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
-                    />
-                    <button
-                      className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full"
-                      onClick={handlePayment}
-                    >
-                      Ishyura {selectedAccount.itemId?.fees} RWF
-                    </button>
-                    <p className="text-start py-2 font-medium">
-                      Nyuma yo kwemeza kwishyura unyuze kuri Ishyura{" "}
-                      {selectedAccount.itemId?.fees}, Uragabwa SMS <br />
-                      kuri telefone yawe wemeze maze ushyiremo umubare w'ibanga.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       )}

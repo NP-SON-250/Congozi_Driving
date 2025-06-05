@@ -116,7 +116,7 @@ const App = () => {
                   element={<AccountMarket />}
                 />
                 <Route path="/schools/online" element={<SchoolDoExams />} />
-                <Route path="/schools/exams" element={<SchoolMyExams />} />
+                <Route path="/schools/accounts" element={<SchoolMyExams />} />
                 <Route path="/schools/account" element={<SchoolMyAccount />} />
                 <Route
                   path="/schools/unpaidaccounts"

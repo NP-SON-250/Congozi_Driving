@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import ExamsCard from "../../../Components/Cards/ExamsCard";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import { FaHandHoldingDollar } from "react-icons/fa6";
-import Irembo from "../../../assets/irembopay.png";
-import Mtn from "../../../assets/MTN.jpg";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
