@@ -32,7 +32,7 @@ const StudentUnpaid = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/purchases/pending",
+        "http://localhost:4900/api/v1/purchases/pending",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -76,20 +76,19 @@ const StudentUnpaid = () => {
   );
 
   const makePayment = (invoiceNumber, exam) => {
-    console.log(invoiceNumber);
     IremboPay.initiate({
       publicKey: "pk_live_111e50f65489462684098ebea001da06",
       invoiceNumber: invoiceNumber,
       locale: IremboPay.locale.RW,
       callback: async (err, resp) => {
         if (!err) {
-          setSelectedExam(exam);
+          setSelectedExam(exam);  
           try {
             const token = localStorage.getItem("token");
             const purchaseId = exam._id;
 
             const response = await axios.put(
-              `https://congozi-backend.onrender.com/api/v1/purchases/${purchaseId}`,
+              `http://localhost:4900/api/v1/purchases/${purchaseId}`,
               { status: "complete" },
               {
                 headers: {

@@ -27,7 +27,7 @@ const Login = () => {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/users/auth",
+        "http://localhost:4900/api/v1/users/auth",
         {
           identifier,
           password,

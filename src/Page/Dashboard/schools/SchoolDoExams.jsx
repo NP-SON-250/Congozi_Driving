@@ -24,7 +24,7 @@ const SchoolDoExams = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/purchases/complete",
+        "http://localhost:4900/api/v1/purchases/complete",
         {
           headers: {
             Authorization: `Bearer ${token}`,

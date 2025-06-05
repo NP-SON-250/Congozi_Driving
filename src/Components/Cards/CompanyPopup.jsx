@@ -16,7 +16,7 @@ const CompanyPopup = ({ onClose }) => {
 
     try {
       const response = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/users/auth/school",
+        "http://localhost:4900/api/v1/users/auth/school",
         {
           identifier,
           password,

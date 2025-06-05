@@ -31,7 +31,7 @@ const AccountMarket = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/accounts",
+        "http://localhost:4900/api/v1/accounts",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -89,7 +89,7 @@ const AccountMarket = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${selectedAccount._id}`,
+        `http://localhost:4900/api/v1/purchases/${selectedAccount._id}`,
         {},
         {
           headers: {
@@ -111,7 +111,7 @@ const AccountMarket = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/purchases/paid/${selectedAccount._id}`,
+        `http://localhost:4900/api/v1/purchases/paid/${selectedAccount._id}`,
         {},
         {
           headers: {

@@ -60,14 +60,11 @@ const AdminExams = () => {
         return;
       }
 
-      const res = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/exams",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get("http://localhost:4900/api/v1/exams", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setExams(res.data.data || []);
     } catch (error) {
       console.error("Failed to fetch exams:", error);
@@ -119,7 +116,7 @@ const AdminExams = () => {
 
     try {
       await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/exams/${examToDelete._id}`,
+        `http://localhost:4900/api/v1/exams/${examToDelete._id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -148,7 +145,7 @@ const AdminExams = () => {
 
     try {
       const res = await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/exams/${editingExam._id}`,
+        `http://localhost:4900/api/v1/exams/${editingExam._id}`,
         {
           title: editedTitle,
           fees: editedFees,
