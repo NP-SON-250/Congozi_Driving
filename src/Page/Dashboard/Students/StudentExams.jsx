@@ -34,7 +34,7 @@ const StudentExams = () => {
         },
       };
       const response = await axios.get(
-        "http://localhost:4900/api/v1/purchases/user",
+        "https://congozi-backend.onrender.com/api/v1/purchases/user",
         config
       );
       const result = response.data?.data;
@@ -74,7 +74,7 @@ const StudentExams = () => {
             const purchaseId = exam._id;
 
             const response = await axios.put(
-              `http://localhost:4900/api/v1/purchases/${purchaseId}`,
+              `https://congozi-backend.onrender.com/api/v1/purchases/${purchaseId}`,
               { status: "complete" },
               {
                 headers: {

@@ -30,7 +30,7 @@ const SchoolAccessedExam = () => {
         try {
           const token = localStorage.getItem("token");
           const response = await axios.get(
-            `http://localhost:4900/api/v1/exams/${examId}`,
+            `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
