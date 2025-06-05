@@ -8,8 +8,6 @@ import {
   FaArrowAltCircleLeft,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import Irembo from "../../../assets/irembopay.png";
-import Mtn from "../../../assets/MTN.jpg";
 import { toast, ToastContainer } from "react-toastify";
 
 const getCurrentDate = () => {
