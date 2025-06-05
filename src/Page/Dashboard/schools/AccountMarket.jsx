@@ -19,6 +19,7 @@ const AccountMarket = () => {
 
   const [paid, setPaid] = useState();
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [isPayingLater, setIsPayingLater] = useState(false);
   const [account, setAccount] = useState({ data: [] });
   const [userName, setUserName] = useState("");
   const navigate = useNavigate();
@@ -135,6 +136,9 @@ const AccountMarket = () => {
   };
 
   const makePayment = async () => {
+    if (isProcessingPayment) return;
+
+    setIsProcessingPayment(true);
     try {
       const invoiceNumber = await purchasedItem();
 
@@ -173,9 +177,14 @@ const AccountMarket = () => {
       });
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsProcessingPayment(false);
     }
   };
   const handlePayLaterClick = async () => {
+    if (isPayingLater) return;
+
+    setIsPayingLater(true);
     try {
       const token = localStorage.getItem("token");
       await axios.post(
@@ -195,27 +204,8 @@ const AccountMarket = () => {
         console.error("Purchase request failed:", error);
         alert("Failed to initiate purchase. Please try again.");
       }
-    }
-  };
-  const handlePayNowClick = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/purchases/paid/${selectedAccount._id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      closePopup();
-    } catch (error) {
-      if (error.response && error.response.status === 404) {
-        alert("Item not found.");
-      } else {
-        console.error("Purchase request failed:", error);
-      }
+    } finally {
+      setIsPayingLater(false);
     }
   };
   const closePopup = () => {
@@ -342,10 +332,13 @@ const AccountMarket = () => {
                 </p>
                 <div className="flex justify-center md:p-6 p-2 md:mt-12 mt-6 mb-2 md:gap-20 gap-6">
                   <button
-                    className="bg-yellow-500 text-white px-2 py-1 rounded"
+                    className={`bg-yellow-500 text-white px-2 py-1 rounded ${
+                      isPayingLater ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                     onClick={handlePayLaterClick}
+                    disabled={isPayingLater}
                   >
-                    Ishyura Mukanya
+                    {isPayingLater ? <LoadingSpinner /> : "Ishyura Mukanya"}
                   </button>
                   <button
                     className={`bg-green-500 text-white px-2 py-1 rounded ${
@@ -384,10 +377,17 @@ const AccountMarket = () => {
                     Hagarika kwishyura
                   </button>
                   <button
-                    className="bg-green-500 text-white px-2 py-1 rounded"
+                    className={`bg-green-500 text-white px-2 py-1 rounded ${
+                      isProcessingPayment ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                     onClick={makePayment}
+                    disabled={isProcessingPayment}
                   >
-                    Soza Kwishyura
+                    {isProcessingPayment ? (
+                      <LoadingSpinner />
+                    ) : (
+                      "Soza Kwishyura"
+                    )}
                   </button>
                 </div>
               </div>

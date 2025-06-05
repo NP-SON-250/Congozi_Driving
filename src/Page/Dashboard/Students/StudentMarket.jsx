@@ -18,6 +18,7 @@ const StudentMarket = () => {
 
   const [paid, setPaid] = useState();
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [isPayingLater, setIsPayingLater] = useState(false);
   const [exam, setExam] = useState({ data: [] });
   const [userName, setUserName] = useState("");
 
@@ -139,6 +140,9 @@ const StudentMarket = () => {
   };
 
   const makePayment = async () => {
+    if (isProcessingPayment) return;
+
+    setIsProcessingPayment(true);
     try {
       const invoiceNumber = await purchasedItem();
 
@@ -180,9 +184,14 @@ const StudentMarket = () => {
       });
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsProcessingPayment(false);
     }
   };
   const handlePayLaterClick = async () => {
+    if (isPayingLater) return;
+
+    setIsPayingLater(true);
     try {
       const token = localStorage.getItem("token");
       await axios.post(
@@ -197,6 +206,8 @@ const StudentMarket = () => {
       closePopup();
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsPayingLater(false);
     }
   };
 
@@ -316,10 +327,13 @@ const StudentMarket = () => {
                 </p>
                 <div className="flex justify-center md:p-6 p-2 md:mt-12 mt-6 mb-2 md:gap-20 gap-6">
                   <button
-                    className="bg-yellow-500 text-white px-2 py-1 rounded"
+                    className={`bg-yellow-500 text-white px-2 py-1 rounded ${
+                      isPayingLater ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                     onClick={handlePayLaterClick}
+                    disabled={isPayingLater}
                   >
-                    Ishyura Mukanya
+                    {isPayingLater ? <LoadingSpinner /> : "Ishyura Mukanya"}
                   </button>
                   <button
                     className={`bg-green-500 text-white px-2 py-1 rounded ${

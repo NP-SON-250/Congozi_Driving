@@ -22,7 +22,6 @@ const SchoolMyExams = () => {
   const [allAccounts, setAllAccounts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedAccount, setSelectedAccount] = useState(null);
-  const [paymentStep, setPaymentStep] = useState("confirmation");
   const accountsPerPage = 4;
   const navigate = useNavigate();
 
@@ -102,7 +101,6 @@ const SchoolMyExams = () => {
   };
   const closePopup = () => {
     setSelectedAccount(null);
-    setPaymentStep("confirmation");
   };
   const getRemainingDays = (endDate) => {
     if (!endDate) return "N/A";
