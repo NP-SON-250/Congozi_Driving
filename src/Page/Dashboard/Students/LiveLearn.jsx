@@ -82,7 +82,7 @@ const LiveLearn = () => {
     }
   }, [examToDo, examCode]);
 
-  const fetchgukoraExam = useCallback(async () => {
+  const fetchgGukoraExam = useCallback(async () => {
     try {
       const number = paidExam?.number;
       if (!number) return;
@@ -103,7 +103,7 @@ const LiveLearn = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const gukoraData = res.data.data;
-      setgukoraExam(gukoraData);
+      fetchgGukoraExam(gukoraData);
       if (typeof window !== "undefined") {
         localStorage.setItem("gukora_exam_data", JSON.stringify(gukoraData));
       }
@@ -192,7 +192,7 @@ const LiveLearn = () => {
               timeLeft={
                 <ExamTimer
                   accessCode={examCode}
-                  duration={3600}
+                  duration={2400}
                   onTimeout={handleTimeout}
                 />
               }
