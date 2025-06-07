@@ -38,9 +38,9 @@ const Services = () => {
         </div>
         <div className=" pb-4 text-md px-10">
           <p>
-            Singombwa ko uvunwa no kuza mw'ishuri, twakira n'abifuza kwkwiga
+            Singombwa ko uvunwa no kuza mw'ishuri, twakira n'abifuza kwiga
             hifashishijwe igukoranabuhanga ryacu kuko muri Congozi Expert
-            ushobora guhitamo kwkwiga imbonankubone cyagwa ukifashisha uburyo
+            ushobora guhitamo kwiga imbonankubone cyagwa ukifashisha uburyo
             bw'igukoranabuhanga rya Congozi Expert. Mumashuri ndetse n'amashami
             yacu yose.
           </p>

@@ -111,10 +111,10 @@ const SchoolWaiting = () => {
 
         {soonToExpireAccounts.length > 0 && (
           <div className="md:w-[90%] w-full bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md mb-3">
-            <strong>Heads up!</strong> You have {soonToExpireAccounts.length}{" "}
-            account
-            {soonToExpireAccounts.length > 1 ? "s" : ""} expiring within 1 day.
-            Make sure to use them in time!
+            <strong>Kumenyesha!</strong> Ufite Konte {soonToExpireAccounts.length}{" "}
+            
+            {soonToExpireAccounts.length > 1 ? "s" : ""} zizarangira mumunsi 1.
+            Gerageza uzikoreshe zitararangira!
           </div>
         )}
 
@@ -166,7 +166,7 @@ const SchoolWaiting = () => {
               return (
                 <AccountCard
                   key={index}
-                  title={`Account ${
+                  title={`Konte ${
                     currentPage * accountsPerPage + index + 1
                   }: ${account.itemId.title}`}
                   fees={account.itemId.fees}
@@ -174,7 +174,7 @@ const SchoolWaiting = () => {
                   remainingDays={remainingDays}
                   onPurchase={() => handleViewExams(account)}
                   icon={<FaRegEye />}
-                  button={"View Exams"}
+                  button={"Reba Ibizamini"}
                   buttonColor={buttonColor}
                 />
               );
@@ -205,7 +205,7 @@ const SchoolWaiting = () => {
                 }
                 disabled={currentPage === totalPages - 1}
               >
-                Izikurira
+                Izikukira
                 <FaArrowAltCircleRight size={24} />
               </button>
             </div>

@@ -261,8 +261,8 @@ const StudentMarket = () => {
       ) : (
         <div className="grid md:grid-cols-3 w-full gap-4 md:gap-3 py-1">
           {currentExams.map((exam, index) => {
-            const iskwkwiga = exam.type.toLowerCase().includes("kwkwiga");
-            const buttonColor = iskwkwiga ? "bg-yellow-500" : "bg-green-500";
+            const iskwiga = exam.type.toLowerCase().includes("kwiga");
+            const buttonColor = iskwiga ? "bg-yellow-500" : "bg-green-500";
             return (
               <ExamsCard
                 key={index}

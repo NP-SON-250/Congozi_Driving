@@ -36,7 +36,7 @@ const EditExamPopup = ({
               className="w-full border border-blue-900/20 rounded px-3 py-2 mt-1"
             >
               <option value="">---</option>
-              <option value="kwkwiga">kwkwiga</option>
+              <option value="kwiga">kwiga</option>
               <option value="gugukora">gugukora</option>
             </select>
           </div>

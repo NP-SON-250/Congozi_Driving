@@ -138,7 +138,7 @@ const SchoolAccessableExams = () => {
             const iskwiga = exam.type.toLowerCase().includes("kwiga");
             const buttonColor = iskwiga ? "bg-yellow-500" : "bg-green-500";
             const buttonText = iskwiga
-              ? "kwkwiga ikizamini"
+              ? "kwiga ikizamini"
               : "Gugukora ikizamini";
             return (
               <ExamsCard

@@ -31,7 +31,7 @@ const Home = () => {
               Uhereye uyuminsi iyandikishe kuri sisteme yacu, maze wisanzure
               n'ibisubizo bigezweho Congozi Expert yabazaniye; Aho ushobora
               kwimenyereza gugukora ibizamini bya provisoir Online, ndetse no
-              kwkwiga ukoresheje ibizamini bisubije neza!
+              kwiga ukoresheje ibizamini bisubije neza!
             </p>
             <div className="md:absolute md:w-[50%] w-full md:justify-normal flex justify-center  md:left-[470px] md:top-[290px]">
               <div className="flex justify-center md:w-[35%] w-[70%] text-md font-bold text-white items-center gap-4 md:px-1 py-2 bg-blue-500 hover:bg-blue-800 rounded-full">
@@ -54,7 +54,7 @@ const Home = () => {
           <div className="flex flex-col">
             <p className="text-white text-start md:px-16 px-5 py-2 font-semibold">
               Ubu nawe wakoresha igihe cyawe neza! Hamwe na Congozi Expert,
-              wakwkwiga amategeko y'umuhanda wifashishije uburyo bugezweho bwo
+              wakwiga amategeko y'umuhanda wifashishije uburyo bugezweho bwo
               kwimenyereza gugukora ikizamini cya provisoir aribwo Online
               wibereye iwawe.
             </p>

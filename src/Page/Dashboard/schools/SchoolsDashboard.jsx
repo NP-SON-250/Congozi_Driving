@@ -71,12 +71,12 @@ const SchoolsDashboard = () => {
       <div className="grid md:grid-cols-3 grid-cols-1 w-full md:px-0 px-12 gap-12 md:pt-2 py-5 md:gap-12">
         <StHomeCard
           bgColor="bg-blue-900"
-          title="Konte Zoes"
+          title="Konte Zose"
           count={totalAccounts.length}
         />
         <StHomeCard
           bgColor="bg-[#F08080]"
-          title="Konte Zarangiyes"
+          title="Konte Zarangiye"
           count={expiredAccounts.length}
         />
 
