@@ -21,7 +21,7 @@ const AccountCard = ({
             <p className="text-Total">
               Igiciro: <span className="font-bold">{fees} Rwf</span>
             </p>
-            <p className="text-Total">Iminsi: {validIn} Days</p>
+            <p className="text-Total">Iminsi: {validIn}</p>
           </div>
         </div>
         <div className="pt-1">

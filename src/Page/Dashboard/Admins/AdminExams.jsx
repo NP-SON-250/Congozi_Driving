@@ -14,7 +14,7 @@ const AdminExams = () => {
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentUser, setCurrentUser] = useState(null);
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
 
   const [editingExam, setEditingExam] = useState(null);
   const [showEditPopup, setShowEditPopup] = useState(false);
@@ -38,7 +38,7 @@ const AdminExams = () => {
     const userData = localStorage.getItem("user");
 
     if (!token) {
-      navigate("/kwinjira");
+      navkwigate("/kwinjira");
       return;
     }
 
@@ -51,13 +51,13 @@ const AdminExams = () => {
     }
 
     fetchExams();
-  }, [navigate]);
+  }, [navkwigate]);
 
   const fetchExams = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        navigate("/kwinjira");
+        navkwigate("/kwinjira");
         return;
       }
 
@@ -75,7 +75,7 @@ const AdminExams = () => {
       if (error.response?.status === 401) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        navigate("/kwinjira");
+        navkwigate("/kwinjira");
       }
     }
   };
@@ -83,7 +83,7 @@ const AdminExams = () => {
   const handleAddQuestionClick = (exam) => {
     const token = localStorage.getItem("token");
     if (!token || !canAdd) {
-      navigate("/kwinjira");
+      navkwigate("/kwinjira");
       return;
     }
 
@@ -99,7 +99,7 @@ const AdminExams = () => {
   const handleEditClick = (exam) => {
     const token = localStorage.getItem("token");
     if (!token || !canEdit) {
-      navigate("/kwinjira");
+      navkwigate("/kwinjira");
       return;
     }
 
@@ -114,7 +114,7 @@ const AdminExams = () => {
   const handleDeleteExam = async () => {
     const token = localStorage.getItem("token");
     if (!token || !canDelete || !examToDelete) {
-      navigate("/kwinjira");
+      navkwigate("/kwinjira");
       return;
     }
 
@@ -135,7 +135,7 @@ const AdminExams = () => {
       if (error.response?.status === 401) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        navigate("/kwinjira");
+        navkwigate("/kwinjira");
       }
     }
   };
@@ -143,7 +143,7 @@ const AdminExams = () => {
   const handleSaveEdit = async () => {
     const token = localStorage.getItem("token");
     if (!token || !canEdit || !editingExam) {
-      navigate("/kwinjira");
+      navkwigate("/kwinjira");
       return;
     }
 
@@ -180,7 +180,7 @@ const AdminExams = () => {
       if (error.response?.status === 401) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        navigate("/kwinjira");
+        navkwigate("/kwinjira");
       }
     }
   };

@@ -24,7 +24,7 @@ const AdminAccounts = () => {
     const userData = localStorage.getItem("user");
 
     if (!token) {
-      navigate("/kwinjira");
+      navkwigate("/kwinjira");
       return;
     }
     if (userData) {
@@ -71,7 +71,7 @@ const AdminAccounts = () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        navigate("/kwinjira");
+        navkwigate("/kwinjira");
         return;
       }
 
@@ -100,7 +100,7 @@ const AdminAccounts = () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        navigate("/kwinjira");
+        navkwigate("/kwinjira");
         return;
       }
 

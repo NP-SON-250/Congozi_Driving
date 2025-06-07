@@ -15,7 +15,7 @@ const AutoTracking = () => {
   const [showContinueCard, setShowContinueCard] = useState(false);
   const [showConfirmCard, setShowConfirmCard] = useState(false);
   const [exam, setExam] = useState({ data: [] });
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
   const location = useLocation();
 
   const params = new URLSearchParams(location.search);
@@ -64,14 +64,17 @@ const AutoTracking = () => {
   const handleNotReady = () => {
     setExamCode("");
     setIsSearched(false);
-    navigate("/students/waitingexams", { replace: true });
+    navkwigate("/students/waitingexams", { replace: true });
   };
 
   const handleStartExam = () => {
-    if (examDetails?.type === "iga" || examDetails?.type === "iga") {
-      navigate(`/liveiga?code=${examCode}`);
-    } else if (examDetails?.type === "kora" || examDetails?.type === "kora") {
-      navigate(`/liveExam?code=${examCode}`);
+    if (examDetails?.type === "kwiga" || examDetails?.type === "kwiga") {
+      navkwigate(`/livekwiga?code=${examCode}`);
+    } else if (
+      examDetails?.type === "gukora" ||
+      examDetails?.type === "gukora"
+    ) {
+      navkwigate(`/liveExam?code=${examCode}`);
     } else {
       alert("Invalid exam type.");
     }

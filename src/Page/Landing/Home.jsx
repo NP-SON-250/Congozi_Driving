@@ -30,18 +30,18 @@ const Home = () => {
             <p className="text-start md:text-md text-md text-blue-500 py-4 px-0">
               Uhereye uyuminsi iyandikishe kuri sisteme yacu, maze wisanzure
               n'ibisubizo bigezweho Congozi Expert yabazaniye; Aho ushobora
-              kwimenyereza gukora ibizamini bya provisoir Online, ndetse no
-              kwiga ukoresheje ibizamini bisubije neza!
+              kwimenyereza gugukora ibizamini bya provisoir Online, ndetse no
+              kwkwiga ukoresheje ibizamini bisubije neza!
             </p>
             <div className="md:absolute md:w-[50%] w-full md:justify-normal flex justify-center  md:left-[470px] md:top-[290px]">
-            <div className="flex justify-center md:w-[35%] w-[70%] text-md font-bold text-white items-center gap-4 md:px-1 py-2 bg-blue-500 hover:bg-blue-800 rounded-full">
-              <Link to={'/kwiyandikisha'}>
-              <button>Tangira Uyumunsi</button>
-              </Link>
-              <div className="w-6 rounded-full bg-white h-6 flex justify-center items-center p-2">
-                <FaArrowRight className="text-blue-500" />
+              <div className="flex justify-center md:w-[35%] w-[70%] text-md font-bold text-white items-center gap-4 md:px-1 py-2 bg-blue-500 hover:bg-blue-800 rounded-full">
+                <Link to={"/kwiyandikisha"}>
+                  <button>Tangira Uyumunsi</button>
+                </Link>
+                <div className="w-6 rounded-full bg-white h-6 flex justify-center items-center p-2">
+                  <FaArrowRight className="text-blue-500" />
+                </div>
               </div>
-            </div>
             </div>
           </div>
         </div>
@@ -54,9 +54,9 @@ const Home = () => {
           <div className="flex flex-col">
             <p className="text-white text-start md:px-16 px-5 py-2 font-semibold">
               Ubu nawe wakoresha igihe cyawe neza! Hamwe na Congozi Expert,
-              wakwiga amategeko y'umuhanda wifashishije uburyo bugezweho bwo
-              kwimenyereza gukora ikizamini cya provisoir aribwo Online wibereye
-              iwawe.
+              wakwkwiga amategeko y'umuhanda wifashishije uburyo bugezweho bwo
+              kwimenyereza gugukora ikizamini cya provisoir aribwo Online
+              wibereye iwawe.
             </p>
             <div className="w-[80%] h-[2px] bg-Passed md:w-[83%] md:ml-16 ml-5 mt-2"></div>
           </div>

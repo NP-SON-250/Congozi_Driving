@@ -20,7 +20,7 @@ const SchoolAccessableExams = () => {
 
   const location = useLocation();
   const { accessCode } = queryString.parse(location.search);
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -81,9 +81,9 @@ const SchoolAccessableExams = () => {
   const handleDoExam = (exam) => {
     const id = exam._id;
     if (id) {
-      navigate(`/schools/accessedexam?id=${id}`);
+      navkwigate(`/schools/accessedexam?id=${id}`);
     } else {
-      console.error("Nta code yo gukora ikikizamini ufite.");
+      console.error("Nta code yo gugukora ikikizamini ufite.");
     }
   };
 
@@ -97,14 +97,14 @@ const SchoolAccessableExams = () => {
       <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-12 gap-1 px-3 py-4">
         <input
           type="text"
-          placeholder="---Select Exam Type---"
+          placeholder="--ubwoko bw'ikizami--"
           value={type}
           onChange={(e) => setType(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl"
         />
         <input
           type="text"
-          placeholder="---Filter Exam Fees---"
+          placeholder="---Shaka n'igiciro---"
           value={fees}
           onChange={(e) => setFees(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl"
@@ -112,7 +112,7 @@ const SchoolAccessableExams = () => {
         <div className="w-full px-3 md:flex hidden">
           <input
             type="search"
-            placeholder="Search Everything"
+            placeholder="---Ubwoko, igiciro, nimero byikizami---"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -123,7 +123,7 @@ const SchoolAccessableExams = () => {
       <div className="w-full px-3 pb-3 flex md:hidden">
         <input
           type="search"
-          placeholder="Search Everything"
+          placeholder="---Ubwoko, igiciro, nimero byikizami---"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -135,9 +135,11 @@ const SchoolAccessableExams = () => {
       ) : (
         <div className="grid md:grid-cols-3 w-full gap-4 md:gap-3 py-1">
           {currentExams.map((exam, index) => {
-            const isiga = exam.type.toLowerCase().includes("iga");
-            const buttonColor = isiga ? "bg-yellow-500" : "bg-green-500";
-            const buttonText = isiga ? "iga Exam" : "Do Exam";
+            const iskwiga = exam.type.toLowerCase().includes("kwiga");
+            const buttonColor = iskwiga ? "bg-yellow-500" : "bg-green-500";
+            const buttonText = iskwiga
+              ? "kwkwiga ikizamini"
+              : "Gugukora ikizamini";
             return (
               <ExamsCard
                 key={index}

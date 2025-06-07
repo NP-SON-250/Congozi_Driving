@@ -71,19 +71,19 @@ const SchoolsDashboard = () => {
       <div className="grid md:grid-cols-3 grid-cols-1 w-full md:px-0 px-12 gap-12 md:pt-2 py-5 md:gap-12">
         <StHomeCard
           bgColor="bg-blue-900"
-          title="Total Accounts"
+          title="Konte Zoes"
           count={totalAccounts.length}
         />
         <StHomeCard
           bgColor="bg-[#F08080]"
-          title="Expired Accounts"
+          title="Konte Zarangiyes"
           count={expiredAccounts.length}
         />
 
         <Link to="/schools/unpaidaccounts" className="block w-full">
           <StHomeCard
             bgColor="bg-[#FACC2E]"
-            title="Unpaid Accounts"
+            title="Konte Zitishyuye"
             count={unpaidAccounts.length}
           />
         </Link>
@@ -91,7 +91,7 @@ const SchoolsDashboard = () => {
         <Link to="/schools/waitingaccounts" className="block w-full">
           <StHomeCard
             bgColor="bg-blue-200"
-            title="Waiting Accounts"
+            title="Konte Zishyuye"
             count={waitingAccounts.length}
           />
         </Link>

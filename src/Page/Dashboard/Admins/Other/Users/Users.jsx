@@ -12,7 +12,7 @@ const Users = () => {
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentUser, setCurrentUser] = useState(null);
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
 
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
@@ -38,7 +38,7 @@ const Users = () => {
     const userData = localStorage.getItem("user");
 
     if (!token) {
-      navigate("/kwinjira");
+      navkwigate("/kwinjira");
       return;
     }
 
@@ -51,13 +51,13 @@ const Users = () => {
     }
 
     fetchUsers();
-  }, [navigate]);
+  }, [navkwigate]);
 
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        navigate("/kwinjira");
+        navkwigate("/kwinjira");
         return;
       }
 
@@ -75,7 +75,7 @@ const Users = () => {
       if (error.response?.status === 401) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        navigate("/kwinjira");
+        navkwigate("/kwinjira");
       }
     }
   };
@@ -87,7 +87,7 @@ const Users = () => {
   const handleEditClick = (user) => {
     const token = localStorage.getItem("token");
     if (!token || !isSuperAdmin) {
-      navigate("/kwinjira");
+      navkwigate("/kwinjira");
       return;
     }
 
@@ -108,7 +108,7 @@ const Users = () => {
   const handleSaveUserEdit = async () => {
     const token = localStorage.getItem("token");
     if (!token || !isSuperAdmin || !userToEdit) {
-      navigate("/kwinjira");
+      navkwigate("/kwinjira");
       return;
     }
 
@@ -145,7 +145,7 @@ const Users = () => {
       if (error.response?.status === 401) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        navigate("/kwinjira");
+        navkwigate("/kwinjira");
       }
     }
   };
@@ -153,7 +153,7 @@ const Users = () => {
   const handleDeleteClick = (user) => {
     const token = localStorage.getItem("token");
     if (!token || !isSuperAdmin) {
-      navigate("/kwinjira");
+      navkwigate("/kwinjira");
       return;
     }
 
@@ -164,7 +164,7 @@ const Users = () => {
   const handleConfirmDelete = async () => {
     const token = localStorage.getItem("token");
     if (!token || !isSuperAdmin || !userToDelete) {
-      navigate("/kwinjira");
+      navkwigate("/kwinjira");
       return;
     }
 
@@ -184,7 +184,7 @@ const Users = () => {
       if (error.response?.status === 401) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        navigate("/kwinjira");
+        navkwigate("/kwinjira");
       }
     }
   };

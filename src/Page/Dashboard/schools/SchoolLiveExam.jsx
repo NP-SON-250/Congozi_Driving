@@ -27,7 +27,7 @@ const SchoolLiveExam = () => {
 
   const hasShownSuccess = useRef(false);
   const location = useLocation();
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
 
   const errors = (message) => {
     toast.error(message, {
@@ -107,7 +107,7 @@ const SchoolLiveExam = () => {
       const token = localStorage.getItem("token");
       if (!token) {
         errors("You need to login first");
-        navigate("/login");
+        navkwigate("/login");
         return;
       }
 
@@ -161,7 +161,7 @@ const SchoolLiveExam = () => {
     examQuestions,
     examToDo,
     examId,
-    navigate,
+    navkwigate,
     selectedOptions,
     examFinished,
     isSubmitting,
@@ -221,7 +221,7 @@ const SchoolLiveExam = () => {
                 access={examId}
               />
 
-              <div className="flex flex-wrap justify-start py-1 md:gap-4 gap-2">
+              <div className="flex flex-wrap justify-center py-1 md:gap-4 gap-2">
                 {examQuestions.map((q, idx) => {
                   const isAnswered = selectedOptions[q._id];
                   return (
@@ -311,7 +311,7 @@ const SchoolLiveExam = () => {
                       disabled={selectedQuestion === 0}
                     >
                       <LuCircleArrowLeft />
-                      Ikibanza
+                      Ikibanza / Prev
                     </button>
                     <button
                       onClick={() =>
@@ -327,7 +327,7 @@ const SchoolLiveExam = () => {
                               }`}
                       disabled={selectedQuestion === examQuestions.length - 1}
                     >
-                      <FiArrowRightCircle /> Igikurikira
+                      <FiArrowRightCircle /> Igikurikira/Next
                     </button>
                   </div>
                 )}
@@ -343,7 +343,7 @@ const SchoolLiveExam = () => {
                         className="bg-green-500 flex justify-center gap-2 items-center text-white px-4 py-1 rounded"
                       >
                         <FaRegEye />
-                        Reba amanota
+                        Reba Ibisubizo
                       </button>
                     </div>
                     <div className="text-md flex gap-12 mt-1 text-orange-500 font-medium">
@@ -375,25 +375,27 @@ const SchoolLiveExam = () => {
                       <div className="bg-white rounded-md md:w-[60%] w-full pb-4">
                         <div className="p-2 w-full bg-green-700 rounded-md text-center">
                           <h1 className="text-lg font-bold text-blue-900">
-                            Attention
+                            Itonde!!
                           </h1>
                         </div>
                         <h3 className="text-lg font-bold my-3 text-center">
-                          Are you sure to finish Exam now?
+                          Ese Urashaka Gusoza Ikizamini?
                         </h3>
                         <div className="flex justify-between p-6">
                           <button
                             onClick={() => handleModalResponse("no")}
                             className="bg-Total text-white px-4 py-1 rounded"
                           >
-                            No, Back
+                            Oya, Subira inyuma
                           </button>
                           <button
                             onClick={() => handleModalResponse("yes")}
                             disabled={isSubmitting}
-                            className="bg-Total text-white px-4 py-1 rounded disabled:opacity-50"
+                            className="bg-green-500 text-white px-1 py-1 rounded disabled:opacity-50"
                           >
-                            {isSubmitting ? "Submitting..." : "Yes, I finish"}
+                            {isSubmitting
+                              ? "Kirikoherezwa..."
+                              : "Yego, Ndasoje"}
                           </button>
                         </div>
                       </div>
@@ -404,7 +406,7 @@ const SchoolLiveExam = () => {
             ) : reviewResults ? (
               <>
                 <div className="w-full bg-green-500 text-blue-900 font-bold text-xl rounded-md text-center mb-4">
-                  <h2 className="font-bold py-2">Exam Review</h2>
+                  <h2 className="font-bold py-2">Uko wakoze</h2>
                 </div>
                 <table className="table-auto w-full border-collapse border border-gray-300">
                   <thead className="bg-gray-300 text-blue-900">
@@ -490,11 +492,11 @@ const SchoolLiveExam = () => {
                         <div className="text-center text-2xl text-blue-900">
                           {totalMarks >=
                           ((12 / 20) * examQuestions.length).toFixed(0)
-                            ? "Congratulations you have made it 🙌🙌🙌"
-                            : "You failed this exam, You need to iga more!!"}
+                            ? "Watsinze wabikoze neza 🙌🙌🙌"
+                            : "Watsinzwe ikizamini kwiga cyane!!"}
                         </div>
                         <div className="text-xl text-orange-500 font-medium">
-                          Total Marks: {totalMarks}/{examQuestions.length} |{" "}
+                          Amanota wabonye: {totalMarks}/{examQuestions.length} |{" "}
                           {((totalMarks / examQuestions.length) * 100).toFixed(
                             0
                           )}
@@ -509,7 +511,7 @@ const SchoolLiveExam = () => {
                     onClick={() => {
                       localStorage.removeItem("selectedOptions");
                       localStorage.removeItem(`examTimeLeft_${examId}`);
-                      navigate("/schools/accessableexams");
+                      navkwigate("/schools/accessableexams");
                     }}
                     className="bg-red-300 text-white py-2 px-4 rounded"
                   >

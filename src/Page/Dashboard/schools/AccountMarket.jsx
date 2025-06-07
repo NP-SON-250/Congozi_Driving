@@ -22,7 +22,7 @@ const AccountMarket = () => {
   const [isPayingLater, setIsPayingLater] = useState(false);
   const [account, setAccount] = useState({ data: [] });
   const [userName, setUserName] = useState("");
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser && storedUser !== "undefined") {
@@ -167,7 +167,7 @@ const AccountMarket = () => {
                 }
               );
               closePopup();
-              navigate(`/schools/accounts`);
+              navkwigate(`/schools/accounts`);
               fetchData();
             } catch (error) {
               console.error("Kwishyura byanze:", error);
@@ -219,14 +219,14 @@ const AccountMarket = () => {
       <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-12 gap-1 px-3 py-4">
         <input
           type="text"
-          placeholder="---Select account valid time---"
+          placeholder="---Shaka konte n'iminsi imara ---"
           value={valid}
           onChange={(e) => setValid(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer text-bold"
         />
         <input
           type="text"
-          placeholder="---Filter account Fees---"
+          placeholder="---Shaka konte n'igiciro---"
           value={fees}
           onChange={(e) => setFees(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer"
@@ -234,7 +234,7 @@ const AccountMarket = () => {
         <div className="w-full px-3 md:flex justify-center items-center hidden md:bloc">
           <input
             type="search"
-            placeholder="Search Everything"
+            placeholder="Shaka konte n'igiciro cg iminsi"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -245,7 +245,7 @@ const AccountMarket = () => {
       <div className="w-full px-3 pb-3 flex justify-center items-center md:hidden">
         <input
           type="search"
-          placeholder="Search Everything"
+          placeholder="Shaka konte n'igiciro cg iminsi"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -261,14 +261,14 @@ const AccountMarket = () => {
             return (
               <AccountCard
                 key={index}
-                title={`Account ${currentPage * accountsPerPage + index + 1}: ${
+                title={`Konte ${currentPage * accountsPerPage + index + 1}: ${
                   account.title
                 }`}
                 fees={account.fees}
                 validIn={account.validIn}
                 onPurchase={() => handlePurchaseClick(account)}
                 icon={<BsCart />}
-                button={"Purchase"}
+                button={"Kugura"}
                 buttonColor={buttonColor}
               />
             );
@@ -298,7 +298,7 @@ const AccountMarket = () => {
             }
             disabled={currentPage === totalPages - 1}
           >
-            Izikurira <FaArrowAltCircleRight size={24} />
+            Izikukira <FaArrowAltCircleRight size={24} />
           </button>
         </div>
       )}
@@ -314,21 +314,20 @@ const AccountMarket = () => {
             {paymentStep === "confirmation" ? (
               <>
                 <h2 className="text-lg text-start font-bold text-white px-6 pt-6">
-                  Dear {userName?.companyName},
+                  Mukiriya {userName?.companyName},
                 </h2>
                 <p className="mt-0 text-start text-white px-6">
-                  Your{" "}
+                  Ugiye kugura konte{" "}
                   <span className="font-bold">{selectedAccount.title}</span>{" "}
-                  account which is valid in{" "}
-                  <span className="font-bold">
-                    {selectedAccount.validIn} days
-                  </span>{" "}
-                  has been successfully purchased! Please make payment for your
-                  bill
+                  izarangira muminsi{" "}
+                  <span className="font-bold">{selectedAccount.validIn}</span>{" "}
+                  ishyura ayamafaranga
                   <span className="font-bold pl-1">
                     ({selectedAccount.fees} RWF)
                   </span>{" "}
-                  to get account access code.
+                  maze uhabwe code yo gufungura ibizamini.
+                  <span>Ufite ikibazo wahamagara iyi nemero:</span>
+                  <span className="text-yellow-600 pl-2">0783905790</span>
                 </p>
                 <div className="flex justify-center md:p-6 p-2 md:mt-12 mt-6 mb-2 md:gap-20 gap-6">
                   <button
@@ -361,8 +360,8 @@ const AccountMarket = () => {
                   Mukiriya {userName?.companyName},
                 </h2>
                 <p className="mt-0 text-start text-white px-6">
-                  Ugiye kugura account {selectedAccount.title} izarangira
-                  muminsi {selectedAccount.validIn} ishyura ayamafaranga (
+                  Ugiye kugura konte {selectedAccount.title} izarangira muminsi{" "}
+                  {selectedAccount.validIn} ishyura ayamafaranga (
                   {selectedAccount.fees} RWF) maze uhabwe kode yo gufungura
                   ibizamini byose. Ufite ikibazo hamagara kuri iyi nimero:
                   <span className="text-yellow-600 font-semibold pl-2">

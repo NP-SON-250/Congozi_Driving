@@ -63,15 +63,15 @@ const AdminProfile = () => {
 
   const validatePasswordChange = () => {
     if (!passwordData.currentPassword) {
-      toast.error("Please enter your current password");
+      toast.error("shyiramo Ijambobanga ryakera");
       return false;
     }
     if (!passwordData.newPassword) {
-      toast.error("Please enter a new password");
+      toast.error("Please enter a Ijambobanga rishya");
       return false;
     }
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      toast.error("New passwords don't match");
+      toast.error("Ijambobanga rishyas ntirihura");
       return false;
     }
     if (passwordData.newPassword.length < 6) {
@@ -105,7 +105,7 @@ const AdminProfile = () => {
             }
           );
         } catch (error) {
-          toast.error("Current password is incorrect");
+          toast.error("Ijambobanga ryakera is incorrect");
           return;
         }
         const form = new FormData();
@@ -275,7 +275,7 @@ const AdminProfile = () => {
                 name="currentPassword"
                 value={passwordData.currentPassword}
                 onChange={handleChange}
-                placeholder="Current Password"
+                placeholder="Ijambobanga ryakera"
                 className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
                 required
               />
@@ -284,7 +284,7 @@ const AdminProfile = () => {
                 name="newPassword"
                 value={passwordData.newPassword}
                 onChange={handleChange}
-                placeholder="New Password"
+                placeholder="Ijambobanga rishya"
                 className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
                 required
               />
@@ -293,7 +293,7 @@ const AdminProfile = () => {
                 name="confirmPassword"
                 value={passwordData.confirmPassword}
                 onChange={handleChange}
-                placeholder="Confirm New Password"
+                placeholder="Confirm Ijambobanga rishya"
                 className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
                 required
               />

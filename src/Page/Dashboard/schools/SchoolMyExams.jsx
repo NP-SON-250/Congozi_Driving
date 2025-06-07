@@ -23,7 +23,7 @@ const SchoolMyExams = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const accountsPerPage = 4;
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
 
   const fetchAccounts = async () => {
     const token = localStorage.getItem("token");
@@ -58,7 +58,7 @@ const SchoolMyExams = () => {
 
   const handleDoAccount = (account) => {
     if (account.accessCode && account.accessCode.length > 0) {
-      navigate(`/schools/accessableexams?accessCode=${account.accessCode}`);
+      navkwigate(`/schools/accessableexams?accessCode=${account.accessCode}`);
     } else {
       console.error("No access code available for this account.");
     }
@@ -87,7 +87,7 @@ const SchoolMyExams = () => {
 
             toast.success("Kwishyura byakunze.");
             closePopup();
-            navigate(`/schools/accounts`);
+            navkwigate(`/schools/accounts`);
             fetchAccounts();
           } catch (error) {
             toast.error("Kwishyura byanze.");
@@ -130,13 +130,17 @@ const SchoolMyExams = () => {
             <thead>
               <tr className="bg-gray-100 border text-blue-900 md:text-base text-xs font-bold">
                 <th className="px-6 py-2 whitespace-nowrap">No.</th>
-                <th className="px-6 py-2 whitespace-nowrap">Account Name</th>
-                <th className="px-6 py-2 whitespace-nowrap">Valid In</th>
-                <th className="px-6 py-2 whitespace-nowrap">Expires</th>
-                <th className="px-6 py-2 whitespace-nowrap">Date</th>
-                <th className="px-6 py-2 whitespace-nowrap">Fees</th>
-                <th className="px-6 py-2 whitespace-nowrap">Status</th>
-                <th className="px-6 py-2 whitespace-nowrap">Actions</th>
+                <th className="px-6 py-2 whitespace-nowrap">
+                  Izina ry'ikikizamini
+                </th>
+                <th className="px-6 py-2 whitespace-nowrap">Iminsi izamara</th>
+                <th className="px-6 py-2 whitespace-nowrap">
+                  Izarangira muminsi
+                </th>
+                <th className="px-6 py-2 whitespace-nowrap">Itariki</th>
+                <th className="px-6 py-2 whitespace-nowrap">Igiciro</th>
+                <th className="px-6 py-2 whitespace-nowrap">Imimerere</th>
+                <th className="px-6 py-2 whitespace-nowrap">Igikorwa</th>
               </tr>
             </thead>
             <tbody>

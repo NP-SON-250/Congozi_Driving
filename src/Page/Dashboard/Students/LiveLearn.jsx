@@ -11,7 +11,7 @@ import ExamTimer from "../../../Components/ExamTimer";
 const LiveLearn = () => {
   const [examCode, setExamCode] = useState("");
   const [paidExam, setPaidExam] = useState(null);
-  const [koraExam, setkoraExam] = useState(null);
+  const [gukoraExam, setgukoraExam] = useState(null);
   const [examToDo, setExamToDo] = useState(null);
   const [examQuestions, setExamQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(0);
@@ -20,7 +20,7 @@ const LiveLearn = () => {
   const [interactedQuestions, setInteractedQuestions] = useState([]);
 
   const location = useLocation();
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
 
   const token = useMemo(() => {
     if (typeof window !== "undefined") {
@@ -82,7 +82,7 @@ const LiveLearn = () => {
     }
   }, [examToDo, examCode]);
 
-  const fetchkoraExam = useCallback(async () => {
+  const fetchgukoraExam = useCallback(async () => {
     try {
       const number = paidExam?.number;
       if (!number) return;
@@ -99,22 +99,22 @@ const LiveLearn = () => {
       if (!examPurchased) return;
 
       const res = await axios.get(
-        `https://congozi-backend.onrender.com/api/v1/exams/kora/${number}`,
+        `https://congozi-backend.onrender.com/api/v1/exams/gukora/${number}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      const koraData = res.data.data;
-      setkoraExam(koraData);
+      const gukoraData = res.data.data;
+      setgukoraExam(gukoraData);
       if (typeof window !== "undefined") {
-        localStorage.setItem("kora_exam_data", JSON.stringify(koraData));
+        localStorage.setItem("gukora_exam_data", JSON.stringify(gukoraData));
       }
     } catch (error) {
-      console.error("Error fetching kora exam:", error);
+      console.error("Error fetching gukora exam:", error);
     }
   }, [examCode, paidExam, token]);
 
   const handleShowPaymentPopup = async () => {
-    await fetchkoraExam();
-    if (koraExam) {
+    await fetchgukoraExam();
+    if (gukoraExam) {
       setPaymentPopup(true);
     }
   };
@@ -122,7 +122,7 @@ const LiveLearn = () => {
   const handlePayLaterClick = async () => {
     try {
       await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${koraExam._id}`,
+        `https://congozi-backend.onrender.com/api/v1/purchases/${gukoraExam._id}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -155,7 +155,7 @@ const LiveLearn = () => {
         await axios.delete(
           `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`
         );
-        navigate("/students/waitingexams", {
+        navkwigate("/students/waitingexams", {
           replace: true,
           state: { reset: true },
         });
@@ -164,7 +164,7 @@ const LiveLearn = () => {
       console.error("Error deleting exam purchase on timeout:", error);
     }
     localStorage.removeItem(`selectedAnswers_${examCode}`);
-  }, [examCode, navigate]);
+  }, [examCode, navkwigate]);
 
   return (
     <div className="flex flex-col bg-white md:p-2 gap-2">
@@ -316,7 +316,7 @@ const LiveLearn = () => {
         </>
       )}
 
-      {paymentPopup && koraExam && (
+      {paymentPopup && gukoraExam && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
           <div className="bg-Total p-4 rounded-lg md:w-1/2 h-1/2 flex justify-center items-center w-full relative">
             <button
@@ -330,14 +330,14 @@ const LiveLearn = () => {
               <div className="flex w-full flex-col bg-gray-300 rounded-lg">
                 <div className="flex flex-col justify-center items-center gap-1 py-5">
                   <h1 className="text-xl pt-1 text-Total font-bold">
-                    {koraExam.title}: {koraExam.number}
+                    {gukoraExam.title}: {gukoraExam.number}
                   </h1>
                   <div className="flex flex-col justify-center items-start">
                     <p className="text-Total">
                       Igiciro:{" "}
-                      <span className="font-bold">{koraExam.fees} Rwf</span>
+                      <span className="font-bold">{gukoraExam.fees} Rwf</span>
                     </p>
-                    <p className="text-Total">Ubwoko: {koraExam.type}</p>
+                    <p className="text-Total">Ubwoko: {gukoraExam.type}</p>
                   </div>
                 </div>
                 <div className="pt-1">

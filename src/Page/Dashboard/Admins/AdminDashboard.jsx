@@ -100,7 +100,7 @@ const AdminDashboard = () => {
             </div>
             <div className="w-full md:px-0 px-4 cursor-pointer">
               <CurrentData
-                title={"Total Accounts"}
+                title={"Konte Zoes"}
                 value={TotalPayments.length}
                 icon={<FcSalesPerformance size={26} />}
                 indicator={<PiArrowBendDoubleUpRightLight size={24} />}

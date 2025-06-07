@@ -18,7 +18,7 @@ const SchoolUnpaid = () => {
 
   const [account, setAccount] = useState({ data: [] });
   const [userName, setUserName] = useState("");
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
@@ -96,7 +96,7 @@ const SchoolUnpaid = () => {
             toast.success("Kwishyura byakunze.");
             closePopup();
             fetchData();
-            navigate(`/schools/accounts`);
+            navkwigate(`/schools/accounts`);
           } catch (error) {
             console.error("Ikibazo:", error);
           }

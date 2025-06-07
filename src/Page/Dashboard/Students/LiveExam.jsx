@@ -27,7 +27,7 @@ const LiveExam = () => {
 
   const hasShownSuccess = useRef(false);
   const location = useLocation();
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
 
   const errors = (message) => {
     toast.error(message, {
@@ -184,9 +184,9 @@ const LiveExam = () => {
 
       const token = localStorage.getItem("token");
       if (!token) {
-        errors("Ntacyo wakora udafite konti, banza winjire.");
+        errors("Ntacyo wagukora udafite konti, banza winjire.");
         setExamFinished(true);
-        navigate("/kwinjira");
+        navkwigate("/kwinjira");
         return;
       }
 
@@ -237,7 +237,7 @@ const LiveExam = () => {
 
       localStorage.setItem(`examFinished_${examCode}_${paidExam._id}`, "true");
 
-      navigate(location.pathname, { replace: true });
+      navkwigate(location.pathname, { replace: true });
     } catch (error) {
       console.error("Submission error:", error);
       errors(
@@ -250,7 +250,7 @@ const LiveExam = () => {
     examQuestions,
     examToDo,
     examCode,
-    navigate,
+    navkwigate,
     selectedOptions,
     examFinished,
     isSubmitting,
@@ -312,7 +312,7 @@ const LiveExam = () => {
                 localStorage.removeItem(
                   `examTimeLeft_${examCode}_${paidExam._id}`
                 );
-                navigate("/students/waitingexams", {
+                navkwigate("/students/waitingexams", {
                   replace: true,
                   state: { reset: true },
                 });
@@ -431,7 +431,7 @@ const LiveExam = () => {
                       className="bg-blue-900 text-white px-2 py-1 rounded flex justify-center items-center gap-2"
                     >
                       <GrSend />
-                      Soza Ikizamini
+                      Soza
                     </button>
                     <button
                       onClick={() =>
@@ -504,7 +504,7 @@ const LiveExam = () => {
                         disabled={isSubmitting}
                         className="bg-green-500 text-white px-1 py-1 rounded disabled:opacity-50"
                       >
-                        {isSubmitting ? "Submitting..." : "Yego, Ndasoje"}
+                        {isSubmitting ? "Kirikoherezwa..." : "Yego, Ndasoje"}
                       </button>
                     </div>
                   </div>
@@ -516,7 +516,7 @@ const LiveExam = () => {
       ) : examFinished ? (
         <>
           <div className="w-full bg-green-500 text-blue-900 font-bold text-xl rounded-md text-center mb-4">
-            <h2 className="font-bold py-2">Exam Review</h2>
+            <h2 className="font-bold py-2">Uko wakoze</h2>
           </div>
           <div className="overflow-x-auto rounded-lg shadow border border-blue-900 w-full">
             <table className="w-full text-left table-auto">
@@ -601,7 +601,7 @@ const LiveExam = () => {
                     <div className="text-center md:text-base text-sm text-blue-900">
                       {totalMarks >= 10
                         ? "Watsinze wabikoze neza 🙌🙌🙌"
-                        : "Watsinzwe ikizamini iga cyane!!"}
+                        : "Watsinzwe ikizamini kwiga cyane!!"}
                     </div>
                     <div className="text-md text-orange-500 font-medium">
                       Amanota wabonye: {totalMarks}/{examQuestions.length} |{" "}
@@ -625,7 +625,7 @@ const LiveExam = () => {
                 localStorage.removeItem(
                   `examTimeLeft_${examCode}_${paidExam._id}`
                 );
-                navigate("/students/waitingexams", {
+                navkwigate("/students/waitingexams", {
                   replace: true,
                   state: { reset: true },
                 });

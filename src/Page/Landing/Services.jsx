@@ -32,17 +32,17 @@ const Services = () => {
           <div className="flex justify-center items-center flex-col gap-2 pb-4">
             <img src={Service3} alt="" className="md:h-[40vh] rounded-md" />
             <p className="text-sm text-blue-500 text-start pl-10 uppercase">
-              dufite ikoranabuhanga ryigisha umuntu ari no muyindi mirimo
+              dufite igukoranabuhanga ryigisha umuntu ari no muyindi mirimo
             </p>
           </div>
         </div>
         <div className=" pb-4 text-md px-10">
           <p>
-            Singombwa ko uvunwa no kuza mw'ishuri, twakira n'abifuza kwiga
-            hifashishijwe ikoranabuhanga ryacu kuko muri Congozi Expert ushobora
-            guhitamo kwiga imbonankubone cyagwa ukifashisha uburyo
-            bw'ikoranabuhanga rya Congozi Expert. Mumashuri ndetse n'amashami yacu
-            yose.
+            Singombwa ko uvunwa no kuza mw'ishuri, twakira n'abifuza kwkwiga
+            hifashishijwe igukoranabuhanga ryacu kuko muri Congozi Expert
+            ushobora guhitamo kwkwiga imbonankubone cyagwa ukifashisha uburyo
+            bw'igukoranabuhanga rya Congozi Expert. Mumashuri ndetse n'amashami
+            yacu yose.
           </p>
         </div>
       </div>

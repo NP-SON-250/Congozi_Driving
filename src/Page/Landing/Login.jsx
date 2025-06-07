@@ -15,7 +15,7 @@ const Login = () => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const { setUser } = useUserContext();
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
@@ -44,19 +44,19 @@ const Login = () => {
 
       switch (data.role) {
         case "student":
-          navigate("/students/home");
+          navkwigate("/students/home");
           window.location.reload();
           break;
         case "admin":
-          navigate("/admins/home");
+          navkwigate("/admins/home");
           window.location.reload();
           break;
         case "supperAdmin":
-          navigate("/admins/home");
+          navkwigate("/admins/home");
           window.location.reload();
           break;
         case "school":
-          navigate("/schools/home");
+          navkwigate("/schools/home");
           window.location.reload();
           break;
         default:

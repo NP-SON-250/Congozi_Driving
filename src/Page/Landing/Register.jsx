@@ -28,7 +28,7 @@ const Register = () => {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
 
@@ -94,7 +94,7 @@ const Register = () => {
         data
       );
       notifySuccess(res.data.message || "Kwiyandikisha byagenze neza!");
-      navigate("/kwinjira");
+      navkwigate("/kwinjira");
     } catch (error) {
       const msg =
         error.response?.data?.message || "Habayeho ikosa mu gihe cyo kohereza.";

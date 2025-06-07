@@ -82,7 +82,7 @@ const SchoolWaiting = () => {
     (currentPage + 1) * accountsPerPage
   );
 
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
 
   const handleViewExams = (account) => {
     const remainingDays = getRemainingDays(account.endDate);
@@ -98,7 +98,7 @@ const SchoolWaiting = () => {
 
     if (account.accessCode) {
       const accessCode = account.accessCode;
-      navigate(`/schools/accessableexams?accessCode=${accessCode}`);
+      navkwigate(`/schools/accessableexams?accessCode=${accessCode}`);
     } else {
       console.error("No access code available to show exams.");
     }
@@ -121,14 +121,14 @@ const SchoolWaiting = () => {
         <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-12 gap-1 px-3 py-4">
           <input
             type="text"
-            placeholder="---Select account validIn---"
+            placeholder="---Shaka konte n'iminsi imara ---"
             value={validIn}
             onChange={(e) => setValidIn(e.target.value)}
             className="border-2 border-blue-500 p-2 rounded-xl"
           />
           <input
             type="text"
-            placeholder="---Filter account Fees---"
+            placeholder="---Shaka konte n'igiciro---"
             value={fees}
             onChange={(e) => setFees(e.target.value)}
             className="border-2 border-blue-500 p-2 rounded-xl"
@@ -136,7 +136,7 @@ const SchoolWaiting = () => {
           <div className="w-full px-3 md:flex hidden">
             <input
               type="search"
-              placeholder="Search Everything"
+              placeholder="Shaka konte n'igiciro cg iminsi"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="border-2 border-blue-500 p-2 rounded-xl w-full"
@@ -147,7 +147,7 @@ const SchoolWaiting = () => {
         <div className="w-full px-3 pb-3 flex md:hidden">
           <input
             type="search"
-            placeholder="Search Everything"
+            placeholder="Shaka konte n'igiciro cg iminsi"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="border-2 border-blue-500 p-2 rounded-xl w-full"

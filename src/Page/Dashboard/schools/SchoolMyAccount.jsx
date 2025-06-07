@@ -62,15 +62,15 @@ const SchoolMyAccount = () => {
 
   const validatePasswordChange = () => {
     if (!passwordData.currentPassword) {
-      toast.error("Please enter your current password");
+      toast.error("shyiramo Ijambobanga ryakera");
       return false;
     }
     if (!passwordData.newPassword) {
-      toast.error("Please enter a new password");
+      toast.error("shyiramo Ijambobanga rishya");
       return false;
     }
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      toast.error("New passwords don't match");
+      toast.error("Ijambobanga rishyas ntirihura");
       return false;
     }
     if (passwordData.newPassword.length < 6) {
@@ -104,7 +104,7 @@ const SchoolMyAccount = () => {
             }
           );
         } catch (error) {
-          toast.error("Current password is incorrect");
+          toast.error("Ijambobanga ryakera is incorrect");
           return;
         }
         const form = new FormData();
@@ -191,7 +191,7 @@ const SchoolMyAccount = () => {
         )}
 
         <h2 className="md:text-xs text-md font-bold text-blue-900 mb-1">
-          {showPasswordForm ? "Change Password" : "Your Profile"}
+          {showPasswordForm ? "Hindura Ijambobanga" : "Ifoto ikigo"}
         </h2>
 
         <form
@@ -274,7 +274,7 @@ const SchoolMyAccount = () => {
                 name="currentPassword"
                 value={passwordData.currentPassword}
                 onChange={handleChange}
-                placeholder="Current Password"
+                placeholder="Ijambobanga ryakera"
                 className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
                 required
               />
@@ -283,7 +283,7 @@ const SchoolMyAccount = () => {
                 name="newPassword"
                 value={passwordData.newPassword}
                 onChange={handleChange}
-                placeholder="New Password"
+                placeholder="Ijambobanga rishya"
                 className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
                 required
               />
@@ -292,7 +292,7 @@ const SchoolMyAccount = () => {
                 name="confirmPassword"
                 value={passwordData.confirmPassword}
                 onChange={handleChange}
-                placeholder="Confirm New Password"
+                placeholder="Emeza Ijambobanga rishya"
                 className="md:w-1/2 w-full px-4 md:text-xs text-md py-1 border rounded"
                 required
               />
@@ -311,7 +311,7 @@ const SchoolMyAccount = () => {
                       <LoadingSpinner size={5} strokeWidth={2} />
                     </>
                   ) : (
-                    <>Update Password</>
+                    <>Emeza Guhindura</>
                   )}
                 </>
               ) : (
@@ -321,7 +321,7 @@ const SchoolMyAccount = () => {
                       <LoadingSpinner size={5} strokeWidth={2} />
                     </>
                   ) : (
-                    <>Save Changes</>
+                    <>Emeza Guhindura</>
                   )}
                 </>
               )}
@@ -339,7 +339,7 @@ const SchoolMyAccount = () => {
               }}
               className="text-blue-600 hover:text-yellow-600"
             >
-              {showPasswordForm ? "Back to Profile" : "Change Password?"}
+              {showPasswordForm ? "Garuka Inyuma" : "Hindura Ijambobanga?"}
             </button>
           </div>
         </form>

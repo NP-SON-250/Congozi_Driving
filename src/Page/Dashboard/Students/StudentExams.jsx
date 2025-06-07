@@ -23,7 +23,7 @@ const StudentExams = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedExam, setSelectedExam] = useState(null);
   const examsPerPage = 5;
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
 
   const fetchExams = async () => {
     try {
@@ -53,9 +53,9 @@ const StudentExams = () => {
   const currentExams = allExams.slice(indexOfFirstExam, indexOfLastExam);
   const totalPages = Math.ceil(allExams.length / examsPerPage);
 
-  const handleigaExam = (exam) => {
+  const handlekwigaExam = (exam) => {
     if (exam.accessCode && exam.accessCode.length > 0) {
-      navigate(`/liveiga?code=${exam.accessCode}`);
+      navkwigate(`/livekwiga?code=${exam.accessCode}`);
     } else {
       console.error("No access code available for this exam.");
     }
@@ -85,7 +85,7 @@ const StudentExams = () => {
 
             toast.success("Kwishyura byakunze.");
             closePopup();
-            navigate(`/students/exams`);
+            navkwigate(`/students/exams`);
             fetchExams();
           } catch (error) {
             toast.error("Kwishyura byanze.");
@@ -101,7 +101,7 @@ const StudentExams = () => {
 
   const handleDoExam = (exam) => {
     if (exam.accessCode && exam.accessCode.length > 0) {
-      navigate(`/liveExam?code=${exam.accessCode}`);
+      navkwigate(`/liveExam?code=${exam.accessCode}`);
     } else {
       console.error("No access code available for this exam.");
     }
@@ -179,7 +179,7 @@ const StudentExams = () => {
                           <FaCartPlus />
                         </button>
                       ) : exam.status === "complete" &&
-                        exam.itemId?.type === "kora" ? (
+                        exam.itemId?.type === "gukora" ? (
                         <button
                           onClick={() => handleDoExam(exam)}
                           className="text-blue-900 py-1 px-3 md:tex-xs text-xs flex items-center gap-2"
@@ -187,9 +187,9 @@ const StudentExams = () => {
                           <FaEdit />
                         </button>
                       ) : exam.status === "complete" &&
-                        exam.itemId?.type === "iga" ? (
+                        exam.itemId?.type === "kwiga" ? (
                         <button
-                          onClick={() => handleigaExam(exam)}
+                          onClick={() => handlekwigaExam(exam)}
                           className="text-blue-900 py-1 px-3 md:tex-xs text-xs flex items-center gap-2"
                         >
                           <FaEdit />

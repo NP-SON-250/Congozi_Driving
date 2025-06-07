@@ -14,7 +14,7 @@ const SchoolLiveLearn = () => {
   const [viewedQuestions, setViewedQuestions] = useState([]);
 
   const location = useLocation();
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -71,7 +71,7 @@ const SchoolLiveLearn = () => {
   const currentQuestion = examQuestions[selectedQuestion];
 
   const handleTimeout = () => {
-    navigate("/schools/accessableexams");
+    navkwigate("/schools/accessableexams");
   };
   return (
     <div className="flex flex-col bg-white md:p-2 gap-2">

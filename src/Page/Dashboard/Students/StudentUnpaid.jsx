@@ -19,7 +19,7 @@ const StudentUnpaid = () => {
   const [exam, setExam] = useState({ data: [] });
   const [userName, setUserName] = useState("");
 
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
@@ -97,7 +97,7 @@ const StudentUnpaid = () => {
 
             toast.success("Kwishyura byakunze.");
             closePopup();
-            navigate(`/students/waitingexams`);
+            navkwigate(`/students/waitingexams`);
             fetchData();
           } catch (error) {
             toast.error("Kwishyura byanze.");
@@ -163,8 +163,8 @@ const StudentUnpaid = () => {
       ) : (
         <div className="grid md:grid-cols-3 w-full gap-4 md:gap-3 py-1">
           {currentExams.map((exam, index) => {
-            const isiga = exam.itemId.type?.toLowerCase().includes("iga");
-            const buttonColor = isiga ? "bg-yellow-500" : "bg-green-500";
+            const iskwiga = exam.itemId.type?.toLowerCase().includes("kwiga");
+            const buttonColor = iskwiga ? "bg-yellow-500" : "bg-green-500";
             return (
               <ExamsCard
                 key={index}

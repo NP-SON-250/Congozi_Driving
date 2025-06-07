@@ -62,31 +62,31 @@ const Sidebar = ({ role = "students", onSignOut }) => {
     ],
     schools: [
       {
-        name: "Home",
+        name: "Ahabanza",
         path: "/schools/home",
         iconR: <HiHome />,
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "Account Market",
+        name: "Isoko rya Konte",
         path: "/schools/account/market",
         iconR: <BsCart />,
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "Do Exams Online",
+        name: "gukora Ibizamini",
         path: "/schools/online",
         iconR: <PiFolderSimpleUserLight />,
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "My Accounts",
+        name: "Konte Nishyuye",
         path: "/schools/accounts",
         iconR: <IoIosMenu />,
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "My Profile",
+        name: "Umwirondoro wa Konte",
         path: "/schools/account",
         iconR: <FaUsersCog />,
         iconL: <IoIosArrowForward />,

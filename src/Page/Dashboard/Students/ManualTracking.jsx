@@ -15,7 +15,7 @@ const ManualTracking = () => {
   const [showContinueCard, setShowContinueCard] = useState(false);
   const [showConfirmCard, setShowConfirmCard] = useState(false);
   const [notFound, setNotFound] = useState(false);
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
 
   useEffect(() => {
     if (examCode) {
@@ -51,14 +51,17 @@ const ManualTracking = () => {
 
   const handleNotReady = () => {
     setIsSearched(false);
-    navigate(`/students/tracking`);
+    navkwigate(`/students/tracking`);
   };
 
   const handleStartExam = () => {
-    if (examDetails?.type === "iga" || examDetails?.type === "iga") {
-      navigate(`/liveiga?code=${examCode}`);
-    } else if (examDetails?.type === "kora" || examDetails?.type === "kora") {
-      navigate(`/liveExam?code=${examCode}`);
+    if (examDetails?.type === "kwiga" || examDetails?.type === "kwiga") {
+      navkwigate(`/livekwiga?code=${examCode}`);
+    } else if (
+      examDetails?.type === "gukora" ||
+      examDetails?.type === "gukora"
+    ) {
+      navkwigate(`/liveExam?code=${examCode}`);
     } else {
       alert("Invalid exam type.");
     }

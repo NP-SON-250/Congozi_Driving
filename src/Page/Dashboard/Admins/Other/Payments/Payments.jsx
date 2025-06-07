@@ -22,7 +22,7 @@ const Payments = () => {
     const userData = localStorage.getItem("user");
 
     if (!token) {
-      navigate("/kwinjira");
+      navkwigate("/kwinjira");
       return;
     }
     if (userData) {
@@ -69,7 +69,7 @@ const Payments = () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        navigate("/kwinjira");
+        navkwigate("/kwinjira");
         return;
       }
 
@@ -98,7 +98,7 @@ const Payments = () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        navigate("/kwinjira");
+        navkwigate("/kwinjira");
         return;
       }
 

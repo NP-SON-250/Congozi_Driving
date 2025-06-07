@@ -74,8 +74,8 @@ const AddNewExamPopup = ({ setShowAddExamPopup, onExamAdded }) => {
               className="w-full border border-blue-900/20 rounded px-3 py-2 mt-1"
             >
               <option value="">---</option>
-              <option value="iga">iga</option>
-              <option value="kora">kora</option>
+              <option value="kwiga">kwiga</option>
+              <option value="gukora">gukora</option>
             </select>
           </div>
           <div>

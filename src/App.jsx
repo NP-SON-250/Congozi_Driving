@@ -75,7 +75,7 @@ const App = () => {
                   element={<StudentWaiting />}
                 />
                 <Route path="/liveExam" element={<LiveExam />} />
-                <Route path="/liveiga" element={<LiveLearn />} />
+                <Route path="/livekwiga" element={<LiveLearn />} />
                 <Route path="/students/school" element={<SchoolDemo />} />
               </Route>
             </Route>
@@ -135,7 +135,7 @@ const App = () => {
                   element={<SchoolAccessedExam />}
                 />
                 <Route path="/schoolsliveExam" element={<SchoolLiveExam />} />
-                <Route path="/schoolsliveiga" element={<SchoolLiveLearn />} />
+                <Route path="/schoolslivekwiga" element={<SchoolLiveLearn />} />
               </Route>
             </Route>
           )}

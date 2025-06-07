@@ -73,17 +73,17 @@ const StudentWaiting = () => {
     (currentPage + 1) * examsPerPage
   );
 
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     if (params.has("accessCode")) {
-      navigate(location.pathname, { replace: true });
+      navkwigate(location.pathname, { replace: true });
     }
   }, []);
   const handleDoExam = (exam) => {
     if (exam.accessCode) {
-      navigate(`/students/waitingexams?accessCode=${exam.accessCode}`, {
+      navkwigate(`/students/waitingexams?accessCode=${exam.accessCode}`, {
         replace: true,
       });
       setIsExamStarted(true);
@@ -138,9 +138,11 @@ const StudentWaiting = () => {
           ) : (
             <div className="grid md:grid-cols-3 w-full gap-4 md:gap-3 py-1">
               {currentExams.map((exam, index) => {
-                const isiga = exam.itemId.type.toLowerCase().includes("iga");
-                const buttonColor = isiga ? "bg-yellow-500" : "bg-green-500";
-                const buttonText = isiga ? "Iga ikizami" : "Kora ikizami";
+                const iskwiga = exam.itemId.type
+                  .toLowerCase()
+                  .includes("kwiga");
+                const buttonColor = iskwiga ? "bg-yellow-500" : "bg-green-500";
+                const buttonText = iskwiga ? "kwiga ikizami" : "gukora ikizami";
                 return (
                   <ExamsCard
                     key={index}

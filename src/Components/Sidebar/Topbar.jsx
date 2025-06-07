@@ -9,8 +9,8 @@ import { useNavigate } from "react-router-dom";
 const Topbar = ({ currentSection, role = "students", onSignOut }) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
-  
+  const navkwigate = useNavigate();
+
   const handleNavClick = (path) => {
     window.location.href = path;
   };
@@ -48,9 +48,9 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
-    navigate("/kwinjira", { replace: true });
+    navkwigate("/kwinjira", { replace: true });
   };
-  
+
   return (
     <div
       className={`fixed top-0 right-0 md:px-24 px-4 flex justify-between items-center w-full h-[11vh] shadow bg-Total`}

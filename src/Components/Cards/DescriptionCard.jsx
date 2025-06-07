@@ -10,13 +10,13 @@ const DescriptionCard = ({access,questions,total20,total100,pass20,pass100,numbe
         <p>Ibibazo Byose: {questions}</p>
         <p>Amanota Yose:{total20}/20</p>
         <p>Amanota Yose: {total100}/100</p>
-        <p>Gutsinda Ni: {pass20}/20</p>
-        <p>Gutsinda Ni: {pass100}/100 </p>
+        <p className="hidden">Gutsinda Ni: {pass20}/20</p>
+        <p className="hidden">Gutsinda Ni: {pass100}/100 </p>
         <p>Nomero y'ikizami: {number}</p>
         <p>Ubwoko bw'ikizami: {type}</p>
-        <div className="flex flex-row">
+        <div className="flex flex-row ">
           Iminota:{" "}
-          <span className="bg-white px-1 rounded-full text-blue-900 font-extrabold">
+          <span className="bg-white px-1 w-12 h-6 rounded-full text-blue-900 font-extrabold">
             {timeLeft}
           </span>
         </div>

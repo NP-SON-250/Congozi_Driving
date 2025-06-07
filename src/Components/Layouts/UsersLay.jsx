@@ -22,11 +22,11 @@ const UsersLay = ({ role }) => {
     "/admins/profile": "My Account",
     "/admins/payments": "Payments",
 
-    "/schools/home": "School Dashboard",
-    "/schools/account/market": "Account Market",
-    "/schools/online": "Do Exams Online",
-    "/schools/accounts": "My Accounts",
-    "/schools/account": "My Account",
+    "/schools/home": "Konte y'Ikigo",
+    "/schools/account/market": "Isoko rya Konte",
+    "/schools/online": "gukora Ibizamini",
+    "/schools/accounts": "Konte Nishyuye",
+    "/schools/account": "Umwirondoro wa Konte",
   };
   const getCurrentYear = () => new Date().getFullYear();
   const currentSection =
@@ -43,8 +43,8 @@ const UsersLay = ({ role }) => {
       <div className="pt-20 lg:pl-[300px] md:pb-[60px] pb-[14vh]">
         <Outlet />
         <div className="md:fixed md:bottom-0 md:left-0 md:right-0 md:block hidden w-full">
-          <div className="flex justify-center bg-Unpaid">
-            <p className="md:p-[6px] p-5 text-blue-900 md:text-2xl text-xs font-bold text-center uppercase">
+          <div className="flex justify-center items-center h-[7.5vh] bg-Unpaid">
+            <p className="md:p-[6px] p-5 text-blue-900 md:text-xs text-xs font-bold text-center uppercase">
               &copy; {getCurrentYear()} Congozi Expert Technical Unity{" "}
               <span className="normal-case">Limited</span>
             </p>
