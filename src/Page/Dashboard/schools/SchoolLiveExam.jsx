@@ -290,10 +290,10 @@ const SchoolLiveExam = () => {
                   })}
                 </div>
                 {!examFinished && (
-                  <div className="mt-4 flex flex-wrap gap-4 pb-4 justify-between">
+                  <div className="mt-4 md:flex md:justify-between grid grid-cols-2 gap-4 md:pb-0 pb-4">
                     <button
                       onClick={confirmFinishExam}
-                      className="bg-blue-900 text-white px-4 py-1 rounded flex jus items-center gap-2"
+                      className="bg-blue-900 text-white px-2 py-1 rounded flex justify-center items-center gap-2"
                     >
                       <GrSend />
                       Soza Ikizamini
@@ -302,12 +302,12 @@ const SchoolLiveExam = () => {
                       onClick={() =>
                         setSelectedQuestion((prev) => Math.max(prev - 1, 0))
                       }
-                      className={`bg-blue-900 text-white px-4 py-1 rounded flex jus items-center gap-2
-                              ${
-                                selectedQuestion === 0
-                                  ? "bg-gray-500 cursor-not-allowed"
-                                  : "bg-blue-900"
-                              }`}
+                      className={`bg-blue-900 text-white px-2 py-1 rounded flex jus items-center gap-2
+                                            ${
+                                              selectedQuestion === 0
+                                                ? "bg-gray-500 cursor-not-allowed"
+                                                : "bg-blue-900"
+                                            }`}
                       disabled={selectedQuestion === 0}
                     >
                       <LuCircleArrowLeft />
@@ -319,12 +319,13 @@ const SchoolLiveExam = () => {
                           Math.min(prev + 1, examQuestions.length - 1)
                         )
                       }
-                      className={`bg-blue-900 text-white px-4 py-1 rounded flex jus items-center gap-2
-                              ${
-                                selectedQuestion === examQuestions.length - 1
-                                  ? "bg-gray-500 cursor-not-allowed"
-                                  : "bg-blue-900"
-                              }`}
+                      className={`bg-blue-900 text-white px-2 py-1 rounded flex jus items-center gap-2
+                                            ${
+                                              selectedQuestion ===
+                                              examQuestions.length - 1
+                                                ? "bg-gray-500 cursor-not-allowed"
+                                                : "bg-blue-900"
+                                            }`}
                       disabled={selectedQuestion === examQuestions.length - 1}
                     >
                       <FiArrowRightCircle /> Igikurikira/Next
@@ -336,7 +337,7 @@ const SchoolLiveExam = () => {
                     <div className="mt-2 flex justify-center gap-24 md:mb-0">
                       <button className="bg-gray-500 cursor-not-allowed text-white px-4 py-1 rounded flex jus items-center gap-2">
                         <GrSend />
-                        Soza
+                        Soza Ikizamini
                       </button>
                       <button
                         onClick={handleReviewResults}
