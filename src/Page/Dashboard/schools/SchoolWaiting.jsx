@@ -205,7 +205,7 @@ const SchoolWaiting = () => {
                 }
                 disabled={currentPage === totalPages - 1}
               >
-                Izikukira
+                Izikurikira
                 <FaArrowAltCircleRight size={24} />
               </button>
             </div>

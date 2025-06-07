@@ -199,7 +199,7 @@ const LiveLearn = () => {
               access={examCode}
             />
 
-            <div className="flex flex-wrap justify-start py-1 md:gap-4 gap-2">
+            <div className="flex flex-wrap justify-center py-1 md:gap-4 gap-2">
               {examQuestions.map((q, idx) => {
                 const isCurrent = selectedQuestion === idx;
                 const isInteracted = interactedQuestions.includes(idx);
