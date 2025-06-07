@@ -191,7 +191,7 @@ const SchoolMyAccount = () => {
         )}
 
         <h2 className="md:text-xs text-md font-bold text-blue-900 mb-1">
-          {showPasswordForm ? "Hindura Ijambobanga" : "Ifoto ikigo"}
+          {showPasswordForm ? "Hindura Ijambobanga" : "Ifoto y'ikigo"}
         </h2>
 
         <form
