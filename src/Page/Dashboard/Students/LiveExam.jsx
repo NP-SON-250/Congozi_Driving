@@ -431,7 +431,7 @@ const LiveExam = () => {
                       className="bg-blue-900 text-white px-2 py-1 rounded flex justify-center items-center gap-2"
                     >
                       <GrSend />
-                      Soza
+                      Soza Ikizamini
                     </button>
                     <button
                       onClick={() =>
