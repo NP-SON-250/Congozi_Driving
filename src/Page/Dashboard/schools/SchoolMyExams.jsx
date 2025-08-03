@@ -311,7 +311,7 @@ const SchoolMyExams = () => {
                     </li>
                   </ul>
                 </div>
-                <div className="flex flex-col justify-center px-3 py-2">
+                <div className="flex flex-col justify-center py-2">
                   <p className="text-start pr-4">
                     Kanda ino mibare kuri telefone yawe ukoreshe SIM kadi ya MTN
                     maze wishyure kuri:{" "}
