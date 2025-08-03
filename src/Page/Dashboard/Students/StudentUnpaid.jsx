@@ -317,7 +317,7 @@ const StudentUnpaid = () => {
                   </ul>
                 </div>
                 <div className="flex flex-col justify-center px-3 py-2">
-                  <p className="text-start">
+                  <p className="text-start pr-4">
                     Kanda ino mibare kuri telefone yawe ukoreshe SIM kadi ya MTN
                     maze wishyure kuri:{" "}
                     <span className="text-md font-semibold text-yellow-700">
@@ -334,7 +334,7 @@ const StudentUnpaid = () => {
                     *{selectedExam.itemId.fees}#
                   </p>
                   <p className="text-md text-Total py-4 font-semibold text-cente">
-                    Tanga amakuru kunyemezavbwishyu yawe
+                    Tanga amakuru kunyemezabwishyu yawe
                   </p>
                   <div className="w-full text-start">
                     <label htmlFor="phone">Nimero wakoresheje wishyura</label>
