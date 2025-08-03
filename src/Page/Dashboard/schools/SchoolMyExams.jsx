@@ -304,7 +304,7 @@ const SchoolMyExams = () => {
             ) : (
               <div className="flex md:flex-row flex-col md:gap-6 gap-1">
                 <div className="text-left">
-                  <ul className="md:space-y-6 space-y-2 bg-gray-200 h-full p-4">
+                  <ul className="md:space-y-6 space-y-2 bg-gray-200 h-full w-[150px] p-4">
                     <li className="text-blue-900 font-bold">
                       <input type="radio" name="payment" checked readOnly /> MTN
                       Mobile Money
