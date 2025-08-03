@@ -33,7 +33,7 @@ const StudentUnpaid = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/purchases/pending",
+        "http://localhost:4100/api/v1/purchases/pending",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -112,7 +112,7 @@ const StudentUnpaid = () => {
       const notificationMessage = `Dear Admin, Turakumenyesha ko ${userName} yishyuye ikizamini cyitwa ${paidItem.title} cy'ubwoko bwo ${paidItem.type} amafaranga ${paidItem.fees} Rwf akoresheje telephone ${phoneUsed} ibaruye kuri ${ownerName}. Reba ko wayabonye kuri telephone nimero: 250 783 905 790 maze umuhe uburenganzira kuri iyi purchase Id: ${purchasedDataId}. Murakoze!!!!!`;
       const noteTitle = `${userName} requests for approval`;
       const response = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/notification",
+        "http://localhost:4100/api/v1/notification",
         {
           message: notificationMessage,
           noteTitle: noteTitle,
@@ -130,7 +130,7 @@ const StudentUnpaid = () => {
       const purchaseId = selectedExam._id;
 
       await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${purchaseId}`,
+        `http://localhost:4100/api/v1/purchases/${purchaseId}`,
         { status: "waitingConfirmation" },
         {
           headers: {
@@ -139,7 +139,7 @@ const StudentUnpaid = () => {
         }
       );
       await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/unpaidexams/${paidItem._id}`
+        `http://localhost:4100/api/v1/unpaidexams/${paidItem._id}`
       );
       setMessage({
         text: response.data.message || "Kwishyura byakunze neza!",
@@ -321,8 +321,9 @@ const StudentUnpaid = () => {
                     Kanda ino mibare kuri telefone yawe ukoreshe SIM kadi ya MTN
                     maze wishyure kuri:{" "}
                     <span className="text-md font-semibold text-yellow-700">
-                      EXPERT TECHNICAL UNITY Limited
+                      EXPERT TECHNICAL UNITY Limited.
                     </span>
+                    Maze uhabwe kode ifungura ikizamini cyawe.
                   </p>
                   <p className="flex justify-center md:py-6 py-4 font-bold">
                     <img src={Mtn} alt="" className="w-10 h-6" />

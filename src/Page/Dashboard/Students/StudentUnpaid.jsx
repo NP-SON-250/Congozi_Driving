@@ -319,11 +319,11 @@ const StudentUnpaid = () => {
                 <div className="flex flex-col justify-center px-3 py-2">
                   <p className="text-start">
                     Kanda ino mibare kuri telefone yawe ukoreshe SIM kadi ya MTN
-                    maze <br />
-                    wishyure kuri:{" "}
+                    maze wishyure kuri:{" "}
                     <span className="text-md font-semibold text-yellow-700">
-                      EXPERT TECHNICAL UNITY Limited
+                      EXPERT TECHNICAL UNITY Limited.
                     </span>
+                    Maze uhabwe kode ifungura ikizamini cyawe.
                   </p>
                   <p className="flex justify-center md:py-6 py-4 font-bold">
                     <img src={Mtn} alt="" className="w-10 h-6" />
