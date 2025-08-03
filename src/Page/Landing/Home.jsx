@@ -61,7 +61,7 @@ const Home = () => {
             <div className="w-[80%] h-[2px] bg-Passed md:w-[83%] md:ml-16 ml-5 mt-2"></div>
           </div>
           <div className="grid md:grid-cols-3 grid-cols-1 gap-1 justify-center pt-4">
-            <div className="flex justify-start md:px-2 px-5 items-center text-start gap-4 ">
+            <div className="flex justify-start md:px-1 px-5 items-center text-start gap-4 ">
               <LuPhoneCall className="text-white text-2xl font-semibold" />
               <p className="text-center text-lg text-white">
                 +250 783 905 790 | 722 558 842

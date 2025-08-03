@@ -1,14 +1,5 @@
 {
-  "version": 2,
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/"
-    }
-  ],
-  "build": {
-    "env": {
-      "NODE_MODULES_CACHE": "false"
-    }
-  }
+  "rewrites":[
+    {"source":"/(.*)", "destination": "/"}
+  ]
 }

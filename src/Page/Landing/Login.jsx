@@ -10,13 +10,12 @@ import { FaQuestionCircle } from "react-icons/fa";
 import LoginInputs from "../../Components/Inputs/Studentnputs/LoginInputs";
 import Injira from "../../assets/Injira.png";
 import { useUserContext } from "../../Components/useUserContext";
-import LoadingSpinner from "../../Components/LoadingSpinner ";
+
 const Login = () => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const { setUser } = useUserContext();
-  const navkwigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     if (!identifier || !password) {
@@ -25,7 +24,6 @@ const Login = () => {
     }
 
     try {
-      setIsLoading(true);
       const response = await axios.post(
         "https://congozi-backend.onrender.com/api/v1/users/auth",
         {
@@ -36,27 +34,29 @@ const Login = () => {
 
       const { token, data, message } = response.data;
 
+      // Update both localStorage and context
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(data));
       setUser(data);
 
       toast.success(message || "Kwinjira byakunze");
 
+      // Role-based redirect
       switch (data.role) {
         case "student":
-          navkwigate("/students/home");
+          navigate("/students/home");
           window.location.reload();
           break;
         case "admin":
-          navkwigate("/admins/home");
-          window.location.reload();
-          break;
-        case "supperAdmin":
-          navkwigate("/admins/home");
+          navigate("/admins/home");
           window.location.reload();
           break;
         case "school":
-          navkwigate("/schools/home");
+          navigate("/schools/home");
+          window.location.reload();
+          break;
+        case "supperAdmin":
+          navigate("/admins/home");
           window.location.reload();
           break;
         default:
@@ -66,12 +66,11 @@ const Login = () => {
       const errMsg =
         error?.response?.data?.message || "Kwinjira byanze ongera ugerageze.";
       toast.error(errMsg);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   useEffect(() => {
+    // Redirect if user is already logged out
     const token = localStorage.getItem("token");
     if (!token) {
       window.history.pushState(null, "", window.location.href);
@@ -82,7 +81,7 @@ const Login = () => {
   }, []);
 
   return (
-    <div className="pt-[73px] md:px-12">
+    <div className=" pt-20 md:px-12">
       <div className="grid md:grid-cols-2 grid-cols-1 rounded-r-md rounded-b-none md:border border-blue-700">
         <div className="flex justify-end md:h-[60vh]">
           <img src={Injira} alt="Login Illustration" />
@@ -96,17 +95,17 @@ const Login = () => {
             </p>
           </div>
 
-          <p className="text-lg md:px-20 p-2 text-center">
-            Kugirango ubone amakuru yawe n'ibizamini ndetse na serivisi zitangwa
-            na Congozi Expert. Ugomba kubanza kwinjira
+          <p className="text-lg md:px-20 p-2 md:text-center text-start">
+            Kugirango ubone amakuru yawe ku bizamini ndetse na serivisi zitangwa
+            na Congozi Technical. Ugomba kubanza kwinjira
           </p>
 
           <div className="flex flex-col items-start gap-4 md:w-[70%] w-full">
             <LoginInputs
-              label="Telefone cg Email"
+              label="Telefone cg email"
               type="text"
               icon={<FaUser />}
-              placeholder="Urugero: 07XX cg email@gmail.com"
+              placeholder="07XXXXXXXX cg Congozi@gmail.com fomate"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
             />
@@ -124,36 +123,25 @@ const Login = () => {
             onClick={handleLogin}
             className="flex justify-center items-center gap-2 px-4 py-1 rounded-md bg-Total hover:bg-blue-800 text-white mt-4"
           >
-            {isLoading ? (
-              <>
-                <LoadingSpinner size={5} strokeWidth={2} />
-              </>
-            ) : (
-              <>
-                <FaCircleArrowRight className="text-white" />
-                Saba Kwinjira
-              </>
-            )}
+            <FaCircleArrowRight className="text-white" />
+            Saba Kwinjira
           </button>
 
-          <div className="md:flex-row flex-col flex justify-center items-center md:gap-10 gap-4 mt-1 mb-3">
+          <div className="md:flex-row flex-col flex justify-center items-center md:gap-10 gap-4 md:mt-0 mt-4">
             <Link to="/hindura">
-              <p className="flex justify-center items-center gap-2 text-blue-500 text-md">
+              <p className="flex justify-center items-center gap-2 text-blue-500 text-md hover:text-yellow-700">
                 <FaQuestionCircle /> Wibagiwe Ijambobanga?
               </p>
             </Link>
-            <Link to={"/kwiyandikisha"}>
-              <div className="flex justify-center items-center md:ml-28 gap-2">
-                <p className="flex justify-center items-center gap-2 text-blue-500 text-md">
-                  Nta konti ufite?
-                </p>
-                <button
-                  className={`flex justify-center items-center px-4 py-1 rounded-md bg-Total hover:bg-blue-800 text-white `}
-                >
-                  Yifungure
-                </button>
-              </div>
-            </Link>
+            <p className="flex justify-center items-center gap-2 text-blue-500 text-md">
+              Nta konti ufite?
+              <Link
+                to="/kwiyandikisha"
+                className="text-xl text-blue-800 font-semibold ml-1 hover:text-yellow-700"
+              >
+                Yifungure
+              </Link>
+            </p>
           </div>
         </div>
       </div>

@@ -4,8 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import EditUserPopup from "./Other/Users/EditUserPopup";
 import DeleteUserPopup from "./Other/Users/DeleteUserPopup";
-import AddUserPopup from "./Other/Users/AddUserPopup";
-import LoadingSpinner from "../../../Components/LoadingSpinner ";
+import AddCompanyUserPopup from "./Other/Users/AddCompanyUserPopup";
 const USERS_PER_PAGE = 4;
 
 const AdminUsers = () => {
@@ -31,14 +30,13 @@ const AdminUsers = () => {
   const [userToDelete, setUserToDelete] = useState(null);
 
   const [showAddPopup, setShowAddPopup] = useState(false);
-  const [newCompanyName, setNewCompanyName] = useState("");
-  const [newTin, setNewTin] = useState("");
-  const [newPhone, setNewPhone] = useState("");
-  const [newEmail, setNewEmail] = useState("");
-  const [newRole, setNewRole] = useState("");
-  const [newIdcard, setNewIdcard] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [newAddress, setNewAddress] = useState("");
+  const [CompanyName, setCompanyName] = useState("");
+  const [Tin, setTin] = useState("");
+  const [Phone, setPhone] = useState("");
+  const [Email, setEmail] = useState("");
+  const [Idcard, setIdcard] = useState("");
+  const [Password, setPassword] = useState("");
+  const [Address, setAddress] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const isAdmin = currentUser?.role === "admin";
@@ -215,20 +213,20 @@ const AdminUsers = () => {
 
     try {
       setIsLoading(true);
-      const newUser = {
-        companyName: newCompanyName,
-        tin: newTin,
-        phone: newPhone,
-        password: newPassword,
-        email: newEmail,
-        role: newRole,
-        address: newAddress,
-        idCard: newIdcard,
+      const User = {
+        companyName: CompanyName,
+        tin: Tin,
+        phone: Phone,
+        password: Password,
+        email: Email,
+        address: Address,
+        idCard: Idcard,
+        role: "school",
       };
 
       const response = await axios.post(
         "https://congozi-backend.onrender.com/api/v1/users",
-        newUser,
+        User,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -243,7 +241,7 @@ const AdminUsers = () => {
       if (error.response?.status === 401) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        navkwigate("/kwinjira");
+        navkwigate("/admins/users");
       }
     } finally {
       setIsLoading(false);
@@ -251,14 +249,13 @@ const AdminUsers = () => {
   };
 
   const resetAddForm = () => {
-    setNewCompanyName("");
-    setNewEmail("");
-    setNewRole("");
-    setNewAddress("");
-    setNewPassword("");
-    setNewPhone("");
-    setNewIdcard("");
-    setNewTin("");
+    setCompanyName("");
+    setEmail("");
+    setAddress("");
+    setPassword("");
+    setPhone("");
+    setIdcard("");
+    setTin("");
   };
   const indexOfLastUser = currentPage * USERS_PER_PAGE;
   const indexOfFirstUser = indexOfLastUser - USERS_PER_PAGE;
@@ -286,7 +283,7 @@ const AdminUsers = () => {
         )}
       </div>
 
-      <div className="overflow-x-auto rounded-lg shadow border border-gray-200">
+      <div className="overflow-auto scrollbar-hide rounded-lg shadow border border-gray-200">
         <table className="w-full text-left table-auto">
           <thead className="bg-gray-100 text-gray-700">
             <tr>
@@ -406,36 +403,27 @@ const AdminUsers = () => {
         />
       )}
       {showAddPopup && (
-        <AddUserPopup
-          newCompanyName={newCompanyName}
-          newTin={newTin}
-          newPhone={newPhone}
-          newEmail={newEmail}
-          newRole={newRole}
-          newAddress={newAddress}
-          newIdcard={newIdcard}
-          newPassword={newPassword}
-          setNewCompanyName={setNewCompanyName}
-          setNewTin={setNewTin}
-          setNewPhone={setNewPhone}
-          setNewEmail={setNewEmail}
-          setNewRole={setNewRole}
-          setNewAddress={setNewAddress}
-          setNewIdcard={setNewIdcard}
-          setNewPassword={setNewPassword}
+        <AddCompanyUserPopup
+          CompanyName={CompanyName}
+          Tin={Tin}
+          Phone={Phone}
+          Email={Email}
+          Address={Address}
+          Idcard={Idcard}
+          Password={Password}
+          setCompanyName={setCompanyName}
+          setTin={setTin}
+          setPhone={setPhone}
+          setEmail={setEmail}
+          setAddress={setAddress}
+          setIdcard={setIdcard}
+          setPassword={setPassword}
           setShowAddPopup={setShowAddPopup}
           handleAddUser={handleAddUser}
-          onValue={
-            isLoading ? (
-              <>
-                <LoadingSpinner size={5} strokeWidth={2} />
-              </>
-            ) : (
-              "Add Company"
-            )
-          }
+          isLoading={isLoading}
         />
       )}
+
       {showDeletePopup && userToDelete && (
         <DeleteUserPopup
           user={userToDelete}

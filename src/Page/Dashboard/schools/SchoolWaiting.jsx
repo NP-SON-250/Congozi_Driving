@@ -111,8 +111,8 @@ const SchoolWaiting = () => {
 
         {soonToExpireAccounts.length > 0 && (
           <div className="md:w-[90%] w-full bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md mb-3">
-            <strong>Kumenyesha!</strong> Ufite Konte {soonToExpireAccounts.length}{" "}
-            
+            <strong>Kumenyesha!</strong> Ufite Konte{" "}
+            {soonToExpireAccounts.length}{" "}
             {soonToExpireAccounts.length > 1 ? "s" : ""} zizarangira mumunsi 1.
             Gerageza uzikoreshe zitararangira!
           </div>
@@ -166,9 +166,9 @@ const SchoolWaiting = () => {
               return (
                 <AccountCard
                   key={index}
-                  title={`Konte ${
-                    currentPage * accountsPerPage + index + 1
-                  }: ${account.itemId.title}`}
+                  title={`Konte ${currentPage * accountsPerPage + index + 1}: ${
+                    account.itemId.title
+                  }`}
                   fees={account.itemId.fees}
                   validIn={account.itemId.validIn}
                   remainingDays={remainingDays}

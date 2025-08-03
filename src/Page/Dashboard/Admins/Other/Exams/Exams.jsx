@@ -203,7 +203,7 @@ const AdminExams = () => {
         <h2 className="font-semibold">Manage All Exams</h2>
       </div>
 
-      <div className="overflow-x-auto rounded-lg shadow border border-blue-900">
+      <div className="overflow-auto scrollbar-hide rounded-lg shadow border border-blue-900">
         <table className="w-full text-left table-auto">
           <thead className="bg-gray-100 text-gray-700">
             <tr>

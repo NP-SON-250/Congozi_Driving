@@ -41,13 +41,15 @@ import SchoolAccessedExam from "./Page/Dashboard/schools/SchoolAccessedExam";
 import SchoolLiveExam from "./Page/Dashboard/schools/SchoolLiveExam";
 import SchoolLiveLearn from "./Page/Dashboard/schools/SchoolLiveLearn";
 import LiveLearn from "./Page/Dashboard/Students/LiveLearn";
+import StudentResults from "./Page/Dashboard/Students/StudentResults";
+import SchoolResults from "./Page/Dashboard/schools/SchoolResults";
 const App = () => {
-  // onContextMenu={(e) => e.preventDefault()}
+  // onContextMenu={(e) => e.preventDefault()}  select-none
   const { userRole, loading } = useUserContext();
   if (loading) return <div>Loading...</div>;
   return (
     <>
-      <div className="overflow-x-hidden font-Poppins select-none">
+      <div className="overflow-x-hidden font-museo">
         <Routes>
           <Route element={<LandingLay />}>
             <Route path="/" element={<Home />}></Route>
@@ -66,6 +68,7 @@ const App = () => {
                 <Route path="/students/tracking" element={<ManualTracking />} />
                 <Route path="/students/exams" element={<StudentExams />} />
                 <Route path="/students/profile" element={<StudentProfile />} />
+                <Route path="/students/results" element={<StudentResults />} />
                 <Route
                   path="/students/unpaidexams"
                   element={<StudentUnpaid />}
@@ -118,6 +121,7 @@ const App = () => {
                 <Route path="/schools/online" element={<SchoolDoExams />} />
                 <Route path="/schools/accounts" element={<SchoolMyExams />} />
                 <Route path="/schools/account" element={<SchoolMyAccount />} />
+                <Route path="/schools/results" element={<SchoolResults />} />
                 <Route
                   path="/schools/unpaidaccounts"
                   element={<SchoolUnpaid />}
