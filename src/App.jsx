@@ -42,14 +42,13 @@ import SchoolLiveExam from "./Page/Dashboard/schools/SchoolLiveExam";
 import SchoolLiveLearn from "./Page/Dashboard/schools/SchoolLiveLearn";
 import LiveLearn from "./Page/Dashboard/Students/LiveLearn";
 import StudentResults from "./Page/Dashboard/Students/StudentResults";
-import SchoolResults from "./Page/Dashboard/schools/SchoolResults";
 const App = () => {
-  // onContextMenu={(e) => e.preventDefault()}  select-none
+  // onContextMenu={(e) => e.preventDefault()} select-none
   const { userRole, loading } = useUserContext();
   if (loading) return <div>Loading...</div>;
   return (
     <>
-      <div className="overflow-x-hidden font-museo">
+      <div className="overflow-x-hidden font-Poppins ">
         <Routes>
           <Route element={<LandingLay />}>
             <Route path="/" element={<Home />}></Route>
@@ -121,7 +120,6 @@ const App = () => {
                 <Route path="/schools/online" element={<SchoolDoExams />} />
                 <Route path="/schools/accounts" element={<SchoolMyExams />} />
                 <Route path="/schools/account" element={<SchoolMyAccount />} />
-                <Route path="/schools/results" element={<SchoolResults />} />
                 <Route
                   path="/schools/unpaidaccounts"
                   element={<SchoolUnpaid />}

@@ -24,8 +24,8 @@ const AdminsPayments = () => {
       const data = res.data;
       const mapped = data.data.map((item) => ({
         id: item._id,
-        payer: item.purchasedBy
-          ? `${item.purchasedBy.fName} ${item.purchasedBy.lName}`
+        payer: item.paidBy
+          ? `${item.paidBy.fName} ${item.paidBy.lName}`
           : "Anonymous",
         amount: `RWF ${item.amount}`,
         startedOn: item.startDate
@@ -159,7 +159,7 @@ const AdminsPayments = () => {
                     className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${
                       payment.status === "Completed"
                         ? "bg-green-100 text-green-800"
-                        : payment.status === "Waiting Confirmation"
+                        : payment.status === "Pending"
                         ? "bg-orange-100 text-orange-800"
                         : "bg-yellow-100 text-yellow-800"
                     }`}
@@ -168,7 +168,7 @@ const AdminsPayments = () => {
                   </span>
                 </td>
                 <td className="px-6 py-1 whitespace-nowrap">
-                  {payment.status !== "Completed" ? (
+                  {payment.status === "Waiting" ? (
                     <button
                       onClick={() => handleConfirm(payment.id)}
                       disabled={loadingId === payment.id}
@@ -181,7 +181,9 @@ const AdminsPayments = () => {
                       {loadingId === payment.id ? "Confirming..." : "Confirm"}
                     </button>
                   ) : (
-                    <span className="text-sm text-gray-400">—</span>
+                    <span className="text-sm text-gray-400 cursor-not-allowed">
+                      No Action
+                    </span>
                   )}
                 </td>
               </tr>

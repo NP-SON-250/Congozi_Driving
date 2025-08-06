@@ -134,9 +134,7 @@ const StudentWaiting = () => {
           </div>
 
           {filteredExams.length === 0 ? (
-            <p className="text-center py-4 text-red-500">
-              Ntakizamini cyishyuye ufite
-            </p>
+            <p className="text-center py-4 text-red-500">No data found</p>
           ) : (
             <div className="grid md:grid-cols-3 w-full gap-4 md:gap-3 py-1">
               {currentExams.map((exam, index) => {

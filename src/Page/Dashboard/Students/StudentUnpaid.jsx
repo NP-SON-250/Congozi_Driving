@@ -97,7 +97,7 @@ const StudentUnpaid = () => {
   const handleNotify = async () => {
     if (!phoneUsed || !ownerName) {
       setMessage({
-        text: "Wongera uzuzise nimero ya telephone n'amazina y'umunyamikoro",
+        text: "Uzuza nimero ya telephone n'amazina yo ibaruyeho",
         type: "error",
       });
       setTimeout(() => setMessage({ text: "", type: "" }), 9000);
@@ -137,9 +137,6 @@ const StudentUnpaid = () => {
             Authorization: `Bearer ${token}`,
           },
         }
-      );
-      await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/unpaidexams/${paidItem._id}`
       );
       setMessage({
         text: response.data.message || "Kwishyura byakunze neza!",
@@ -268,36 +265,42 @@ const StudentUnpaid = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-around md:gap-[900px] gap-[250px] md:pb-0 pb-10">
-          <button
-            className={`px-2 py-1 text-blue-900 rounded ${
-              currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
-            disabled={currentPage === 0}
-          >
-            <FaArrowAltCircleLeft size={24} />
-          </button>
-          <button
-            className={`px-2 py-1 text-blue-900 rounded ${
-              currentPage === totalPages - 1
-                ? "opacity-50 cursor-not-allowed"
-                : ""
-            }`}
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))
-            }
-            disabled={currentPage === totalPages - 1}
-          >
-            <FaArrowAltCircleRight size={24} />
-          </button>
+        <div className="flex justify-around md:gap-[700px] gap-[120px] md:pb-0 pt-3 px-10">
+          <div>
+            <button
+              className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
+                currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
+              disabled={currentPage === 0}
+            >
+              <FaArrowAltCircleLeft size={24} />
+              Ibibanza
+            </button>
+          </div>
+          <div>
+            <button
+              className={`px-2 py-1 text-blue-900 rounded flex justify-center itemes-center gap-2 ${
+                currentPage === totalPages - 1
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }`}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))
+              }
+              disabled={currentPage === totalPages - 1}
+            >
+              Ibikurikira
+              <FaArrowAltCircleRight size={24} />
+            </button>
+          </div>
         </div>
       )}
 
       {/* Payment Popup */}
       {selectedExam && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[999]">
-          <div className="bg-white rounded-lg shadow-lg md:max-w-3xl w-full text-center relative">
+          <div className="bg-white rounded-lg shadow-lg md:max-w-4xl w-full text-center relative">
             <button
               className="absolute top-1 right-1 text-xl bg-white text-red-700 border-2 border-white rounded-full w-8 h-8 flex justify-center"
               onClick={closePopup}
@@ -308,7 +311,7 @@ const StudentUnpaid = () => {
               <></>
             ) : (
               <div className="flex md:flex-row flex-col md:gap-6 gap-1">
-                <div className="text-left">
+                <div className="text-left md:w-96">
                   <ul className="md:space-y-6 space-y-2 bg-gray-200 h-full p-4">
                     <li className="text-blue-900 font-bold">
                       <input type="radio" name="payment" checked readOnly /> MTN
@@ -323,18 +326,26 @@ const StudentUnpaid = () => {
                     <span className="text-md font-semibold text-yellow-700">
                       EXPERT TECHNICAL UNITY Limited.
                     </span>
-                    Maze uhabwe kode ifungura ikizamini cyawe.
+                    <span className="ml-2">
+                      Maze uhabwe kode ifungura ikizamini cyawe.
+                    </span>
                   </p>
                   <p className="flex justify-center md:py-6 py-4 font-bold">
-                    <img src={Mtn} alt="" className="w-10 h-6" />
+                    <img src={Mtn} alt="" className="w-10 h-6 pr-3" />
                     *182*8*1*
                     <span className="bg-green-400/20 border border-green-600">
                       072255
                     </span>
                     *{selectedExam.itemId.fees}#
                   </p>
-                  <p className="text-md text-Total py-4 font-semibold text-cente">
+                  <p className="text-md text-Total pt-4 font-semibold">
                     Tanga amakuru kunyemezabwishyu yawe
+                  </p>
+                  <p className="pb-4">
+                    Ukeneye ubufasha hamagara:{" "}
+                    <span className="text-md font-bold text-yellow-700">
+                      0783905790
+                    </span>
                   </p>
                   <div className="w-full text-start">
                     <label htmlFor="phone">Nimero wakoresheje wishyura</label>

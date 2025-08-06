@@ -1,5 +1,5 @@
 {
-  "name": "Congozi_frontend",
+  "name": "congozi_frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -18,8 +18,7 @@
     "react-router-dom": "^7.4.1",
     "react-slick": "^0.30.3",
     "react-toastify": "^11.0.5",
-    "slick-carousel": "^1.8.1",
-    "tailwind-scrollbar-hide": "^4.0.0"
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

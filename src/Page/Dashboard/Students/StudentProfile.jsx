@@ -315,7 +315,7 @@ const StudentProfile = () => {
                       <LoadingSpinner size={5} strokeWidth={2} />
                     </>
                   ) : (
-                    <>Guhindura</>
+                    <>Emeza guhindura</>
                   )}
                 </>
               ) : (
@@ -325,7 +325,7 @@ const StudentProfile = () => {
                       <LoadingSpinner size={5} strokeWidth={2} />
                     </>
                   ) : (
-                    <>Guhindura</>
+                    <>Emeza Guhindura</>
                   )}
                 </>
               )}

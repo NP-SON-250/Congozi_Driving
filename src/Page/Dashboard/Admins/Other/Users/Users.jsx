@@ -206,7 +206,7 @@ const Users = () => {
         <h2 className="text-2xl font-semibold">Manage All Users</h2>
       </div>
 
-      <div className="overflow-auto scrollbar-hide rounded-lg shadow border border-gray-200">
+      <div className="overflow-x-auto rounded-lg shadow border border-gray-200">
         <table className="w-full text-left table-auto">
           <thead className="bg-gray-100 text-gray-700">
             <tr>

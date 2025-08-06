@@ -103,6 +103,27 @@ const SchoolLiveLearn = () => {
               access={examId}
             />
 
+            <div className="flex flex-wrap justify-center py-1 md:gap-4 gap-2">
+              {examQuestions.map((q, idx) => {
+                return (
+                  <button
+                    key={q._id}
+                    onClick={() => handleSelectQuestion(idx)}
+                    className={`w-20 h-10 text-sm rounded-md flex justify-center items-center 
+                      ${
+                        selectedQuestion === idx
+                          ? "bg-blue-500 text-white"
+                          : viewedQuestions.includes(idx)
+                          ? "bg-blue-500 text-white"
+                          : "bg-white border"
+                      }`}
+                  >
+                    Ikibazo: {idx + 1}
+                  </button>
+                );
+              })}
+            </div>
+
             <div className="w-full px-3">
               {currentQuestion && (
                 <>

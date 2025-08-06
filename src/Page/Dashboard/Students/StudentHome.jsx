@@ -75,7 +75,7 @@ const StudentHome = () => {
   return (
     <div className="flex flex-col justify-center items-start md:px-5 gap-2 bg-white md:p-2">
       <WelcomeDear />
-      <div className="grid md:grid-cols-3 grid-cols-1 w-full md:px-0 px-10 gap-12 md:pt-2 py-5 md:gap-12">
+      <div className="grid md:grid-cols-3 grid-cols-1 w-full md:px-0 px-12 gap-12 md:pt-2 py-5 md:gap-12">
         <StHomeCard
           bgColor="bg-blue-900"
           title="Ibizamini Byose"

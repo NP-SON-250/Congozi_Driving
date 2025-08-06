@@ -55,10 +55,12 @@ const ManualTracking = () => {
   };
 
   const handleStartExam = () => {
-    if (examDetails?.type === "kwiga" || examDetails?.type === "Kwiga") {
+    if (examDetails?.type === "kwiga" || examDetails?.type === "kwiga") {
       navkwigate(`/livekwiga?code=${examCode}`);
-    }
-    if (examDetails?.type === "gukora" || examDetails?.type === "Gukora") {
+    } else if (
+      examDetails?.type === "gukora" ||
+      examDetails?.type === "gukora"
+    ) {
       navkwigate(`/liveExam?code=${examCode}`);
     } else {
       alert("Invalid exam type.");
@@ -96,7 +98,7 @@ const ManualTracking = () => {
                 />
                 <button
                   onClick={handleSearch}
-                  className="absolute md:right-[240px] right-6 bg-Total cursor-pointer rounded-r-full p-2 text-white"
+                  className="absolute md:right-[240px] right-6 bg-blue-500 cursor-pointer rounded-r-full p-2 text-white"
                 >
                   Shaka
                 </button>
@@ -187,7 +189,7 @@ const ManualTracking = () => {
                   Oya
                 </button>
                 <button
-                  className="bg-Total text-white px-2 py-1 md:w-[100px] w-[80px] rounded-full"
+                  className="bg-blue-500 text-white px-2 py-1 md:w-[100px] w-[80px] rounded-full"
                   onClick={() => setShowContinueCard(true)}
                 >
                   Yego

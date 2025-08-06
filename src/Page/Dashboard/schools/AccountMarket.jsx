@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import { BsCart } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
+import Irembo from "../../../assets/irembopay.png";
+import Mtn from "../../../assets/MTN.jpg";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import AccountCard from "../../../Components/Cards/AdminCards/AccountCard";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../../Components/LoadingSpinner ";
-
 const AccountMarket = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [accountsPerPage, setAccountsPerPage] = useState(6);
@@ -15,11 +16,13 @@ const AccountMarket = () => {
   const [fees, setFees] = useState("");
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [paymentStep, setPaymentStep] = useState("confirmation");
+
+  const [paid, setPaid] = useState();
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [isPayingLater, setIsPayingLater] = useState(false);
   const [account, setAccount] = useState({ data: [] });
   const [userName, setUserName] = useState("");
-
-  const navigate = useNavigate();
+  const navkwigate = useNavigate();
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser && storedUser !== "undefined") {
@@ -30,7 +33,6 @@ const AccountMarket = () => {
       }
     }
   }, []);
-
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -85,6 +87,100 @@ const AccountMarket = () => {
     setPaymentStep("confirmation");
   };
 
+  const handleProceedToPayment = async () => {
+    if (isProcessingPayment) return;
+
+    setIsProcessingPayment(true);
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        `https://congozi-backend.onrender.com/api/v1/purchases/${selectedAccount._id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setPaymentStep("payment");
+      setPaid(response.data?.data?.purchase._id);
+    } catch (error) {
+      console.error("Kwishyura Byanze:", error);
+    } finally {
+      setIsProcessingPayment(false);
+    }
+  };
+
+  const purchasedItem = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const purchasedId = paid;
+      const response = await axios.get(
+        `https://congozi-backend.onrender.com/api/v1/purchases/${purchasedId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data?.data?.invoiceNumber) {
+        const invoiceNumbers = response.data.data.invoiceNumber;
+        return invoiceNumbers;
+      }
+      return null;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const makePayment = async () => {
+    if (isProcessingPayment) return;
+
+    setIsProcessingPayment(true);
+    try {
+      const invoiceNumber = await purchasedItem();
+
+      if (!invoiceNumber) {
+        toast.error("Nta nomero ya invoice yabonetse");
+        return;
+      }
+
+      IremboPay.initiate({
+        publicKey: "pk_live_111e50f65489462684098ebea001da06",
+        invoiceNumber: invoiceNumber,
+        locale: IremboPay.locale.RW,
+        callback: async (err, resp) => {
+          if (!err) {
+            try {
+              const token = localStorage.getItem("token");
+              const purchasedId = paid;
+
+              const response = await axios.put(
+                `https://congozi-backend.onrender.com/api/v1/purchases/${purchasedId}`,
+                { status: "complete" },
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+              closePopup();
+              navkwigate(`/schools/accounts`);
+              fetchData();
+            } catch (error) {
+              console.error("Kwishyura byanze:", error);
+            }
+          }
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsProcessingPayment(false);
+    }
+  };
   const handlePayLaterClick = async () => {
     if (isPayingLater) return;
 
@@ -101,7 +197,6 @@ const AccountMarket = () => {
         }
       );
       closePopup();
-      navigate("/schools/accounts");
     } catch (error) {
       if (error.response && error.response.status === 404) {
         alert("You have already purchased this account.");
@@ -113,7 +208,6 @@ const AccountMarket = () => {
       setIsPayingLater(false);
     }
   };
-
   const closePopup = () => {
     setSelectedAccount(null);
     setPaymentStep("confirmation");
@@ -157,7 +251,6 @@ const AccountMarket = () => {
           className="border-2 border-blue-500 p-2 rounded-xl w-full"
         />
       </div>
-
       {filteredAccounts.length === 0 ? (
         <p className="text-center py-4 text-red-500">No data found</p>
       ) : (
@@ -182,7 +275,6 @@ const AccountMarket = () => {
           })}
         </div>
       )}
-
       {totalPages > 1 && (
         <div className="flex justify-around md:gap-[700px] gap-[70px] md:pb-0 pt-3 px-10 ">
           <button
@@ -210,47 +302,95 @@ const AccountMarket = () => {
           </button>
         </div>
       )}
-
       {selectedAccount && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[999]">
-          <div className="bg-white rounded-lg shadow-lg md:max-w-md w-full text-center relative">
+          <div className="bg-Total rounded-lg shadow-lg md:max-w-3xl w-full text-center relative">
             <button
               className="absolute top-1 right-1 text-xl bg-white text-red-700 border-2 border-white rounded-full w-8 h-8 flex justify-center"
               onClick={closePopup}
             >
               ✖
             </button>
-
             {paymentStep === "confirmation" ? (
               <>
-                <h2 className="text-lg text-start font-bold text-Total px-6 pt-6">
+                <h2 className="text-lg text-start font-bold text-white px-6 pt-6">
                   Mukiriya {userName?.companyName},
                 </h2>
-                <p className="mt-0 text-start text-Total px-6">
-                  Ugiye gusaba kugura konte{" "}
+                <p className="mt-0 text-start text-white px-6">
+                  Ugiye kugura konte{" "}
                   <span className="font-bold">{selectedAccount.title}</span>{" "}
                   izarangira muminsi{" "}
                   <span className="font-bold">{selectedAccount.validIn}</span>{" "}
-                  uribwishyure ayamafaranga
+                  ishyura ayamafaranga
                   <span className="font-bold pl-1">
-                    ({selectedAccount.fees} RWF.)
+                    ({selectedAccount.fees} RWF)
                   </span>{" "}
+                  maze uhabwe code yo gufungura ibizamini.
                   <span>Ufite ikibazo wahamagara iyi nemero:</span>
-                  <span className="text-yellow-600 pl-2">250 783 905 790</span>
+                  <span className="text-yellow-600 pl-2">0783905790</span>
                 </p>
                 <div className="flex justify-center md:p-6 p-2 md:mt-12 mt-6 mb-2 md:gap-20 gap-6">
                   <button
-                    className={`bg-green-500  w-full text-white p-2 rounded ${
+                    className={`bg-yellow-500 text-white px-2 py-1 rounded ${
                       isPayingLater ? "opacity-50 cursor-not-allowed" : ""
                     }`}
                     onClick={handlePayLaterClick}
                     disabled={isPayingLater}
                   >
-                    {isPayingLater ? <LoadingSpinner /> : "Saba kugura"}
+                    {isPayingLater ? <LoadingSpinner /> : "Ishyura Mukanya"}
+                  </button>
+                  <button
+                    className={`bg-green-500 text-white px-2 py-1 rounded ${
+                      isProcessingPayment ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                    onClick={handleProceedToPayment}
+                    disabled={isProcessingPayment}
+                  >
+                    {isProcessingPayment ? (
+                      <LoadingSpinner />
+                    ) : (
+                      "Ishyura Nonaha"
+                    )}
                   </button>
                 </div>
               </>
-            ) : null}
+            ) : (
+              <div className="flex flex-col pb-14">
+                <h2 className="text-lg text-start font-bold text-white px-6 pt-6">
+                  Mukiriya {userName?.companyName},
+                </h2>
+                <p className="mt-0 text-start text-white px-6">
+                  Ugiye kugura konte {selectedAccount.title} izarangira muminsi{" "}
+                  {selectedAccount.validIn} ishyura ayamafaranga (
+                  {selectedAccount.fees} RWF) maze uhabwe kode yo gufungura
+                  ibizamini byose. Ufite ikibazo hamagara kuri iyi nimero:
+                  <span className="text-yellow-600 font-semibold pl-2">
+                    0783905790
+                  </span>
+                </p>
+                <div className="flex justify-center md:gap-24 gap-10 pt-10">
+                  <button
+                    className="bg-red-500 text-white px-2 py-1 rounded"
+                    onClick={closePopup}
+                  >
+                    Hagarika kwishyura
+                  </button>
+                  <button
+                    className={`bg-green-500 text-white px-2 py-1 rounded ${
+                      isProcessingPayment ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                    onClick={makePayment}
+                    disabled={isProcessingPayment}
+                  >
+                    {isProcessingPayment ? (
+                      <LoadingSpinner />
+                    ) : (
+                      "Soza Kwishyura"
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
