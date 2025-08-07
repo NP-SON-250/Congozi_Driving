@@ -212,18 +212,20 @@ const LiveExam = () => {
       );
       console.log("Deleted access code:", examCode);
 
-      try {
-        const deleted = await axios.delete(
-          `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log("Deleted data:", deleted);
-      } catch (deleteError) {
-        console.error("Error deleting purchase record:", deleteError);
+      if (res.data) {
+        try {
+          const deleted = await axios.delete(
+            `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          console.log("Deleted data:", deleted);
+        } catch (deleteError) {
+          console.error("Error deleting purchase record:", deleteError);
+        }
       }
 
       if (!hasShownSuccess.current) {
