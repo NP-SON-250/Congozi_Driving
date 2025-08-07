@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  FaArrowAltCircleLeft,
-  FaArrowAltCircleRight,
-  FaEdit,
-  FaCartPlus,
-} from "react-icons/fa";
+import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import Mtn from "../../../assets/MTN.jpg";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import axios from "axios";
@@ -75,7 +70,7 @@ const StudentExams = () => {
       const fees = [
         ...new Set(exam.data.map((item) => item.itemId?.fees)),
       ].filter(Boolean);
-      setUniqueFees(fees.sort((a, b) => a - b)); // Sort fees numerically
+      setUniqueFees(fees.sort((a, b) => a - b));
     }
   }, [exam.data]);
 
@@ -109,7 +104,7 @@ const StudentExams = () => {
     indexOfFirstExam + examsPerPage
   );
 
-  const makePayment = (invoiceNumber, exam) => {
+  const makePayment = (exam) => {
     setSelectedExam(exam);
     setPaymentStep("payment");
   };
@@ -318,7 +313,7 @@ const StudentExams = () => {
                         <button
                           title="Pay"
                           onClick={() => {
-                            makePayment(exam.invoiceNumber, exam);
+                            makePayment(exam);
                           }}
                           className="text-blue-500 underline py-1 px-3 flex md:tex-md font-bold hover:text-yellow-700 text-xs items-center gap-2"
                         >

@@ -42,6 +42,7 @@ import SchoolLiveExam from "./Page/Dashboard/schools/SchoolLiveExam";
 import SchoolLiveLearn from "./Page/Dashboard/schools/SchoolLiveLearn";
 import LiveLearn from "./Page/Dashboard/Students/LiveLearn";
 import StudentResults from "./Page/Dashboard/Students/StudentResults";
+import SchoolResults from "./Page/Dashboard/schools/SchoolResults";
 const App = () => {
   // onContextMenu={(e) => e.preventDefault()} select-none
   const { userRole, loading } = useUserContext();
@@ -138,6 +139,7 @@ const App = () => {
                 />
                 <Route path="/schoolsliveExam" element={<SchoolLiveExam />} />
                 <Route path="/schoolslivekwiga" element={<SchoolLiveLearn />} />
+                <Route path="/schools/results" element={<SchoolResults />} />
               </Route>
             </Route>
           )}

@@ -196,7 +196,10 @@ const SchoolLiveExam = () => {
     <div className="flex flex-col bg-white md:p-2 gap-2">
       {showNoQuestionsMessage ? (
         <div className="text-center mt-10 text-Total font-semibold">
-          This exam has no questions. Please contact your administrator.
+          <p>Ikikizami ntabibazo gifite. Hamagara Admin</p>
+          <p>
+            kuri: <span className="text-orange-500">0783905790</span>
+          </p>
         </div>
       ) : (
         <>

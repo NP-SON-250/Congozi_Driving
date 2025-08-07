@@ -25,7 +25,7 @@ const UsersLay = ({ role }) => {
     "/schools/home": "Konte y'Ikigo",
     "/schools/account/market": "Isoko rya Konte",
     "/schools/online": "gukora Ibizamini",
-    "/schools/accounts": "Konte Nishyuye",
+    "/schools/accounts": "Konte Naguze",
     "/schools/account": "Umwirondoro wa Konte",
   };
   const getCurrentYear = () => new Date().getFullYear();

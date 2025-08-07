@@ -86,7 +86,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "Konte Nishyuye",
+        name: "Konte Naguze",
         path: "/schools/accounts",
         iconR: <IoIosMenu />,
         iconL: <IoIosArrowForward />,

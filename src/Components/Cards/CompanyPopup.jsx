@@ -6,7 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 const CompanyPopup = ({ onClose }) => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const navkwigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     if (!identifier || !password) {
@@ -31,15 +31,15 @@ const CompanyPopup = ({ onClose }) => {
       toast.success(message || "Kwinjira byakunze");
       switch (data.role) {
         case "student":
-          navkwigate("/students/home");
+          navigate("/students/home");
           window.location.reload();
           break;
         case "admin":
-          navkwigate("/admins/home");
+          navigate("/admins/home");
           window.location.reload();
           break;
         case "school":
-          navkwigate("/schools/home");
+          navigate("/schools/home");
           window.location.reload();
           break;
         default:

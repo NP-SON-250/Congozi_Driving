@@ -7,6 +7,7 @@ import { LuCircleArrowLeft } from "react-icons/lu";
 import { FiArrowRightCircle } from "react-icons/fi";
 import DescriptionCard from "../../../Components/Cards/DescriptionCard";
 import ExamTimer from "../../../Components/ExamTimer";
+import LoadingSpinner from "../../../Components/LoadingSpinner ";
 
 const LiveLearn = () => {
   const [examCode, setExamCode] = useState("");
@@ -18,7 +19,7 @@ const LiveLearn = () => {
   const [showNoQuestionsMessage, setShowNoQuestionsMessage] = useState(false);
   const [paymentPopup, setPaymentPopup] = useState(false);
   const [interactedQuestions, setInteractedQuestions] = useState([]);
-
+  const [isLoadingExam, setIsLoadingExam] = useState(false);
   const location = useLocation();
   const navkwigate = useNavigate();
 
@@ -113,9 +114,32 @@ const LiveLearn = () => {
   }, [examCode, paidExam, token]);
 
   const handleShowPaymentPopup = async () => {
-    await fetchgukoraExam();
-    if (gukoraExam) {
-      setPaymentPopup(true);
+    setIsLoadingExam(true);
+    try {
+      if (!paidExam) return;
+
+      // Get the current exam type
+      const currentType = examToDo?.type;
+
+      // Fetch exam with same number but different type
+      const res = await axios.get(
+        `https://congozi-backend.onrender.com/api/v1/exams/kora/${paidExam.number}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      const alternateExam = res.data.data;
+
+      if (alternateExam) {
+        setgukoraExam(alternateExam);
+        setPaymentPopup(true);
+      } else {
+        alert("Ntabikizamini bishya bihari muri iyi mibare");
+      }
+    } catch (error) {
+      console.error("Error fetching alternate exam:", error);
+      alert("Error fetching alternate exam. Please try again.");
+    } finally {
+      setIsLoadingExam(false);
     }
   };
 
@@ -272,9 +296,19 @@ const LiveLearn = () => {
                   <button
                     onClick={handleShowPaymentPopup}
                     className="bg-blue-900 text-white px-4 py-1 rounded flex md:ml-0 ml-12 items-center gap-2"
+                    disabled={isLoadingExam}
                   >
-                    <GrSend />
-                    Isuzume Muri ikikizamini
+                    {isLoadingExam ? (
+                      <>
+                        <LoadingSpinner />
+                        <span className="ml-2">Iyubaka...</span>
+                      </>
+                    ) : (
+                      <>
+                        <GrSend />
+                        Isuzume Muri ikikizamini
+                      </>
+                    )}
                   </button>
                   <button
                     onClick={() =>

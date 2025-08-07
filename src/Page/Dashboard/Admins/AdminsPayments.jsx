@@ -22,26 +22,35 @@ const AdminsPayments = () => {
         }
       );
       const data = res.data;
-      const mapped = data.data.map((item) => ({
-        id: item._id,
-        payer: item.paidBy
-          ? `${item.paidBy.fName} ${item.paidBy.lName}`
-          : "Anonymous",
-        amount: `RWF ${item.amount}`,
-        startedOn: item.startDate
-          ? new Date(item.startDate).toISOString().split("T")[0]
-          : "Since Approved",
-        expiresOn: item.endDate
-          ? new Date(item.endDate).toISOString().split("T")[0]
-          : "No expires",
-        purchasedItem: item.itemType,
-        status:
-          item.status === "complete"
-            ? "Completed"
-            : item.status === "waitingConfirmation"
-            ? "Waiting"
-            : "Pending",
-      }));
+      const mapped = data.data.map((item) => {
+        let payerName = "Unknown";
+        if (item.paidBy) {
+          if (item.paidBy.fName && item.paidBy.lName) {
+            payerName = `${item.paidBy.fName} ${item.paidBy.lName}`;
+          } else if (item.paidBy.companyName) {
+            payerName = item.paidBy.companyName;
+          }
+        }
+
+        return {
+          id: item._id,
+          payer: payerName,
+          amount: `RWF ${item.amount}`,
+          startedOn: item.startDate
+            ? new Date(item.startDate).toISOString().split("T")[0]
+            : "Since Approved",
+          expiresOn: item.endDate
+            ? new Date(item.endDate).toISOString().split("T")[0]
+            : "No expires",
+          purchasedItem: item.itemType,
+          status:
+            item.status === "complete"
+              ? "Completed"
+              : item.status === "waitingConfirmation"
+              ? "Waiting"
+              : "Pending",
+        };
+      });
       setPayments(mapped);
     } catch (err) {
       console.error("Failed to fetch payments:", err);

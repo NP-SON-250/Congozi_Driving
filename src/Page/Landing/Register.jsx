@@ -133,7 +133,7 @@ const Register = () => {
     try {
       setIsLoading(true);
       const res = await axios.post(
-        "http://localhost:4100/api/v1/users",
+        "https://congozi-backend.onrender.com/api/v1/users",
         data,
         {
           headers: {

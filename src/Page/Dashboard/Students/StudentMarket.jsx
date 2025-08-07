@@ -4,7 +4,6 @@ import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import { BsCart } from "react-icons/bs";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
 import LoadingSpinner from "../../../Components/LoadingSpinner ";
 import { useNavigate } from "react-router-dom";
 const StudentMarket = () => {
@@ -16,8 +15,6 @@ const StudentMarket = () => {
   const [selectedExam, setSelectedExam] = useState(null);
   const [paymentStep, setPaymentStep] = useState("confirmation");
 
-  const [paid, setPaid] = useState();
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [isPayingLater, setIsPayingLater] = useState(false);
   const [exam, setExam] = useState({ data: [] });
   const [userName, setUserName] = useState("");
@@ -239,7 +236,6 @@ const StudentMarket = () => {
           </div>
         </div>
       )}
-      <ToastContainer />
     </div>
   );
 };
