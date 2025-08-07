@@ -10,6 +10,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../Components/LoadingSpinner ";
+
 const Register = () => {
   const [formData, setFormData] = useState({
     fName: "",
@@ -28,7 +29,8 @@ const Register = () => {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const navkwigate = useNavigate();
+  const navigate = useNavigate();
+
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
 
@@ -39,6 +41,10 @@ const Register = () => {
         const previewURL = URL.createObjectURL(file);
         setSelectedImage(previewURL);
       }
+    } else if (name === "phone") {
+      // Format phone number automatically
+      const formattedPhone = value.replace(/\D/g, "").replace(/^0/, "");
+      setFormData((prev) => ({ ...prev, [name]: formattedPhone }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
@@ -47,21 +53,44 @@ const Register = () => {
   const validateInputs = () => {
     let newErrors = {};
 
-    if (!/^(072|073|078)\d{7}$/.test(formData.phone)) {
-      newErrors.phone = <AiOutlineCloseCircle size={24} />;
+    // Required fields validation
+    if (!formData.fName.trim()) {
+      newErrors.fName = "Izina rya mbere rirakenewe";
     }
 
-    // Only validate email if it's provided and invalid
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = <AiOutlineCloseCircle size={24} />;
+    if (!formData.lName.trim()) {
+      newErrors.lName = "Izina rya kabiri rirakenewe";
+    }
+
+    if (!formData.address.trim()) {
+      newErrors.address = "Aho uherereye birakenewe";
+    }
+
+    // Phone validation (required and format)
+    if (!formData.phone) {
+      newErrors.phone = "Numero ya telefone irakenewe";
+    } else if (!/^(72|73|78|79)\d{7}$/.test(formData.phone)) {
+      newErrors.phone = "Numero ya telefone ntabwo ari yo";
+    }
+
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = "Ijambobanga rirakenewe";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Ijambobanga rigomba kuba nibura imibare 6";
     }
 
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = <AiOutlineCloseCircle size={24} />;
+      newErrors.confirmPassword = "Ijambobanga ntirihuye";
+    }
+
+    // Email validation (only if provided)
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Email ntabwo ari yo";
     }
 
     if (!agreedToTerms) {
-      newErrors.terms = "Emera amategeko n'amabwiriza.";
+      newErrors.terms = "Ugomba kwemera amategeko n'amabwiriza";
     }
 
     setErrors(newErrors);
@@ -69,10 +98,26 @@ const Register = () => {
   };
 
   const notifySuccess = (msg) =>
-    toast.success(msg, { position: "top-center", autoClose: 2000 });
+    toast.success(msg, {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
 
   const notifyError = (msg) =>
-    toast.error(msg, { position: "top-center", autoClose: 2000 });
+    toast.error(msg, {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -80,21 +125,48 @@ const Register = () => {
 
     const data = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
-      if (key !== "confirmPassword") data.append(key, value);
+      if (key !== "confirmPassword" && value !== "") {
+        data.append(key, value);
+      }
     });
 
     try {
       setIsLoading(true);
       const res = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/users",
-        data
+        "http://localhost:4100/api/v1/users",
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
-      notifySuccess(res.data.message || "Kwiyandikisha byagenze neza!");
-      navkwigate("/kwinjira");
+
+      notifySuccess(res.data.message);
+
+      // Reset form and redirect after delay
+      setTimeout(() => {
+        setFormData({
+          fName: "",
+          lName: "",
+          address: "",
+          phone: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          idCard: "",
+          profile: null,
+        });
+        setSelectedImage(null);
+        setAgreedToTerms(false);
+        navigate("/kwinjira");
+      }, 1500);
     } catch (error) {
-      const msg =
-        error.response?.data?.message || "Habayeho ikosa mu gihe cyo kohereza.";
-      notifyError(msg);
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Habaye ikibazo mugukora konti";
+      notifyError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -103,8 +175,9 @@ const Register = () => {
   const handleFileTrigger = () => {
     document.getElementById("file-upload").click();
   };
+
   return (
-    <div className=" pt-16">
+    <div className="pt-16">
       <div className="bg-black/20 flex justify-center items-center p-1 rounded-sm">
         <h1 className="md:text-xl text-sm text-Total font-semibold font-Roboto">
           Fungura konti kuri Congozi Expert
@@ -124,7 +197,7 @@ const Register = () => {
           </div>
 
           <form
-            className="w-full pb-5 flex flex-col gap-4"
+            className="w-full py-10 flex flex-col gap-4"
             onSubmit={handleSubmit}
           >
             <div className="flex md:flex-row flex-col gap-1 pt-1">
@@ -133,12 +206,16 @@ const Register = () => {
                 name="fName"
                 value={formData.fName}
                 onChange={handleInputChange}
+                required
+                error={errors.fName}
               />
               <HalfInput
                 label="Izina rya kabiri"
                 name="lName"
                 value={formData.lName}
                 onChange={handleInputChange}
+                required
+                error={errors.lName}
               />
             </div>
             <div className="flex md:flex-row flex-col gap-1">
@@ -147,20 +224,19 @@ const Register = () => {
                 name="address"
                 value={formData.address}
                 onChange={handleInputChange}
+                required
+                error={errors.address}
               />
               <HalfInput
                 label="Telefone"
                 name="phone"
                 value={formData.phone}
                 onChange={handleInputChange}
+                placeholder="078xxxxxx cg 072xxxxxx"
+                required
+                error={errors.phone}
               />
             </div>
-            <p
-              className="absolute md:top-[195px] top-[594.5px] md:-right-[8px] -right-3 cursor-pointer text-red-500 px-4"
-              title="Andika nimero ya telefone muri uburyo: 07..."
-            >
-              {errors.phone && <ErrorMessage message={errors.phone} />}
-            </p>
             <div className="flex md:flex-row flex-col gap-1">
               <HalfInput
                 label="Ijambobanga"
@@ -168,6 +244,8 @@ const Register = () => {
                 type="password"
                 value={formData.password}
                 onChange={handleInputChange}
+                required
+                error={errors.password}
               />
               <HalfInput
                 label="Risubiremo"
@@ -175,38 +253,29 @@ const Register = () => {
                 type="password"
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
+                required
+                error={errors.confirmPassword}
               />
             </div>
-            <p
-              className="text-red-500 absolute md:top-[238.5px] top-[742.5px] md:-right-[8px] -right-3  md:text-base text-2xl cursor-pointer px-4"
-              title="Ijambobanga ntirihuye"
-            >
-              {errors.confirmPassword && (
-                <ErrorMessage message={errors.confirmPassword} />
-              )}
-            </p>
-            <FullInput
-              label="Irangamuntu"
-              name="idCard"
-              value={formData.idCard}
-              onChange={handleInputChange}
-            />
-            <FullInput
-              label="Email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              type="text"
-            />
-            <p
-              className="absolute md:top-[326px]  top-[919px] md:-right-[12px] -right-3 md:text-base text-2xl cursor-pointer text-red-500 px-4"
-              title="Emeri igomba kuba yanditse irimo @, akadomo (.com / .net nibindi)"
-            >
-              {errors.email && <ErrorMessage message={errors.email} />}
-            </p>
+            <div className="flex md:flex-row flex-col gap-1">
+              <HalfInput
+                label="Irangamuntu (Si Itegeko)"
+                name="idCard"
+                value={formData.idCard}
+                onChange={handleInputChange}
+              />
+              <HalfInput
+                label="Email (Si Itegeko)"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                type="email"
+                error={errors.email}
+              />
+            </div>
             <div>
               <label className="text-gray-700 font-medium px-4 md:w-[16%] w-full">
-                Ifoto
+                Ifoto (Si Itegeko)
               </label>
               <div
                 className="flex cursor-pointer lg:w-32 w-32 px-4 border-desired"
@@ -243,25 +312,21 @@ const Register = () => {
                   onChange={(e) => setAgreedToTerms(e.target.checked)}
                   className="md:w-3 md:h-3 w-4 h-4 rounded-full cursor-pointer"
                 />
-
                 <label
                   htmlFor="terms"
                   className="text-gray-700 font-medium cursor-pointer"
                 >
                   Amategeko n'ambwiriza
                 </label>
-              </div>
-              <p className="absolute md:top-[413px] md:right-[530px] top-[1030px] text-red-500 text-sm px-4">
                 {errors.terms && <ErrorMessage message={errors.terms} />}
-              </p>
+              </div>
               <button
                 type="submit"
-                className="text-white flex justify-center items-center gap-2 px-4 py-1 rounded-md bg-Total hover:bg-blue-800"
+                disabled={isLoading}
+                className="text-white flex justify-center items-center gap-2 px-4 py-1 rounded-md bg-Total hover:bg-blue-800 disabled:bg-gray-400"
               >
                 {isLoading ? (
-                  <>
-                    <LoadingSpinner size={5} strokeWidth={2} />
-                  </>
+                  <LoadingSpinner size={5} strokeWidth={2} />
                 ) : (
                   <>
                     <ImUserPlus className="text-white" />
@@ -277,7 +342,9 @@ const Register = () => {
     </div>
   );
 };
+
 const ErrorMessage = ({ message }) => (
-  <p className="text-red-500 text-sm px-4 -mt-2">{message}</p>
+  <span className="text-red-500 text-sm ml-2">{message}</span>
 );
+
 export default Register;

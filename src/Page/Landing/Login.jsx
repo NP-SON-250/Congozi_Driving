@@ -89,14 +89,14 @@ const Login = () => {
         </div>
 
         <div className="flex flex-col items-center gap-3 md:py-0 py-6 md:border-l border-blue-700">
-          <div className="flex justify-center items-center gap-2 w-full bg-blue-700 md:rounded-l-none rounded-md py-3">
+          <div className="flex justify-center items-center gap-2 w-full bg-blue-700 md:rounded-l-none rounded-md py-1">
             <IoIosLogIn className="md:text-2xl text-3xl text-white" />
             <p className="text-white text-xl font-semibold">
               Kwinjira muri konti
             </p>
           </div>
 
-          <p className="text-lg md:px-20 p-2 text-center">
+          <p className="text-lg md:px-20 md:py-0 p-2 text-center">
             Kugirango ubone amakuru yawe n'ibizamini ndetse na serivisi zitangwa
             na Congozi Expert. Ugomba kubanza kwinjira
           </p>
