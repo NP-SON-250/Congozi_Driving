@@ -184,7 +184,7 @@ const LiveExam = () => {
 
       const token = localStorage.getItem("token");
       if (!token) {
-        errors("Ntacyo wagukora udafite konti, banza winjire.");
+        errors("Ntacyo gukora udafite, banza winjire.");
         setExamFinished(true);
         navkwigate("/kwinjira");
         return;
@@ -210,6 +210,7 @@ const LiveExam = () => {
           },
         }
       );
+      console.log("Deleted access code:", examCode);
 
       try {
         const deleted = await axios.delete(
@@ -220,6 +221,7 @@ const LiveExam = () => {
             },
           }
         );
+        console.log("Deleted data:", deleted);
       } catch (deleteError) {
         console.error("Error deleting purchase record:", deleteError);
       }
