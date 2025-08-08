@@ -46,12 +46,14 @@ const AddQuestionPopup = ({
         data.append("image", formData.image);
       }
 
+      const token = localStorage.getItem("token");
       await axios.post(
         `https://congozi-backend.onrender.com/api/v1/questions/${selectedExam._id}`,
         data,
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
         }
       );

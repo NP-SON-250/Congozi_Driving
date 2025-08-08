@@ -64,6 +64,7 @@ const AdminExams = () => {
         "https://congozi-backend.onrender.com/api/v1/exams",
         {
           headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         }

@@ -21,7 +21,7 @@ const LiveLearn = () => {
   const [interactedQuestions, setInteractedQuestions] = useState([]);
   const [isLoadingExam, setIsLoadingExam] = useState(false);
   const location = useLocation();
-  const navkwigate = useNavigate();
+  const navigate = useNavigate();
 
   const token = useMemo(() => {
     if (typeof window !== "undefined") {
@@ -151,6 +151,7 @@ const LiveLearn = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setPaymentPopup(false);
+      navigate("/students/exams");
     } catch (error) {
       if (error.response?.status === 404) {
         alert("You have already purchased this exam.");
@@ -179,7 +180,7 @@ const LiveLearn = () => {
         await axios.delete(
           `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`
         );
-        navkwigate("/students/waitingexams", {
+        navigate("/students/waitingexams", {
           replace: true,
           state: { reset: true },
         });
@@ -188,7 +189,7 @@ const LiveLearn = () => {
       console.error("Error deleting exam purchase on timeout:", error);
     }
     localStorage.removeItem(`selectedAnswers_${examCode}`);
-  }, [examCode, navkwigate]);
+  }, [examCode, navigate]);
 
   return (
     <div className="flex flex-col bg-white md:p-2 gap-2">

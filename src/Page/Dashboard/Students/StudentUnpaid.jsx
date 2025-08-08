@@ -5,6 +5,7 @@ import { FaHandHoldingDollar } from "react-icons/fa6";
 import Mtn from "../../../assets/MTN.jpg";
 import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import axios from "axios";
+import LoadingSpinner from "../../../Components/LoadingSpinner ";
 
 const StudentUnpaid = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -19,6 +20,9 @@ const StudentUnpaid = () => {
   const [phoneUsed, setPhoneUsed] = useState("");
   const [ownerName, setOwnerName] = useState("");
   const [message, setMessage] = useState({ text: "", type: "" });
+  const [uniqueTypes, setUniqueTypes] = useState([]);
+  const [uniqueFees, setUniqueFees] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Get user info from localStorage
   useEffect(() => {
@@ -55,6 +59,21 @@ const StudentUnpaid = () => {
     fetchData();
   }, []);
 
+  // Update unique filters when exam data changes
+  useEffect(() => {
+    if (exam.data && exam.data.length > 0) {
+      const types = [
+        ...new Set(exam.data.map((item) => item.itemId?.type)),
+      ].filter(Boolean);
+      setUniqueTypes(types);
+
+      const fees = [
+        ...new Set(exam.data.map((item) => item.itemId?.fees)),
+      ].filter(Boolean);
+      setUniqueFees(fees.sort((a, b) => a - b));
+    }
+  }, [exam.data]);
+
   // Adjust items per page on screen resize
   useEffect(() => {
     const updateExamsPerPage = () => {
@@ -65,6 +84,29 @@ const StudentUnpaid = () => {
     return () => window.removeEventListener("resize", updateExamsPerPage);
   }, []);
 
+  // Validate phone number (MTN Rwanda)
+  const validatePhone = (phone) => {
+    const regex = /^(078|079)\d{7}$/;
+    return regex.test(phone);
+  };
+
+  // Validate name (allow first name only, but validate both if space included)
+  const validateName = (name) => {
+    const nameParts = name.trim().split(/\s+/);
+
+    // Allow single name (first name only)
+    if (nameParts.length === 1) {
+      return /^[a-zA-Z]{2,}$/.test(nameParts[0]);
+    }
+
+    // If multiple names provided, validate all parts
+    return (
+      nameParts.length >= 2 &&
+      nameParts.every((part) => /^[a-zA-Z]{2,}$/.test(part))
+    );
+  };
+
+  // Filter exams based on search and filters
   const filteredExams = exam.data.filter(
     (item) =>
       (type === "" ||
@@ -76,6 +118,7 @@ const StudentUnpaid = () => {
         item.itemId.number?.includes(searchTerm))
   );
 
+  // Pagination logic
   const totalPages = Math.ceil(filteredExams.length / examsPerPage);
   const currentExams = filteredExams.slice(
     currentPage * examsPerPage,
@@ -95,6 +138,7 @@ const StudentUnpaid = () => {
   };
 
   const handleNotify = async () => {
+    // Validate inputs
     if (!phoneUsed || !ownerName) {
       setMessage({
         text: "Uzuza nimero ya telephone n'amazina yo ibaruyeho",
@@ -104,18 +148,40 @@ const StudentUnpaid = () => {
       return;
     }
 
+    if (!validatePhone(phoneUsed)) {
+      setMessage({
+        text: "Iyi telephone ntikorana na MoMo Pay. Koresha 078 cyangwa 079.",
+        type: "error",
+      });
+      setTimeout(() => setMessage({ text: "", type: "" }), 9000);
+      return;
+    }
+
+    if (!validateName(ownerName)) {
+      setMessage({
+        text: ownerName.includes(" ")
+          ? `Niba Iyi ntelephone ${phoneUsed} ibaruye kumazina abiri yandike neza`
+          : "Andika izina ryanyayo",
+        type: "error",
+      });
+      setTimeout(() => setMessage({ text: "", type: "" }), 9000);
+      return;
+    }
+
+    setIsLoading(true);
+
     try {
       const token = localStorage.getItem("token");
       const purchasedDataId = selectedExam._id;
       const paidItem = selectedExam.itemId;
 
-      const notificationMessage = `Dear Admin, Turakumenyesha ko ${userName} yishyuye ikizamini cyitwa ${paidItem.title} cy'ubwoko bwo ${paidItem.type} amafaranga ${paidItem.fees} Rwf akoresheje telephone ${phoneUsed} ibaruye kuri ${ownerName}. Reba ko wayabonye kuri telephone nimero: 250 783 905 790 maze umuhe uburenganzira kuri iyi purchase Id: ${purchasedDataId}. Murakoze!!!!!`;
-      const noteTitle = `${userName} requests for approval`;
-      const response = await axios.post(
+      const notificationMessage = `Dear Admin, ${userName} yishyuye ikizamini cya ${paidItem.title} (${paidItem.type}) amafaranga ${paidItem.fees} Rwf akoresheje telephone ${phoneUsed} (${ownerName}).`;
+
+      await axios.post(
         "https://congozi-backend.onrender.com/api/v1/notification",
         {
           message: notificationMessage,
-          noteTitle: noteTitle,
+          noteTitle: `${userName} requests for approval`,
           purchasedItem: purchasedDataId,
           ownerName: userName,
         },
@@ -127,10 +193,8 @@ const StudentUnpaid = () => {
         }
       );
 
-      const purchaseId = selectedExam._id;
-
       await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${purchaseId}`,
+        `https://congozi-backend.onrender.com/api/v1/purchases/${purchasedDataId}`,
         { status: "waitingConfirmation" },
         {
           headers: {
@@ -138,23 +202,22 @@ const StudentUnpaid = () => {
           },
         }
       );
+
       setMessage({
-        text: response.data.message || "Kwishyura byakunze neza!",
+        text: "Kwishyura byakunze neza! Tegereza iminota mike kugirango ukorwe ikizamini.",
         type: "success",
       });
-      setTimeout(() => setMessage({ text: "", type: "" }), 9000);
-
-      closePopup();
-      fetchData();
     } catch (error) {
       setMessage({
         text: "Kwishyura byanze. Wongera gerageza.",
         type: "error",
       });
-      setTimeout(() => setMessage({ text: "", type: "" }), 9000);
       console.error("Payment error:", error);
+    } finally {
+      setIsLoading(false);
       closePopup();
       fetchData();
+      setTimeout(() => setMessage({ text: "", type: "" }), 9000);
     }
   };
 
@@ -164,20 +227,30 @@ const StudentUnpaid = () => {
 
       {/* Filters */}
       <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
-        <input
-          type="text"
-          placeholder="--ubwoko bw'ikizami--"
+        <select
+          className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer"
           value={type}
           onChange={(e) => setType(e.target.value)}
+        >
+          <option value="">----Ubwoko----</option>
+          {uniqueTypes.map((type, index) => (
+            <option key={index} value={type}>
+              {type}
+            </option>
+          ))}
+        </select>
+        <select
           className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer"
-        />
-        <input
-          type="text"
-          placeholder="---Shaka n'igiciro---"
           value={fees}
           onChange={(e) => setFees(e.target.value)}
-          className="border-2 border-blue-500 p-2 rounded-xl cursor-pointer"
-        />
+        >
+          <option value="">----Igiciro----</option>
+          {uniqueFees.map((fee, index) => (
+            <option key={index} value={fee}>
+              {fee} Rwf
+            </option>
+          ))}
+        </select>
         <div className="w-full px-3 md:flex justify-center items-center hidden">
           <input
             type="search"
@@ -198,44 +271,19 @@ const StudentUnpaid = () => {
           className="border-2 border-blue-500 p-2 rounded-xl w-full"
         />
       </div>
+
       {message.text && (
         <div
-          className={`flex justify-center z-50 p-4 rounded-md shadow-lg ${
-            message.type === "success"
-              ? "bg-green-100 text-green-800 border border-green-300"
-              : "bg-red-100 text-red-800 border border-red-300"
+          className={`p-2 rounded-md w-full ${
+            message.type === "error"
+              ? "bg-red-100 text-red-700"
+              : "bg-green-100 text-green-700"
           }`}
         >
-          <div className="flex items-center">
-            {message.type === "success" ? (
-              <svg
-                className="w-5 h-5 mr-2"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            ) : (
-              <svg
-                className="w-5 h-5 mr-2"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            )}
-            <span>{message.text}</span>
-          </div>
+          {message.text}
         </div>
       )}
+
       {/* Exam Cards */}
       {filteredExams.length === 0 ? (
         <p className="text-center py-4 text-red-500">
@@ -307,90 +355,106 @@ const StudentUnpaid = () => {
             >
               ✖
             </button>
-            {paymentStep === "confirmation" ? (
-              <></>
-            ) : (
-              <div className="flex md:flex-row flex-col md:gap-6 gap-1">
-                <div className="text-left md:w-96">
-                  <ul className="md:space-y-6 space-y-2 bg-gray-200 h-full p-4">
-                    <li className="text-blue-900 font-bold">
-                      <input type="radio" name="payment" checked readOnly /> MTN
-                      Mobile Money
-                    </li>
-                  </ul>
-                </div>
-                <div className="flex flex-col justify-center px-3 py-2">
-                  <p className="text-start pr-4">
-                    Kanda ino mibare kuri telefone yawe ukoreshe SIM kadi ya MTN
-                    maze wishyure kuri:{" "}
-                    <span className="text-md font-semibold text-yellow-700">
-                      EXPERT TECHNICAL UNITY Limited.
-                    </span>
-                    <span className="ml-2">
-                      Maze uhabwe kode ifungura ikizamini cyawe.
-                    </span>
-                  </p>
-                  <p className="flex justify-center md:py-6 py-4 font-bold">
-                    <img src={Mtn} alt="" className="w-10 h-6 pr-3" />
-                    *182*8*1*
-                    <span className="bg-green-400/20 border border-green-600">
-                      072255
-                    </span>
-                    *{selectedExam.itemId.fees}#
-                  </p>
-                  <p className="text-md text-Total pt-4 font-semibold">
-                    Tanga amakuru kunyemezabwishyu yawe
-                  </p>
-                  <p className="pb-4">
-                    Ukeneye ubufasha hamagara:{" "}
-                    <span className="text-md font-bold text-yellow-700">
-                      0783905790
-                    </span>
-                  </p>
-                  <div className="w-full text-start">
-                    <label htmlFor="phone">Nimero wakoresheje wishyura</label>
-                    <input
-                      type="text"
-                      placeholder="Urugero: 0786731449"
-                      className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
-                      value={phoneUsed}
-                      onChange={(e) => setPhoneUsed(e.target.value)}
-                      required
-                    />
-                    <label htmlFor="phone">Amazina ibaruyeho</label>
-                    <input
-                      type="text"
-                      placeholder="Urugero: Samuel NKOTANYI"
-                      className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
-                      value={ownerName}
-                      onChange={(e) => setOwnerName(e.target.value)}
-                      required
-                    />
-                    <button
-                      className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full"
-                      onClick={handleNotify}
-                    >
-                      Menyesha Ko Wishyuye
-                    </button>
-                    <p className="text-start py-2 font-medium">
-                      Nyuma yo kumenyekanisha ko wishyuye{" "}
-                      <span className="text-Total text-md font-semibold">
-                        muminota 5
-                      </span>{" "}
-                      urahabwa ubutumwa{" "}
-                      <span className="text-Total text-md font-semibold">
-                        kuri sisiteme hejuru
-                      </span>{" "}
-                      bukwemerera{" "}
-                      <span className="text-Total text-md font-semibold">
-                        {selectedExam.itemId.type}{" "}
-                      </span>{" "}
-                      ikizamini
+            <div className="flex md:flex-row flex-col md:gap-6 gap-1">
+              <div className="text-left md:w-96">
+                <ul className="md:space-y-6 space-y-2 bg-gray-200 h-full p-4">
+                  <li className="text-blue-900 font-bold">
+                    <input type="radio" name="payment" checked readOnly /> MTN
+                    Mobile Money
+                  </li>
+                </ul>
+              </div>
+              <div className="flex flex-col justify-center px-3 py-2">
+                <p className="text-start pr-4">
+                  Kanda ino mibare kuri telefone yawe ukoreshe SIM kadi ya MTN
+                  maze wishyure kuri:{" "}
+                  <span className="text-md font-semibold text-yellow-700">
+                    EXPERT TECHNICAL UNITY Limited.
+                  </span>
+                  <span className="ml-2">
+                    Maze uhabwe kode ifungura ikizamini cyawe.
+                  </span>
+                </p>
+                <p className="flex justify-center md:py-6 py-4 font-bold">
+                  <img src={Mtn} alt="" className="w-10 h-6 pr-3" />
+                  *182*8*1*
+                  <span className="bg-green-400/20 border border-green-600">
+                    072255
+                  </span>
+                  *{selectedExam.itemId.fees}#
+                </p>
+                <p className="text-md text-Total pt-4 font-semibold">
+                  Tanga amakuru kunyemezabwishyu yawe
+                </p>
+                <div className="w-full text-start">
+                  <label>Nimero wakoresheje wishyura</label>
+                  <input
+                    type="text"
+                    placeholder="0781234567"
+                    className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
+                    value={phoneUsed}
+                    onChange={(e) => setPhoneUsed(e.target.value)}
+                    maxLength="10"
+                  />
+                  {phoneUsed && !validatePhone(phoneUsed) && (
+                    <p className="text-red-500 text-sm mt-1">
+                      Koresha nimero ya MTN itangirira na 078 cyangwa 079
                     </p>
-                  </div>
+                  )}
+
+                  <label className="mt-2">
+                    Amazina yanditse kuri telephone
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Urugero: Gandi Stephen"
+                    className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
+                    value={ownerName}
+                    onChange={(e) => setOwnerName(e.target.value)}
+                  />
+                  {ownerName && !validateName(ownerName) && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {ownerName.includes(" ")
+                        ? `Niba Iyi ntelephone ${phoneUsed} ibaruye kumazina abiri yandike neza`
+                        : "Andika izina ryanyayo"}
+                    </p>
+                  )}
+
+                  <button
+                    className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full flex justify-center items-center gap-2"
+                    onClick={handleNotify}
+                    disabled={
+                      isLoading ||
+                      !validatePhone(phoneUsed) ||
+                      !validateName(ownerName)
+                    }
+                  >
+                    {isLoading ? (
+                      <>
+                        <LoadingSpinner />
+                      </>
+                    ) : (
+                      "Menyesha Ko Wishyuye"
+                    )}
+                  </button>
+                  <p className="text-start py-2 font-medium">
+                    Nyuma yo kumenyekanisha ko wishyuye{" "}
+                    <span className="text-Total text-md font-semibold">
+                      muminota 5
+                    </span>{" "}
+                    urahabwa ubutumwa{" "}
+                    <span className="text-Total text-md font-semibold">
+                      kuri sisiteme hejuru
+                    </span>{" "}
+                    bukwemerera{" "}
+                    <span className="text-Total text-md font-semibold">
+                      {selectedExam.itemId.type}{" "}
+                    </span>{" "}
+                    ikizamini
+                  </p>
                 </div>
               </div>
-            )}
+            </div>
           </div>
         </div>
       )}

@@ -21,9 +21,16 @@ const AddOptionPopup = ({ question, onClose, onSave }) => {
     try {
       setIsLoading(true);
 
+      const token = localStorage.getItem("token");
       const response = await axios.post(
         `https://congozi-backend.onrender.com/api/v1/options/${question._id}`,
-        payload
+        payload,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       onSave(question._id, response.data.Option);
       onClose();

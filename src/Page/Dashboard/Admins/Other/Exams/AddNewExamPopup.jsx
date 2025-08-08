@@ -18,9 +18,16 @@ const AddNewExamPopup = ({ setShowAddExamPopup, onExamAdded }) => {
         type: examType,
       };
 
+      const token = localStorage.getItem("token");
       const res = await axios.post(
         "https://congozi-backend.onrender.com/api/v1/exams",
-        newExam
+        newExam,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (res.data) {

@@ -100,6 +100,7 @@ const AdminProfile = () => {
             },
             {
               headers: {
+                "Content-Type": "multipart/form-data",
                 Authorization: `Bearer ${token}`,
               },
             }

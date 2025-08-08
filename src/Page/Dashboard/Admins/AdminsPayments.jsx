@@ -70,6 +70,7 @@ const AdminsPayments = () => {
         { status: "complete" },
         {
           headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         }
@@ -135,13 +136,13 @@ const AdminsPayments = () => {
         <table className="w-full text-left table-auto">
           <thead className="bg-gray-100 text-gray-700">
             <tr>
+              <th className="px-6 py-1 whitespace-nowrap">Actions</th>
               <th className="px-6 py-1 whitespace-nowrap">Payer</th>
               <th className="px-6 py-1 whitespace-  nowrap">Amount</th>
               <th className="px-6 py-1 whitespace-nowrap">Purchased Item</th>
               <th className="px-6 py-1 whitespace-nowrap">Paid On</th>
               <th className="px-6 py-1 whitespace-nowrap">Expires On</th>
               <th className="px-6 py-1 whitespace-nowrap">Status</th>
-              <th className="px-6 py-1 whitespace-nowrap">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -149,7 +150,25 @@ const AdminsPayments = () => {
               <tr key={payment.id} className="border-t hover:bg-gray-50">
                 {/* Hidden ID for potential admin use */}
                 <td className="hidden">{payment.id}</td>
-
+                <td className="px-6 py-1 whitespace-nowrap">
+                  {payment.status === "Waiting" ? (
+                    <button
+                      onClick={() => handleConfirm(payment.id)}
+                      disabled={loadingId === payment.id}
+                      className={`text-blue-600 ${
+                        loadingId === payment.id
+                          ? "text-green-700"
+                          : "hover:text-yellow-700"
+                      }`}
+                    >
+                      {loadingId === payment.id ? "Confirming..." : "Confirm"}
+                    </button>
+                  ) : (
+                    <span className="text-sm text-gray-400 cursor-not-allowed">
+                      No Action
+                    </span>
+                  )}
+                </td>
                 <td className="px-6 py-1 whitespace-nowrap">{payment.payer}</td>
                 <td className="px-6 py-1 whitespace-nowrap">
                   {payment.amount}
@@ -175,25 +194,6 @@ const AdminsPayments = () => {
                   >
                     {payment.status}
                   </span>
-                </td>
-                <td className="px-6 py-1 whitespace-nowrap">
-                  {payment.status === "Waiting" ? (
-                    <button
-                      onClick={() => handleConfirm(payment.id)}
-                      disabled={loadingId === payment.id}
-                      className={`text-blue-600 ${
-                        loadingId === payment.id
-                          ? "text-green-700"
-                          : "hover:text-yellow-700"
-                      }`}
-                    >
-                      {loadingId === payment.id ? "Confirming..." : "Confirm"}
-                    </button>
-                  ) : (
-                    <span className="text-sm text-gray-400 cursor-not-allowed">
-                      No Action
-                    </span>
-                  )}
                 </td>
               </tr>
             ))}

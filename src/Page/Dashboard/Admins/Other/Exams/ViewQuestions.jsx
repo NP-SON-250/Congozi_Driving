@@ -85,12 +85,14 @@ const ViewQuestions = ({ exam, onBack }) => {
     }
 
     try {
+      const token = localStorage.getItem("token");
       await axios.put(
         `https://congozi-backend.onrender.com/api/v1/questions/${questionToEdit._id}`,
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -113,8 +115,15 @@ const ViewQuestions = ({ exam, onBack }) => {
   const handleDeleteQuestion = async () => {
     if (!questionToDelete) return;
     try {
+      const token = localStorage.getItem("token");
       await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/questions/${questionToDelete._id}`
+        `https://congozi-backend.onrender.com/api/v1/questions/${questionToDelete._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       console.log("Question deleted successfully");
       setQuestionToDelete(null);

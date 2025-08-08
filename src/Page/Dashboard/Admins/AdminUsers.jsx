@@ -145,6 +145,7 @@ const AdminUsers = () => {
         updatedUser,
         {
           headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         }

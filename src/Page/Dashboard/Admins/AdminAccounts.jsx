@@ -79,6 +79,7 @@ const AdminAccounts = () => {
         `https://congozi-backend.onrender.com/api/v1/accounts/${accountToDelete._id}`,
         {
           headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         }
@@ -113,6 +114,7 @@ const AdminAccounts = () => {
         },
         {
           headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         }

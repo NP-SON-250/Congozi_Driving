@@ -7,6 +7,7 @@ import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../../Components/LoadingSpinner ";
+
 const SchoolUnpaid = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [accountsPerPage, setAccountsPerPage] = useState(6);
@@ -22,6 +23,28 @@ const SchoolUnpaid = () => {
   const [message, setMessage] = useState({ text: "", type: "" });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  // Validate phone number (MTN Rwanda)
+  const validatePhone = (phone) => {
+    const regex = /^(078|079)\d{7}$/;
+    return regex.test(phone);
+  };
+
+  // Validate name (allow first name only, but validate both if space included)
+  const validateName = (name) => {
+    const nameParts = name.trim().split(/\s+/);
+
+    // Allow single name (first name only)
+    if (nameParts.length === 1) {
+      return /^[a-zA-Z]{2,}$/.test(nameParts[0]);
+    }
+
+    // If multiple names provided, validate all parts
+    return (
+      nameParts.length >= 2 &&
+      nameParts.every((part) => /^[a-zA-Z]{2,}$/.test(part))
+    );
+  };
 
   // Get user info from localStorage
   useEffect(() => {
@@ -106,6 +129,26 @@ const SchoolUnpaid = () => {
       return;
     }
 
+    if (!validatePhone(phoneUsed)) {
+      setMessage({
+        text: "Iyi telephone ntikorana na MoMo Pay. Koresha 078 cyangwa 079.",
+        type: "error",
+      });
+      setTimeout(() => setMessage({ text: "", type: "" }), 9000);
+      return;
+    }
+
+    if (!validateName(ownerName)) {
+      setMessage({
+        text: ownerName.includes(" ")
+          ? `Niba Iyi ntelephone ${phoneUsed} ibaruye kumazina abiri yandike neza`
+          : "Andika izina ryanyayo",
+        type: "error",
+      });
+      setTimeout(() => setMessage({ text: "", type: "" }), 9000);
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -160,7 +203,7 @@ const SchoolUnpaid = () => {
       setTimeout(() => setMessage({ text: "", type: "" }), 9000);
       console.error("Payment error:", error);
     } finally {
-      setIsLoading(false); // Stop loading whether successful or not
+      setIsLoading(false);
     }
   };
 
@@ -365,9 +408,17 @@ const SchoolUnpaid = () => {
                       className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
                       value={phoneUsed}
                       onChange={(e) => setPhoneUsed(e.target.value)}
+                      maxLength="10"
                       required
                     />
-                    <label htmlFor="phone">Amazina ibaruyeho</label>
+                    {phoneUsed && !validatePhone(phoneUsed) && (
+                      <p className="text-red-500 text-sm mt-1">
+                        Koresha nimero ya MTN itangirira na 078 cyangwa 079
+                      </p>
+                    )}
+                    <label htmlFor="phone" className="mt-2">
+                      Amazina ibaruyeho
+                    </label>
                     <input
                       type="text"
                       placeholder="Urugero: Samuel NKOTANYI"
@@ -376,15 +427,25 @@ const SchoolUnpaid = () => {
                       onChange={(e) => setOwnerName(e.target.value)}
                       required
                     />
+                    {ownerName && !validateName(ownerName) && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {ownerName.includes(" ")
+                          ? `Niba Iyi ntelephone ${phoneUsed} ibaruye kumazina abiri yandike neza`
+                          : "Andika izina ryanyayo"}
+                      </p>
+                    )}
                     <button
                       className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full flex justify-center items-center"
                       onClick={handleNotify}
-                      disabled={isLoading}
+                      disabled={
+                        isLoading ||
+                        !validatePhone(phoneUsed) ||
+                        !validateName(ownerName)
+                      }
                     >
                       {isLoading ? (
                         <>
                           <LoadingSpinner />
-                          <span className="ml-2">Iyubaka...</span>
                         </>
                       ) : (
                         "Menyesha Ko Wishyuye"

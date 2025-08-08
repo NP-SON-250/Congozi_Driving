@@ -84,6 +84,28 @@ const SchoolMyExams = () => {
     return () => window.removeEventListener("resize", updateAccountsPerPage);
   }, []);
 
+  // Validate phone number (MTN Rwanda)
+  const validatePhone = (phone) => {
+    const regex = /^(078|079)\d{7}$/;
+    return regex.test(phone);
+  };
+
+  // Validate name (allow first name only, but validate both if space included)
+  const validateName = (name) => {
+    const nameParts = name.trim().split(/\s+/);
+
+    // Allow single name (first name only)
+    if (nameParts.length === 1) {
+      return /^[a-zA-Z]{2,}$/.test(nameParts[0]);
+    }
+
+    // If multiple names provided, validate all parts
+    return (
+      nameParts.length >= 2 &&
+      nameParts.every((part) => /^[a-zA-Z]{2,}$/.test(part))
+    );
+  };
+
   // Enhanced search functionality
   const filteredAccounts = account.data.filter(
     (item) =>
@@ -109,9 +131,30 @@ const SchoolMyExams = () => {
   };
 
   const handleNotify = async () => {
+    // Validate inputs
     if (!phoneUsed || !ownerName) {
       setMessage({
         text: "Uzuza nimero ya telephone n'amazina yo ibaruyeho",
+        type: "error",
+      });
+      setTimeout(() => setMessage({ text: "", type: "" }), 9000);
+      return;
+    }
+
+    if (!validatePhone(phoneUsed)) {
+      setMessage({
+        text: "Iyi telephone ntikorana na MoMo Pay. Koresha 078 cyangwa 079.",
+        type: "error",
+      });
+      setTimeout(() => setMessage({ text: "", type: "" }), 9000);
+      return;
+    }
+
+    if (!validateName(ownerName)) {
+      setMessage({
+        text: ownerName.includes(" ")
+          ? `Niba Iyi ntelephone ${phoneUsed} ibaruye kumazina abiri yandike neza`
+          : "Andika izina ryanyayo",
         type: "error",
       });
       setTimeout(() => setMessage({ text: "", type: "" }), 9000);
@@ -269,6 +312,7 @@ const SchoolMyExams = () => {
             <thead>
               <tr className="bg-gray-100 border text-blue-900 md:text-base text-xs font-bold">
                 <th className="text-center p-2 whitespace-nowrap">No.</th>
+                <th className="text-center p-2 whitespace-nowrap">Igikorwa</th>
                 <th className="text-center p-2 whitespace-nowrap">
                   Izina ry'ikonte
                 </th>
@@ -279,7 +323,6 @@ const SchoolMyExams = () => {
                 <th className="text-center p-2 whitespace-nowrap">Itariki</th>
                 <th className="text-center p-2 whitespace-nowrap">Igiciro</th>
                 <th className="text-center p-2 whitespace-nowrap">Imimerere</th>
-                <th className="text-center p-2 whitespace-nowrap">Igikorwa</th>
               </tr>
             </thead>
             <tbody>
@@ -317,24 +360,6 @@ const SchoolMyExams = () => {
                       <td className="text-center md:tex-md text-xs py-2 px-4 whitespace-nowrap">
                         {indexOfFirstAccount + index + 1}
                       </td>
-                      <td className="text-start md:tex-md text-xs px-1 whitespace-nowrap">
-                        {account.itemId?.title}
-                      </td>
-                      <td className="text-start md:tex-md text-xs p-2 whitespace-nowrap">
-                        {account.itemId?.validIn} Days
-                      </td>
-                      <td className="text-start md:tex-md text-xs px-2 whitespace-nowrap">
-                        {getRemainingDays(account.endDate)}
-                      </td>
-                      <td className="text-start md:tex-md text-xs px-2 whitespace-nowrap">
-                        {getCurrentDate()}
-                      </td>
-                      <td className="text-start md:tex-md text-xs px-2 whitespace-nowrap">
-                        {account.amount} Rwf
-                      </td>
-                      <td className="text-start md:tex-md text-xs px-2 whitespace-nowrap">
-                        {account.status}
-                      </td>
                       <td className="text-center p-2 whitespace-nowrap">
                         {isExpired ? (
                           <button
@@ -366,6 +391,24 @@ const SchoolMyExams = () => {
                             Tegereza
                           </button>
                         )}
+                      </td>
+                      <td className="text-start md:tex-md text-xs px-1 whitespace-nowrap">
+                        {account.itemId?.title}
+                      </td>
+                      <td className="text-start md:tex-md text-xs p-2 whitespace-nowrap">
+                        {account.itemId?.validIn} Days
+                      </td>
+                      <td className="text-start md:tex-md text-xs px-2 whitespace-nowrap">
+                        {getRemainingDays(account.endDate)}
+                      </td>
+                      <td className="text-start md:tex-md text-xs px-2 whitespace-nowrap">
+                        {getCurrentDate()}
+                      </td>
+                      <td className="text-start md:tex-md text-xs px-2 whitespace-nowrap">
+                        {account.amount} Rwf
+                      </td>
+                      <td className="text-start md:tex-md text-xs px-2 whitespace-nowrap">
+                        {account.status}
                       </td>
                     </tr>
                   );
@@ -457,8 +500,14 @@ const SchoolMyExams = () => {
                     className="border border-gray-400 rounded px-2 py-1 md:w-1/2 w-full mt-2"
                     value={phoneUsed}
                     onChange={(e) => setPhoneUsed(e.target.value)}
+                    maxLength="10"
                     required
                   />
+                  {phoneUsed && !validatePhone(phoneUsed) && (
+                    <p className="text-red-500 text-sm mt-1">
+                      Koresha nimero ya MTN itangirira na 078 cyangwa 079
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col justify-center items-center">
                   <label htmlFor="phone" className="text-start">
@@ -472,11 +521,22 @@ const SchoolMyExams = () => {
                     onChange={(e) => setOwnerName(e.target.value)}
                     required
                   />
+                  {ownerName && !validateName(ownerName) && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {ownerName.includes(" ")
+                        ? `Niba Iyi ntelephone ${phoneUsed} ibaruye kumazina abiri yandike neza`
+                        : "Andika izina ryanyayo"}
+                    </p>
+                  )}
                 </div>
                 <button
                   className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full flex justify-center items-center"
                   onClick={handleNotify}
-                  disabled={isLoading}
+                  disabled={
+                    isLoading ||
+                    !validatePhone(phoneUsed) ||
+                    !validateName(ownerName)
+                  }
                 >
                   {isLoading ? (
                     <>

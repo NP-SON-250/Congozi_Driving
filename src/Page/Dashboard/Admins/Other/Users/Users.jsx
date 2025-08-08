@@ -65,6 +65,7 @@ const Users = () => {
         "https://congozi-backend.onrender.com/api/v1/users",
         {
           headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         }
@@ -130,6 +131,7 @@ const Users = () => {
         updatedUser,
         {
           headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         }
@@ -173,6 +175,7 @@ const Users = () => {
         `https://congozi-backend.onrender.com/api/v1/users/${userToDelete._id}`,
         {
           headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         }

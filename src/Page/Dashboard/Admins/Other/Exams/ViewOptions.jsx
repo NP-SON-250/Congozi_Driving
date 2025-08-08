@@ -39,11 +39,18 @@ const ViewOptions = ({ question, onBack }) => {
     if (!optionToEdit) return;
 
     try {
+      const token = localStorage.getItem("token");
       await axios.put(
         `https://congozi-backend.onrender.com/api/v1/options/${optionToEdit._id}`,
         {
           text: editedOptionText,
           isCorrect: editedIsCorrect,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       setOptionToEdit(false);
@@ -57,8 +64,15 @@ const ViewOptions = ({ question, onBack }) => {
     if (!optionToDelete) return;
 
     try {
+      const token = localStorage.getItem("token");
       await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/options/${optionToDelete._id}`
+        `https://congozi-backend.onrender.com/api/v1/options/${optionToDelete._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setOptionToDelete(null);
       fetchOptions();

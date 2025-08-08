@@ -89,6 +89,16 @@ const Register = () => {
       newErrors.email = "Email ntabwo ari yo";
     }
 
+    // ID Card validation (only if provided)
+    if (formData.idCard && !/^\d{16}$/.test(formData.idCard)) {
+      newErrors.idCard = "Irangamuntu igomba kuba imibare 16";
+    }
+
+    // Profile image validation (only if provided)
+    if (formData.profile && !formData.profile.type.startsWith("image/")) {
+      newErrors.profile = "Hitamo ifoto gusa";
+    }
+
     if (!agreedToTerms) {
       newErrors.terms = "Ugomba kwemera amategeko n'amabwiriza";
     }
@@ -125,7 +135,8 @@ const Register = () => {
 
     const data = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
-      if (key !== "confirmPassword" && value !== "") {
+      // Only append fields that have values (except confirmPassword)
+      if (key !== "confirmPassword" && value !== "" && value !== null) {
         data.append(key, value);
       }
     });
@@ -263,6 +274,7 @@ const Register = () => {
                 name="idCard"
                 value={formData.idCard}
                 onChange={handleInputChange}
+                error={errors.idCard}
               />
               <HalfInput
                 label="Email (Si Itegeko)"
@@ -302,6 +314,7 @@ const Register = () => {
                   </span>
                 )}
               </div>
+              {errors.profile && <ErrorMessage message={errors.profile} />}
             </div>
             <div className="flex md:flex-row flex-col justify-center items-center md:mr-[150px] pt-6 md:gap-20 gap-6">
               <div className="flex items-center gap-2 px-4">
