@@ -41,10 +41,6 @@ const Register = () => {
         const previewURL = URL.createObjectURL(file);
         setSelectedImage(previewURL);
       }
-    } else if (name === "phone") {
-      // Format phone number automatically
-      const formattedPhone = value.replace(/\D/g, "").replace(/^0/, "");
-      setFormData((prev) => ({ ...prev, [name]: formattedPhone }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
@@ -69,7 +65,7 @@ const Register = () => {
     // Phone validation (required and format)
     if (!formData.phone) {
       newErrors.phone = "Numero ya telefone irakenewe";
-    } else if (!/^(72|73|78|79)\d{7}$/.test(formData.phone)) {
+    } else if (!/^(078|079)\d{7}$/.test(formData.phone)) {
       newErrors.phone = "Numero ya telefone ntabwo ari yo";
     }
 
