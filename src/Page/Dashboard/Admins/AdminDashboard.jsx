@@ -13,6 +13,7 @@ import Payments from "./Other/Payments/Payments";
 import Exams from "./Other/Exams/Exams";
 
 const AdminDashboard = () => {
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const [activeSection, setActiveSection] = useState("dashboard");
 
   const handleCardClick = (section) => {
@@ -45,18 +46,9 @@ const AdminDashboard = () => {
         };
 
         const [userRes, examRes, paymentRes] = await Promise.all([
-          axios.get(
-            "https://congozi-backend.onrender.com/api/v1/users",
-            config
-          ),
-          axios.get(
-            "https://congozi-backend.onrender.com/api/v1/exams",
-            config
-          ),
-          axios.get(
-            "https://congozi-backend.onrender.com/api/v1/accounts",
-            config
-          ),
+          axios.get(`${ApiUrl}/users`, config),
+          axios.get(`${ApiUrl}/exams`, config),
+          axios.get(`${ApiUrl}/accounts`, config),
         ]);
 
         setTotalExams(examRes.data?.data || []);

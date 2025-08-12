@@ -8,6 +8,7 @@ import DeleteQuestionPopup from "./DeleteQuestionPopup";
 import axios from "axios";
 
 const ViewQuestions = ({ exam, onBack }) => {
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const questionsPerPage = 4;
@@ -31,9 +32,7 @@ const ViewQuestions = ({ exam, onBack }) => {
 
   const fetchQuestions = async () => {
     try {
-      const res = await axios.get(
-        `https://congozi-backend.onrender.com/api/v1/questions/${exam._id}`
-      );
+      const res = await axios.get(`${ApiUrl}/questions/${exam._id}`);
       if (res.data && res.data.data) {
         setQuestions(res.data.data);
       }
@@ -86,16 +85,12 @@ const ViewQuestions = ({ exam, onBack }) => {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/questions/${questionToEdit._id}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.put(`${ApiUrl}/questions/${questionToEdit._id}`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setShowEditPopup(false);
       fetchQuestions();
     } catch (error) {
@@ -116,15 +111,12 @@ const ViewQuestions = ({ exam, onBack }) => {
     if (!questionToDelete) return;
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/questions/${questionToDelete._id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`${ApiUrl}/questions/${questionToDelete._id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log("Question deleted successfully");
       setQuestionToDelete(null);
       fetchQuestions();

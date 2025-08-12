@@ -8,6 +8,7 @@ const CompanyPopup = ({ onClose }) => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const handleLogin = async () => {
     if (!identifier || !password) {
       toast.error("Shyiramo tin cyangwa company name n'ijambo banga");
@@ -16,7 +17,7 @@ const CompanyPopup = ({ onClose }) => {
 
     try {
       const response = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/users/auth/school",
+        `${ApiUrl}/users/auth/school`,
         {
           identifier,
           password,

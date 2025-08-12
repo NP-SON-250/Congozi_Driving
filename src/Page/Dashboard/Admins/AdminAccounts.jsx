@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { MdMoreHoriz } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AddNewAccountPopup from "./Other/Accounts/AddNewAccountPopup";
 import EditAccountPopup from "./Other/Accounts/EditAccountPopup";
@@ -18,15 +19,38 @@ const AdminAccounts = () => {
   const [editedValidIn, setEditedValidIn] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const navigate = useNavigate();
+
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
+
+  const fetchAccounts = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${ApiUrl}/accounts`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setAccounts(response.data.data || []);
+    } catch (error) {
+      console.error("Failed to fetch accounts:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+      });
+      setAccounts([]);
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const userData = localStorage.getItem("user");
 
     if (!token) {
-      navkwigate("/kwinjira");
+      navigate("/kwinjira");
       return;
     }
+
     if (userData) {
       try {
         setCurrentUser(JSON.parse(userData));
@@ -35,19 +59,7 @@ const AdminAccounts = () => {
       }
     }
     fetchAccounts();
-  }, []);
-
-  const fetchAccounts = async () => {
-    try {
-      const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/accounts"
-      );
-      setAccounts(response.data.data || []);
-    } catch (error) {
-      console.error("Failed to fetch accounts:", error);
-      setAccounts([]);
-    }
-  };
+  }, [navigate]);
 
   const toggleMenu = (accountId) => {
     setSelectedMenu(selectedMenu === accountId ? null : accountId);
@@ -71,22 +83,23 @@ const AdminAccounts = () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        navkwigate("/kwinjira");
+        navigate("/kwinjira");
         return;
       }
 
-      await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/accounts/${accountToDelete._id}`,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`${ApiUrl}/accounts/${accountToDelete._id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       fetchAccounts();
     } catch (error) {
-      console.error("Failed to delete account:", error);
+      console.error("Failed to delete account:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+      });
     }
     setShowDeleteConfirm(false);
     setAccountToDelete(null);
@@ -101,12 +114,12 @@ const AdminAccounts = () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        navkwigate("/kwinjira");
+        navigate("/kwinjira");
         return;
       }
 
       await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/accounts/${accountToEdit._id}`,
+        `${ApiUrl}/accounts/${accountToEdit._id}`,
         {
           title: editedTitle,
           fees: editedFees,
@@ -114,7 +127,7 @@ const AdminAccounts = () => {
         },
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         }
@@ -122,7 +135,11 @@ const AdminAccounts = () => {
       fetchAccounts();
       setAccountToEdit(null);
     } catch (error) {
-      console.error("Failed to update account:", error);
+      console.error("Failed to update account:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+      });
     }
   };
 
@@ -138,6 +155,7 @@ const AdminAccounts = () => {
     setCurrentPage(pageNumber);
     setSelectedMenu(null);
   };
+
   const isAdmin = currentUser?.role === "admin";
   const isSuperAdmin = currentUser?.role === "supperAdmin";
   const canAddOrEdit = isAdmin || isSuperAdmin;
@@ -222,6 +240,7 @@ const AdminAccounts = () => {
           </tbody>
         </table>
       </div>
+
       <div className="flex justify-center items-center mt-6 space-x-4">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
@@ -249,12 +268,14 @@ const AdminAccounts = () => {
           Next
         </button>
       </div>
+
       {canAddOrEdit && showAddAccountPopup && (
         <AddNewAccountPopup
           setShowAddAccountPopup={setShowAddAccountPopup}
           onAccountAdded={fetchAccounts}
         />
       )}
+
       {canAddOrEdit && accountToEdit && (
         <EditAccountPopup
           accountToEdit={accountToEdit}
@@ -268,6 +289,7 @@ const AdminAccounts = () => {
           handleSaveEdit={handleSaveEdit}
         />
       )}
+
       {canDelete && showDeleteConfirm && (
         <div className="fixed inset-0 z-[999] bg-black bg-opacity-40 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">

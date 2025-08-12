@@ -16,7 +16,7 @@ const SchoolAccessedExam = () => {
   const [exam, setExam] = useState({ data: [] });
   const navkwigate = useNavigate();
   const location = useLocation();
-
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const params = new URLSearchParams(location.search);
 
   useEffect(() => {
@@ -29,14 +29,11 @@ const SchoolAccessedExam = () => {
       const fetchData = async () => {
         try {
           const token = localStorage.getItem("token");
-          const response = await axios.get(
-            `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const response = await axios.get(`${ApiUrl}/exams/${examId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
           setExam(response.data.data);
         } catch (error) {
           console.error("Error fetching data:", error);

@@ -12,6 +12,7 @@ const SchoolsDashboard = () => {
   const [waitingAccounts, setWaitingAccounts] = useState([]);
   const [userData, setUserData] = useState(null);
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -34,22 +35,10 @@ const SchoolsDashboard = () => {
 
         const [unpaidRes, totalRes, expiredRes, waitingRes] = await Promise.all(
           [
-            axios.get(
-              "https://congozi-backend.onrender.com/api/v1/unpaidaccounts",
-              config
-            ),
-            axios.get(
-              "https://congozi-backend.onrender.com/api/v1/totaluseraccounts",
-              config
-            ),
-            axios.get(
-              "https://congozi-backend.onrender.com/api/v1/expiredaccounts",
-              config
-            ),
-            axios.get(
-              "https://congozi-backend.onrender.com/api/v1/waittingaccounts",
-              config
-            ),
+            axios.get(`${ApiUrl}/unpaidaccounts`, config),
+            axios.get(`${ApiUrl}/totaluseraccounts`, config),
+            axios.get(`${ApiUrl}/expiredaccounts`, config),
+            axios.get(`${ApiUrl}/waittingaccounts`, config),
           ]
         );
 

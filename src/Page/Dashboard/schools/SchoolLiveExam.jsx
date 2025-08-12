@@ -29,6 +29,7 @@ const SchoolLiveExam = () => {
   const location = useLocation();
   const navkwigate = useNavigate();
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const errors = (message) => {
     toast.error(message, {
       position: "top-center",
@@ -64,12 +65,9 @@ const SchoolLiveExam = () => {
     const fetchExamDetails = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(
-          `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const res = await axios.get(`${ApiUrl}/exams/${examId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         const examData = res.data.data;
         setExamToDo(examData);
         localStorage.setItem("live_exam_data", JSON.stringify(examData));
@@ -123,17 +121,14 @@ const SchoolLiveExam = () => {
         responses,
       };
 
-      const res = await fetch(
-        `https://congozi-backend.onrender.com/api/v1/responses/add`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const res = await fetch(`${ApiUrl}/responses/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
 
       const data = await res.json();
 

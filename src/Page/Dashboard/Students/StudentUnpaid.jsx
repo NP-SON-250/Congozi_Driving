@@ -24,6 +24,7 @@ const StudentUnpaid = () => {
   const [uniqueFees, setUniqueFees] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   // Get user info from localStorage
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -36,14 +37,11 @@ const StudentUnpaid = () => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/purchases/pending",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${ApiUrl}/purchases/pending`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setExam(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -175,10 +173,10 @@ const StudentUnpaid = () => {
       const purchasedDataId = selectedExam._id;
       const paidItem = selectedExam.itemId;
 
-      const notificationMessage = `Dear Admin, ${userName} yishyuye ikizamini cya ${paidItem.title} (${paidItem.type}) amafaranga ${paidItem.fees} Rwf akoresheje telephone ${phoneUsed} (${ownerName}).`;
+      const notificationMessage = `Dear Admin, ${userName} yishyuye ikizamini cya ${paidItem.title} (${paidItem.type}) amafaranga ${paidItem.fees} Rwf akoresheje telephone ${phoneUsed} (${ownerName}). Reba ko wayabonye kuri MoMo pay ya 072255 maze umuhe uburenganzira kuri iyi purchase ID: ${purchasedDataId}`;
 
       await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/notification",
+        `${ApiUrl}/notification`,
         {
           message: notificationMessage,
           noteTitle: `${userName} requests for approval`,
@@ -194,7 +192,7 @@ const StudentUnpaid = () => {
       );
 
       await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${purchasedDataId}`,
+        `${ApiUrl}/purchases/${purchasedDataId}`,
         { status: "waitingConfirmation" },
         {
           headers: {
@@ -303,7 +301,7 @@ const StudentUnpaid = () => {
                 type={exam.itemId.type}
                 onPurchase={() => handlePurchaseClick(exam)}
                 icon={<FaHandHoldingDollar />}
-                button={"Soza Kwishyura"}
+                button={"Ishyura"}
                 buttonColor={buttonColor}
               />
             );
@@ -385,6 +383,12 @@ const StudentUnpaid = () => {
                 </p>
                 <p className="text-md text-Total pt-4 font-semibold">
                   Tanga amakuru kunyemezabwishyu yawe
+                </p>
+                <p className="pb-4">
+                  Ukeneye ubufasha hamagara:{" "}
+                  <span className="text-md font-bold text-yellow-700">
+                    0783905790
+                  </span>
                 </p>
                 <div className="w-full text-start">
                   <label>Nimero wakoresheje wishyura</label>

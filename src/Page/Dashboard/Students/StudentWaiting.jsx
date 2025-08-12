@@ -16,6 +16,7 @@ const StudentWaiting = () => {
   const [fees, setFees] = useState("");
   const [isExamStarted, setIsExamStarted] = useState(false);
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const location = useLocation();
   const { accessCode } = queryString.parse(location.search);
   const [exam, setExam] = useState({ data: [] });
@@ -24,7 +25,7 @@ const StudentWaiting = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/purchases/complete",
+        `${ApiUrl}/purchases/complete`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

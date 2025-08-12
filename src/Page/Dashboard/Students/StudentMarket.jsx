@@ -6,6 +6,7 @@ import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import axios from "axios";
 import LoadingSpinner from "../../../Components/LoadingSpinner ";
 import { useNavigate } from "react-router-dom";
+
 const StudentMarket = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [examsPerPage, setExamsPerPage] = useState(6);
@@ -14,12 +15,15 @@ const StudentMarket = () => {
   const [fees, setFees] = useState("");
   const [selectedExam, setSelectedExam] = useState(null);
   const [paymentStep, setPaymentStep] = useState("confirmation");
-
   const [isPayingLater, setIsPayingLater] = useState(false);
   const [exam, setExam] = useState({ data: [] });
   const [userName, setUserName] = useState("");
+  const [paymentStatus, setPaymentStatus] = useState(null);
+  const [paymentMessage, setPaymentMessage] = useState("");
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
+
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser && storedUser !== "undefined") {
@@ -34,14 +38,11 @@ const StudentMarket = () => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/exams",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${ApiUrl}/exams`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setExam(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -81,26 +82,41 @@ const StudentMarket = () => {
   const handlePurchaseClick = (exam) => {
     setSelectedExam(exam);
     setPaymentStep("confirmation");
+    setPaymentStatus(null);
+    setPaymentMessage("");
   };
+
   const handlePayLaterClick = async () => {
     if (isPayingLater) return;
 
     setIsPayingLater(true);
+    setPaymentStatus(null);
+    setPaymentMessage("");
+
     try {
       const token = localStorage.getItem("token");
-      await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${selectedExam._id}`,
+      const response = await axios.post(
+        `${ApiUrl}/purchases/${selectedExam._id}`,
         {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-      closePopup();
-      navigate("/students/exams");
+
+      if (response?.data?.status === "201") {
+        setPaymentStatus("success");
+        setPaymentMessage(response?.data?.message);
+
+        closePopup();
+        navigate("/students/exams");
+      } else {
+        setPaymentStatus("error");
+        setPaymentMessage(response.data.message);
+      }
     } catch (error) {
-      console.log(error);
+      setPaymentStatus("error");
+      setPaymentMessage(
+        error.response?.data?.message ||
+          "Habaye ikibazo mu gusaba ikizami, subira mugerageze."
+      );
     } finally {
       setIsPayingLater(false);
     }
@@ -109,6 +125,9 @@ const StudentMarket = () => {
   const closePopup = () => {
     setSelectedExam(null);
     setPaymentStep("confirmation");
+    setPaymentStatus(null);
+    setPaymentMessage("");
+    setIsPayingLater(false); // Add this line
   };
 
   return (
@@ -220,6 +239,19 @@ const StudentMarket = () => {
                   {selectedExam.fees} RWF). Ufite ikibazo hamagara kuri iyi
                   nimero: 250 783 905 790
                 </p>
+
+                {paymentStatus && (
+                  <div
+                    className={`px-6 py-2 text-start ${
+                      paymentStatus === "success"
+                        ? "text-green-400"
+                        : "text-red-400"
+                    }`}
+                  >
+                    {paymentMessage}
+                  </div>
+                )}
+
                 <div className="flex justify-center md:p-6 p-2 md:mt-12 mt-6 mb-2 md:gap-20 gap-6">
                   <button
                     className={`bg-green-500  w-full text-white p-2 rounded ${

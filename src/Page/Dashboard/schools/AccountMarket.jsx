@@ -17,7 +17,11 @@ const AccountMarket = () => {
   const [isPayingLater, setIsPayingLater] = useState(false);
   const [account, setAccount] = useState({ data: [] });
   const [userName, setUserName] = useState("");
+  const [paymentStatus, setPaymentStatus] = useState(null);
+  const [paymentMessage, setPaymentMessage] = useState("");
   const navigate = useNavigate();
+
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -33,14 +37,11 @@ const AccountMarket = () => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/accounts",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${ApiUrl}/accounts`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setAccount(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -80,16 +81,21 @@ const AccountMarket = () => {
 
   const handlePurchaseClick = (account) => {
     setSelectedAccount(account);
+    setPaymentStatus(null);
+    setPaymentMessage("");
   };
 
   const handlePayLaterClick = async () => {
     if (isPayingLater) return;
 
     setIsPayingLater(true);
+    setPaymentStatus(null);
+    setPaymentMessage("");
+
     try {
       const token = localStorage.getItem("token");
-      await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${selectedAccount._id}`,
+      const response = await axios.post(
+        `${ApiUrl}/purchases/${selectedAccount._id}`,
         {},
         {
           headers: {
@@ -97,15 +103,23 @@ const AccountMarket = () => {
           },
         }
       );
-      closePopup();
-      navigate("/schools/accounts");
-    } catch (error) {
-      if (error.response && error.response.status === 404) {
-        alert("You have already purchased this account.");
+      console.log(selectedAccount);
+      if (response?.data?.status === "201") {
+        setPaymentStatus("success");
+        setPaymentMessage(response?.data?.message);
+
+        closePopup();
+        navigate("/schools/accounts");
       } else {
-        console.error("Purchase request failed:", error);
-        alert("Failed to initiate purchase. Please try again.");
+        setPaymentStatus("error");
+        setPaymentMessage(response.data.message);
       }
+    } catch (error) {
+      setPaymentStatus("error");
+      setPaymentMessage(
+        error.response?.data?.message ||
+          "Habaye ikibazo mu gusaba konte, subira mugerageze."
+      );
     } finally {
       setIsPayingLater(false);
     }
@@ -113,6 +127,9 @@ const AccountMarket = () => {
 
   const closePopup = () => {
     setSelectedAccount(null);
+    setPaymentStatus(null);
+    setPaymentMessage("");
+    setIsPayingLater(false);
   };
 
   return (
@@ -233,6 +250,19 @@ const AccountMarket = () => {
               <span>Ufite ikibazo wahamagara iyi nemero:</span>
               <span className="text-yellow-600 pl-2">0783905790</span>
             </p>
+
+            {paymentStatus && (
+              <div
+                className={`px-6 py-2 text-start ${
+                  paymentStatus === "success"
+                    ? "text-green-400"
+                    : "text-red-400"
+                }`}
+              >
+                {paymentMessage}
+              </div>
+            )}
+
             <div className="flex justify-center md:p-6 p-2 md:mt-12 mt-6 mb-2">
               <button
                 className={`bg-green-500 w-full text-white p-2 rounded ${

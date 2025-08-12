@@ -24,6 +24,7 @@ const StudentExams = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   // Get user info from localStorage
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -36,14 +37,11 @@ const StudentExams = () => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/purchases/all",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${ApiUrl}/purchases/all`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setExam(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -177,10 +175,10 @@ const StudentExams = () => {
       const purchasedDataId = selectedExam._id;
       const paidItem = selectedExam.itemId;
 
-      const notificationMessage = `Dear Admin, ${userName} yishyuye ikizamini cya ${paidItem.title} (${paidItem.type}) amafaranga ${paidItem.fees} Rwf akoresheje telephone ${phoneUsed} (${ownerName}).`;
+      const notificationMessage = `Dear Admin, ${userName} yishyuye ikizamini cya ${paidItem.title} (${paidItem.type}) amafaranga ${paidItem.fees} Rwf akoresheje telephone ${phoneUsed} (${ownerName}). Reba ko wayabonye kuri MoMo pay ya 072255 maze umuhe uburenganzira kuri iyi purchase ID: ${purchasedDataId}`;
 
       await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/notification",
+        `${ApiUrl}/notification`,
         {
           message: notificationMessage,
           noteTitle: `${userName} requests for approval`,
@@ -196,7 +194,7 @@ const StudentExams = () => {
       );
 
       await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${purchasedDataId}`,
+        `${ApiUrl}/purchases/${purchasedDataId}`,
         { status: "waitingConfirmation" },
         {
           headers: {
@@ -298,12 +296,14 @@ const StudentExams = () => {
             <thead>
               <tr className="bg-gray-100 border text-blue-900 md:text-base text-xs font-bold">
                 <th className="text-center p-2">No.</th>
-                <th className="text-center p-2">Igikorwa</th>
-                <th className="text-center p-2">Umutwe w'ikizami</th>
-                <th className="text-center p-2">Ubwoko</th>
-                <th className="text-center p-2">Itariki</th>
-                <th className="text-center p-2">Igiciro</th>
-                <th className="text-center p-2">Imimerere</th>
+                <th className="text-start p-2 whitespace-nowrap">Igikorwa</th>
+                <th className="text-start p-2 whitespace-nowrap">
+                  Umutwe w'ikizami
+                </th>
+                <th className="text-start p-2 whitespace-nowrap">Ubwoko</th>
+                <th className="text-start p-2 whitespace-nowrap">Itariki</th>
+                <th className="text-start p-2 whitespace-nowrap">Igiciro</th>
+                <th className="text-start p-2 whitespace-nowrap">Imimerere</th>
               </tr>
             </thead>
             <tbody>
@@ -322,14 +322,14 @@ const StudentExams = () => {
                     key={exam._id}
                     className="bg-white border text-blue-900 md:text-base text-xs"
                   >
-                    <td className="text-center py-2 px-4">
+                    <td className="text-center py-2 px-0">
                       {indexOfFirstExam + index + 1}
                     </td>
-                    <td className="text-center p-2">
+                    <td className="text-start p-2 whitespace-nowrap">
                       {exam.status === "pending" ? (
                         <button
                           onClick={() => makePayment(exam)}
-                          className="text-blue-500 underline py-1 px-3 flex font-bold hover:text-yellow-700 items-center gap-2"
+                          className="text-Total text-sm bg-blue-300 rounded-md py-0 px-3 flex hover:bg-green-300 items-center gap-2"
                         >
                           Soza Kwishyura
                         </button>
@@ -340,26 +340,33 @@ const StudentExams = () => {
                               ? handleDoExam(exam)
                               : handlekwigaExam(exam)
                           }
-                          className="text-blue-500 underline py-1 px-3 flex font-bold hover:text-yellow-700 items-center gap-2"
+                          className="text-Total text-sm bg-green-200 rounded-md py-0 px-3 flex hover:bg-blue-300 items-center gap-2"
                         >
                           {exam.itemId?.type === "gukora"
                             ? "Kora Ikizamini"
                             : "Iga Ikizamini"}
                         </button>
                       ) : (
-                        <button
-                          className="text-blue-500 underline py-1 px-3"
-                          disabled
-                        >
+                        <button className="bg-gray-400 text-Total rounded-md py-0 px-3 cursor-not-allowed">
                           Tegereza
                         </button>
                       )}
                     </td>
-                    <td className="text-start px-1">{exam.itemId?.title}</td>
-                    <td className="text-start p-2">{exam.itemId?.type}</td>
-                    <td className="text-start px-2">{getCurrentDate()}</td>
-                    <td className="text-start px-2">{exam.amount} Rwf</td>
-                    <td className="text-start px-2">{exam.status}</td>
+                    <td className="text-start px-1 whitespace-nowrap">
+                      {exam.itemId?.title}
+                    </td>
+                    <td className="text-start p-2 whitespace-nowrap">
+                      {exam.itemId?.type}
+                    </td>
+                    <td className="text-start px-2 whitespace-nowrap">
+                      {getCurrentDate()}
+                    </td>
+                    <td className="text-start px-2 whitespace-nowrap">
+                      {exam.amount} Rwf
+                    </td>
+                    <td className="text-start px-2 whitespace-nowrap">
+                      {exam.status}
+                    </td>
                   </tr>
                 ))
               )}
@@ -432,6 +439,12 @@ const StudentExams = () => {
                 <p className="text-md text-Total pt-4 font-semibold">
                   Tanga amakuru kunyemezabwishyu yawe
                 </p>
+                <p className="pb-4">
+                  Ukeneye ubufasha hamagara:{" "}
+                  <span className="text-md font-bold text-yellow-700">
+                    0783905790
+                  </span>
+                </p>
                 <div className="w-full text-start">
                   <label>Nimero wakoresheje wishyura</label>
                   <input
@@ -467,7 +480,7 @@ const StudentExams = () => {
                   )}
 
                   <button
-                    className="bg-green-500 text-white px-2 py-1 rounded mt-4 w-full flex justify-center items-center gap-2"
+                    className="bg-green-500 text-Total px-2 py-1 rounded mt-4 w-full flex justify-center items-center gap-2"
                     onClick={handleNotify}
                     disabled={
                       isLoading ||

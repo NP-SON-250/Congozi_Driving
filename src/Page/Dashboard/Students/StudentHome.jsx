@@ -13,6 +13,7 @@ const StudentHome = () => {
   const [passedExams, setPassedExams] = useState([]);
   const [failedExams, setFailedExams] = useState([]);
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -32,30 +33,12 @@ const StudentHome = () => {
           passedRes,
           failedRes,
         ] = await Promise.all([
-          axios.get(
-            "https://congozi-backend.onrender.com/api/v1/unpaidexams",
-            config
-          ),
-          axios.get(
-            "https://congozi-backend.onrender.com/api/v1/totaluserexams",
-            config
-          ),
-          axios.get(
-            "https://congozi-backend.onrender.com/api/v1/expiredexams",
-            config
-          ),
-          axios.get(
-            "https://congozi-backend.onrender.com/api/v1/waittingexams",
-            config
-          ),
-          axios.get(
-            "https://congozi-backend.onrender.com/api/v1/passedexams",
-            config
-          ),
-          axios.get(
-            "https://congozi-backend.onrender.com/api/v1/failledexams",
-            config
-          ),
+          axios.get(`${ApiUrl}/unpaidexams`, config),
+          axios.get(`${ApiUrl}/totaluserexams`, config),
+          axios.get(`${ApiUrl}/expiredexams`, config),
+          axios.get(`${ApiUrl}/waittingexams`, config),
+          axios.get(`${ApiUrl}/passedexams`, config),
+          axios.get(`${ApiUrl}/failledexams`, config),
         ]);
 
         setUnpaidExams(unpaidRes.data?.data || []);

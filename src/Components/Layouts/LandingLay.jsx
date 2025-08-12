@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 
+// Move static values outside component
+const currentYear = new Date().getFullYear();
+const COPYRIGHT_TEXT = `© ${currentYear} Congozi Expert Technical Unity Limited`;
+
 const LandingLay = () => {
   const [applyHeight, setApplyHeight] = useState(false);
-  const getCurrentYear = () => new Date().getFullYear();
 
   useEffect(() => {
     const setVh = () => {
@@ -13,19 +16,31 @@ const LandingLay = () => {
     };
 
     const checkScreenSize = () => {
-      const isMdUp = window.matchMedia("(min-width: 768px)").matches;
-      setApplyHeight(isMdUp);
+      setApplyHeight(window.matchMedia("(min-width: 768px)").matches);
     };
 
+    // Initial setup
     setVh();
     checkScreenSize();
 
-    window.addEventListener("resize", setVh);
-    window.addEventListener("resize", checkScreenSize);
+    // Event listeners with debouncing
+    const debounce = (fn) => {
+      let frame;
+      return () => {
+        if (frame) cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(fn);
+      };
+    };
+
+    const debouncedSetVh = debounce(setVh);
+    const debouncedCheckSize = debounce(checkScreenSize);
+
+    window.addEventListener("resize", debouncedSetVh);
+    window.addEventListener("resize", debouncedCheckSize);
 
     return () => {
-      window.removeEventListener("resize", setVh);
-      window.removeEventListener("resize", checkScreenSize);
+      window.removeEventListener("resize", debouncedSetVh);
+      window.removeEventListener("resize", debouncedCheckSize);
     };
   }, []);
 
@@ -35,24 +50,18 @@ const LandingLay = () => {
         <Navbar />
       </div>
       <div
-        className={`flex flex-col flex-grow`}
-        style={
-          applyHeight
-            ? { height: "calc(var(--vh, 1vh) * 100 - 10vh)" }
-            : undefined
-        }
+        className={`flex flex-col flex-grow ${applyHeight ? "md:h-[calc(var(--vh,1vh)*100-10vh)]" : ""}`}
       >
         <div className="flex-grow">
           <Outlet />
         </div>
-        <div className="md:fixed md:bottom-0 md:left-0 md:right-0 w-full">
+        <footer className="md:fixed md:bottom-0 md:left-0 md:right-0 w-full">
           <div className="flex justify-center bg-Unpaid">
-            <p className="p-4 text-blue-900 md:text-xs text-xs font-bold text-center uppercase">
-              &copy; {getCurrentYear()} Congozi Expert Technical Unity{" "}
-              <span className="normal-case">Limited</span>
+            <p className="p-4 text-blue-900 text-xs font-bold text-center uppercase">
+              {COPYRIGHT_TEXT}
             </p>
           </div>
-        </div>
+        </footer>
       </div>
     </div>
   );

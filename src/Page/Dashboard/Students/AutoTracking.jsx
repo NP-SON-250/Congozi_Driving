@@ -12,6 +12,7 @@ const AutoTracking = () => {
   const [examDetails, setExamDetails] = useState(null);
   const [grantedUsers, setGrantedUsers] = useState(null);
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const [showContinueCard, setShowContinueCard] = useState(false);
   const [showConfirmCard, setShowConfirmCard] = useState(false);
   const [exam, setExam] = useState({ data: [] });
@@ -31,7 +32,7 @@ const AutoTracking = () => {
         try {
           const token = localStorage.getItem("token");
           const response = await axios.get(
-            `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
+            `${ApiUrl}/purchases/access/${examCode}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,

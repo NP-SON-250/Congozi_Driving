@@ -15,6 +15,7 @@ const AdminUsers = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const navkwigate = useNavigate();
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
   const [editedCompanyName, setEditedCompanyName] = useState("");
@@ -75,14 +76,11 @@ const AdminUsers = () => {
         return;
       }
 
-      const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/users",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${ApiUrl}/users`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setUsers(response.data.data || []);
     } catch (error) {
       console.error("Failed to fetch users:", error);
@@ -140,16 +138,12 @@ const AdminUsers = () => {
         address: editedAddress,
       };
 
-      await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/users/${userToEdit._id}`,
-        updatedUser,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.put(`${ApiUrl}/users/${userToEdit._id}`, updatedUser, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setUsers(
         users.map((user) =>
           user._id === userToEdit._id ? { ...user, ...updatedUser } : user
@@ -187,14 +181,11 @@ const AdminUsers = () => {
     }
 
     try {
-      await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/users/${userToDelete._id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`${ApiUrl}/users/${userToDelete._id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setUsers(users.filter((user) => user._id !== userToDelete._id));
       setShowDeletePopup(false);
     } catch (error) {
@@ -227,15 +218,11 @@ const AdminUsers = () => {
         idCard: newIdcard,
       };
 
-      const response = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/users",
-        newUser,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.post(`${ApiUrl}/users`, newUser, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setUsers([...users, response.data.data]);
       setShowAddPopup(false);
       resetAddForm();

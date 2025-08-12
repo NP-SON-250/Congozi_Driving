@@ -1,19 +1,20 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
-import { BrowserRouter } from "react-router-dom";
-import { UserProvider } from "./Components/useUserContext"; 
-import "./index.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import "react-toastify/dist/ReactToastify.css";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
+import { UserProvider } from './Components/useUserContext';
+import ErrorBoundary from './Components/ErrorBoundary';
+import './index.css';
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <UserProvider>
-        <App />
-      </UserProvider>
+      <ErrorBoundary>
+        <UserProvider>
+          <App />
+        </UserProvider>
+      </ErrorBoundary>
     </BrowserRouter>
   </React.StrictMode>
 );

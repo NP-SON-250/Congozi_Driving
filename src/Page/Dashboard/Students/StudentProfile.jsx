@@ -10,6 +10,7 @@ const StudentProfile = () => {
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const [formData, setFormData] = useState({
     fName: "",
     lName: "",
@@ -94,7 +95,7 @@ const StudentProfile = () => {
 
         try {
           await axios.post(
-            `https://congozi-backend.onrender.com/api/v1/users/verify-password`,
+            `${ApiUrl}/users/verify-password`,
             {
               userId: user._id,
               password: passwordData.currentPassword,
@@ -113,16 +114,12 @@ const StudentProfile = () => {
         const form = new FormData();
         form.append("password", passwordData.newPassword);
 
-        const response = await axios.put(
-          `https://congozi-backend.onrender.com/api/v1/users/${user._id}`,
-          form,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.put(`${ApiUrl}/users/${user._id}`, form, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         setMessage("Password updated successfully");
         setMessageType("success");
@@ -146,16 +143,12 @@ const StudentProfile = () => {
           form.append("profile", profile);
         }
 
-        const response = await axios.put(
-          `https://congozi-backend.onrender.com/api/v1/users/${user._id}`,
-          form,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.put(`${ApiUrl}/users/${user._id}`, form, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         const updatedUser = response.data.data;
         localStorage.setItem("user", JSON.stringify(updatedUser));

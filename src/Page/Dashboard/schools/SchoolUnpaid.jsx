@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../../Components/LoadingSpinner ";
 
 const SchoolUnpaid = () => {
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const [currentPage, setCurrentPage] = useState(0);
   const [accountsPerPage, setAccountsPerPage] = useState(6);
   const [searchTerm, setSearchTerm] = useState("");
@@ -58,14 +59,11 @@ const SchoolUnpaid = () => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/purchases/pending",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${ApiUrl}/purchases/pending`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setAccount(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -160,7 +158,7 @@ const SchoolUnpaid = () => {
       const noteTitle = `${userName} requests for approval`;
 
       await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/notification",
+        `${ApiUrl}/notification`,
         {
           message: notificationMessage,
           noteTitle: noteTitle,
@@ -178,7 +176,7 @@ const SchoolUnpaid = () => {
       const purchaseId = selectedAccount._id;
 
       await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${purchaseId}`,
+        `${ApiUrl}/purchases/${purchaseId}`,
         { status: "waitingConfirmation" },
         {
           headers: {
@@ -188,7 +186,7 @@ const SchoolUnpaid = () => {
       );
 
       setMessage({
-        text: "Kwishyura byakunze neza!",
+        text: "Kumenyekanisha ubwishyu byakozwe neza!",
         type: "success",
       });
       setTimeout(() => setMessage({ text: "", type: "" }), 9000);
@@ -197,7 +195,7 @@ const SchoolUnpaid = () => {
       fetchData();
     } catch (error) {
       setMessage({
-        text: "Kwishyura byanze. Wongera gerageza.",
+        text: "Kumenyekanisha ubwishyu byanze. Wongera ugerageze.",
         type: "error",
       });
       setTimeout(() => setMessage({ text: "", type: "" }), 9000);
@@ -251,7 +249,7 @@ const SchoolUnpaid = () => {
       {/* Message display */}
       {message.text && (
         <div
-          className={`flex justify-center z-50 p-4 rounded-md shadow-lg ${
+          className={`flex justify-center w-[100%] z-50 p-4 rounded-md shadow-lg ${
             message.type === "success"
               ? "bg-green-100 text-green-800 border border-green-300"
               : "bg-red-100 text-red-800 border border-red-300"
@@ -308,7 +306,7 @@ const SchoolUnpaid = () => {
                 validIn={account.itemId.validIn}
                 onPurchase={() => handlePurchaseClick(account)}
                 icon={<FaHandHoldingDollar />}
-                button={"Soza Kwishyura"}
+                button={"Ishyura"}
                 buttonColor={buttonColor}
               />
             );

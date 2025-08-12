@@ -9,6 +9,8 @@ const SchoolMyAccount = () => {
   const [messageType, setMessageType] = useState("");
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const [formData, setFormData] = useState({
     companyName: "",
     tin: "",
@@ -92,7 +94,7 @@ const SchoolMyAccount = () => {
         if (!validatePasswordChange()) return;
         try {
           await axios.post(
-            `https://congozi-backend.onrender.com/api/v1/users/verify-password`,
+            `${ApiUrl}/users/verify-password`,
             {
               userId: user._id,
               password: passwordData.currentPassword,
@@ -110,16 +112,12 @@ const SchoolMyAccount = () => {
         const form = new FormData();
         form.append("password", passwordData.newPassword);
 
-        const response = await axios.put(
-          `https://congozi-backend.onrender.com/api/v1/users/${user._id}`,
-          form,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.put(`${ApiUrl}/users/${user._id}`, form, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         setMessage("Password updated successfully");
         setMessageType("success");
@@ -143,16 +141,12 @@ const SchoolMyAccount = () => {
           form.append("profile", profile);
         }
 
-        const response = await axios.put(
-          `https://congozi-backend.onrender.com/api/v1/users/${user._id}`,
-          form,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.put(`${ApiUrl}/users/${user._id}`, form, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         const updatedUser = response.data.data;
         localStorage.setItem("user", JSON.stringify(updatedUser));
@@ -299,10 +293,10 @@ const SchoolMyAccount = () => {
             </>
           )}
 
-          <div className="pt-4 flex md:text-xs text-md flex-row justify-center gap-3 md:gap-10 items-center">
+          <div className="pt-4 flex md:text-xs text-md flex-row justify-center gap-2 md:gap-10 items-center">
             <button
               type="submit"
-              className="bg-blue-900 text-white px-6 py-1 rounded hover:bg-blue-800 mb-3"
+              className="bg-blue-900 text-white md:px-6 px-2 py-1 rounded hover:bg-blue-800 mb-3"
             >
               {showPasswordForm ? (
                 <>

@@ -23,6 +23,7 @@ const LiveLearn = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const token = useMemo(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("token");
@@ -39,10 +40,9 @@ const LiveLearn = () => {
   useEffect(() => {
     const fetchPaidExam = async () => {
       try {
-        const res = await axios.get(
-          `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const res = await axios.get(`${ApiUrl}/purchases/access/${examCode}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setPaidExam(res.data.data.itemId);
       } catch (error) {
         console.error("Error fetching paid exam:", error);
@@ -56,10 +56,9 @@ const LiveLearn = () => {
       try {
         const examId = paidExam?.examId || paidExam?._id;
         if (!examId) return;
-        const res = await axios.get(
-          `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const res = await axios.get(`${ApiUrl}/exams/${examId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         const examData = res.data.data;
         setExamToDo(examData);
         if (typeof window !== "undefined") {
@@ -88,10 +87,9 @@ const LiveLearn = () => {
       const number = paidExam?.number;
       if (!number) return;
 
-      const purchaseRes = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/purchases/user",
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const purchaseRes = await axios.get(`${ApiUrl}/purchases/user`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const purchasedExams = purchaseRes.data.data;
       const examPurchased = purchasedExams.some(
@@ -99,10 +97,9 @@ const LiveLearn = () => {
       );
       if (!examPurchased) return;
 
-      const res = await axios.get(
-        `https://congozi-backend.onrender.com/api/v1/exams/gukora/${number}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const res = await axios.get(`${ApiUrl}/exams/gukora/${number}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const gukoraData = res.data.data;
       fetchgGukoraExam(gukoraData);
       if (typeof window !== "undefined") {
@@ -122,10 +119,9 @@ const LiveLearn = () => {
       const currentType = examToDo?.type;
 
       // Fetch exam with same number but different type
-      const res = await axios.get(
-        `https://congozi-backend.onrender.com/api/v1/exams/kora/${paidExam.number}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const res = await axios.get(`${ApiUrl}/exams/kora/${paidExam.number}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const alternateExam = res.data.data;
 
@@ -146,7 +142,7 @@ const LiveLearn = () => {
   const handlePayLaterClick = async () => {
     try {
       await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${gukoraExam._id}`,
+        `${ApiUrl}/purchases/${gukoraExam._id}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -177,9 +173,7 @@ const LiveLearn = () => {
   const handleTimeout = useCallback(async () => {
     try {
       if (examCode) {
-        await axios.delete(
-          `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`
-        );
+        await axios.delete(`${ApiUrl}/purchases/access/${examCode}`);
         navigate("/students/waitingexams", {
           replace: true,
           state: { reset: true },

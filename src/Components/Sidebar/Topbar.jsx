@@ -13,6 +13,7 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [expandedNotifications, setExpandedNotifications] = useState([]);
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser && storedUser !== "undefined") {
@@ -31,12 +32,9 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
     if (!token) return;
 
     try {
-      const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/notification/all",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.get(`${ApiUrl}/notification/all`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const data = response.data?.data || [];
       setNotifications(data);
       setNotificationCount(data.length);
@@ -74,12 +72,9 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
     if (!notification) return;
     const token = localStorage.getItem("token");
     try {
-      await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/notification/mark/${notification._id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await axios.delete(`${ApiUrl}/notification/mark/${notification._id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       fetchNotifications();
       setExpandedNotifications(
         expandedNotifications.filter((id) => id !== notification._id)

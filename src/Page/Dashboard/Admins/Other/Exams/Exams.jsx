@@ -9,6 +9,7 @@ import ViewQuestions from "./ViewQuestions";
 const EXAMS_PER_PAGE = 4;
 
 const AdminExams = () => {
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const [exams, setExams] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -60,15 +61,12 @@ const AdminExams = () => {
         return;
       }
 
-      const res = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/exams",
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${ApiUrl}/exams`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setExams(res.data.data || []);
     } catch (error) {
       console.error("Failed to fetch exams:", error);
@@ -119,14 +117,11 @@ const AdminExams = () => {
     }
 
     try {
-      await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/exams/${examToDelete._id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`${ApiUrl}/exams/${examToDelete._id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setExams(exams.filter((e) => e._id !== examToDelete._id));
       setExamToDelete(null);
       setShowDeleteConfirm(false);
@@ -149,7 +144,7 @@ const AdminExams = () => {
 
     try {
       const res = await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/exams/${editingExam._id}`,
+        `${ApiUrl}/exams/${editingExam._id}`,
         {
           title: editedTitle,
           fees: editedFees,

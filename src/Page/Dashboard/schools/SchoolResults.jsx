@@ -9,6 +9,7 @@ const SchoolResults = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const navigate = useNavigate();
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   useEffect(() => {
     const fetchExams = async () => {
       const token = localStorage.getItem("token");
@@ -20,7 +21,7 @@ const SchoolResults = () => {
 
       try {
         const res = await axios.get(
-          "https://congozi-backend.onrender.com/api/v1/responses/user",
+          `${ApiUrl}/responses/user`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -63,11 +64,9 @@ const SchoolResults = () => {
     );
   }
 
-  if (loading) return <div className="p-4">Loading...</div>;
-
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-semibold mb-4">Ibizamini wakoze</h2>
+    <div className="p-1">
+      <h2 className="text-md text-center text-Total font-semibold mb-4">Ibizamini nakoze</h2>
 
       {!selectedExam ? (
         <div className="grid gap-4 md:grid-cols-2">

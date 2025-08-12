@@ -14,13 +14,14 @@ const SchoolDemo = () => {
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [paymentStep, setPaymentStep] = useState("confirmation");
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const [account, setAccount] = useState({ data: [] });
 
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/accounts",
+        `${ApiUrl}/accounts`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

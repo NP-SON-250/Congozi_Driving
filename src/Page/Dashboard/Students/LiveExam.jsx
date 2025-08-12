@@ -25,6 +25,7 @@ const LiveExam = () => {
   const [userName, setUserName] = useState("");
   const [showCongrats, setShowCongrats] = useState(false);
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const hasShownSuccess = useRef(false);
   const location = useLocation();
   const navkwigate = useNavigate();
@@ -80,12 +81,9 @@ const LiveExam = () => {
     const fetchPaidExam = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(
-          `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const res = await axios.get(`${ApiUrl}/purchases/access/${examCode}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setPaidExam(res.data.data.itemId);
       } catch (error) {
         console.error("Error fetching paid exam:", error);
@@ -101,12 +99,9 @@ const LiveExam = () => {
         const examId = paidExam?.examId || paidExam?._id;
         if (!examId) return;
 
-        const res = await axios.get(
-          `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const res = await axios.get(`${ApiUrl}/exams/${examId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         const examData = res.data.data;
         setExamToDo(examData);
 
@@ -201,30 +196,26 @@ const LiveExam = () => {
         responses,
       };
 
-      const res = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/responses/add",
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log("Deleted access code:", examCode);
+      const res = await axios.post(`${ApiUrl}/responses/add`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (res.data) {
         try {
-          const deleted = await axios.delete(
-            `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
+          const updated = await axios.put(
+            `${ApiUrl}/purchases/access/${examCode}`,
+            {},
             {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
             }
           );
-          console.log("Deleted data:", deleted);
+          console.log("updated data:", updated);
         } catch (deleteError) {
-          console.error("Error deleting purchase record:", deleteError);
+          console.error("Error updating purchase record:", deleteError);
         }
       }
 

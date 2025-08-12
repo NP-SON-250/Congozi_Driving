@@ -17,13 +17,14 @@ const ManualTracking = () => {
   const [notFound, setNotFound] = useState(false);
   const navkwigate = useNavigate();
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   useEffect(() => {
     if (examCode) {
       const fetchData = async () => {
         try {
           const token = localStorage.getItem("token");
           const response = await axios.get(
-            `https://congozi-backend.onrender.com/api/v1/purchases/access/${examCode}`,
+            `${ApiUrl}/purchases/access/${examCode}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,

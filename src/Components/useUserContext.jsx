@@ -1,24 +1,50 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useMemo } from "react";
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [userRole, setUserRole] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [state, setState] = useState({
+    user: null,
+    userRole: null,
+    loading: true
+  });
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      setUserRole(parsedUser.role);
-    }
-    setLoading(false);
+    const loadUserData = async () => {
+      try {
+        // Immediate loading state
+        setState(prev => ({ ...prev, loading: true }));
+        
+        // Simulate network request
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          setState({
+            user: parsedUser,
+            userRole: parsedUser.role,
+            loading: false
+          });
+        } else {
+          setState(prev => ({ ...prev, loading: false }));
+        }
+      } catch (error) {
+        console.error("Failed to load user data:", error);
+        setState(prev => ({ ...prev, loading: false }));
+      }
+    };
+
+    loadUserData();
   }, []);
 
+  const value = useMemo(() => ({
+    ...state,
+    setUser: (user) => setState({ user, userRole: user?.role, loading: false })
+  }), [state]);
+
   return (
-    <UserContext.Provider value={{ user, setUser, userRole, loading }}>
+    <UserContext.Provider value={value}>
       {children}
     </UserContext.Provider>
   );

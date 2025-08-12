@@ -8,6 +8,7 @@ const AddNewExamPopup = ({ setShowAddExamPopup, onExamAdded }) => {
   const [examType, setExamType] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const handleSave = async () => {
     try {
       setIsLoading(true);
@@ -20,7 +21,7 @@ const AddNewExamPopup = ({ setShowAddExamPopup, onExamAdded }) => {
 
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/exams",
+        `${ApiUrl}/exams`,
         newExam,
         {
           headers: {

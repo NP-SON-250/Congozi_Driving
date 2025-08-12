@@ -18,6 +18,7 @@ const Login = () => {
   const navkwigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const handleLogin = async () => {
     if (!identifier || !password) {
       toast.error("Shyiramo nomero ya telefone n'ijambo banga");
@@ -27,7 +28,7 @@ const Login = () => {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/users/auth",
+        `${ApiUrl}/users/auth`,
         {
           identifier,
           password,

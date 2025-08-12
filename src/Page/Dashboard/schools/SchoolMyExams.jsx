@@ -4,6 +4,7 @@ import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../../Components/LoadingSpinner ";
+import Mtn from "../../../assets/MTN.jpg";
 const SchoolMyExams = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [accountsPerPage, setAccountsPerPage] = useState(10);
@@ -19,6 +20,7 @@ const SchoolMyExams = () => {
   const [uniqueValids, setUniqueValids] = useState([]);
   const [uniqueFees, setUniqueFees] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
 
   // Get user info from localStorage
@@ -33,14 +35,11 @@ const SchoolMyExams = () => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/purchases/user",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${ApiUrl}/purchases/user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const result = response.data?.data;
       setAccount(Array.isArray(result) ? { data: result } : { data: [result] });
     } catch (error) {
@@ -168,11 +167,11 @@ const SchoolMyExams = () => {
       const purchasedDataId = selectedAccount._id;
       const paidItem = selectedAccount.itemId;
 
-      const notificationMessage = `Dear Admin, Turakumenyesha ko ${userName} yishyuye konte ${paidItem.title} y'iminsi ${paidItem.validIn} amafaranga ${selectedAccount.amount} Rwf akoresheje telephone ${phoneUsed} ibaruye kuri ${ownerName}. Reba ko wayabonye kuri telephone nimero: 250 783 905 790 maze umuhe uburenganzira kuri iyi purchase Id: ${purchasedDataId}. Murakoze!!!!!`;
+      const notificationMessage = `Dear Admin, Turakumenyesha ko ${userName} yishyuye konte ${paidItem.title} y'iminsi ${paidItem.validIn} amafaranga ${selectedAccount.amount} Rwf akoresheje telephone ${phoneUsed} ibaruye kuri ${ownerName}. Reba ko wayabonye kuri telephone nimero: 250 783 905 790 maze umuhe uburenganzira kuri iyi purchase Id: ${purchasedDataId}`;
       const noteTitle = `${userName} requests for approval`;
 
       await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/notification",
+        `${ApiUrl}/notification`,
         {
           message: notificationMessage,
           noteTitle: noteTitle,
@@ -190,7 +189,7 @@ const SchoolMyExams = () => {
       const purchaseId = selectedAccount._id;
 
       await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${purchaseId}`,
+        `${ApiUrl}/purchases/${purchaseId}`,
         { status: "waitingConfirmation" },
         {
           headers: {
@@ -200,7 +199,7 @@ const SchoolMyExams = () => {
       );
 
       setMessage({
-        text: "Kwishyura byakunze neza!",
+        text: "Kumenyekanisha ubwishyu byakozwe neza!",
         type: "success",
       });
       setTimeout(() => setMessage({ text: "", type: "" }), 9000);
@@ -209,7 +208,7 @@ const SchoolMyExams = () => {
       fetchData();
     } catch (error) {
       setMessage({
-        text: "Kwishyura byanze. Wongera gerageza.",
+        text: "Kumenyekanisha ubwishyu byanze. Wongera ugerageze.",
         type: "error",
       });
       setTimeout(() => setMessage({ text: "", type: "" }), 9000);
@@ -316,12 +315,12 @@ const SchoolMyExams = () => {
                 <th className="text-center p-2 whitespace-nowrap">
                   Izina ry'ikonte
                 </th>
-                <th className="text-center p-2 whitespace-nowrap">Iminsi</th>
+                <th className="text-center p-2 whitespace-nowrap">Iminsi izamara</th>
+                <th className="text-center p-2 whitespace-nowrap">Igihe isabiwe</th>
                 <th className="text-center p-2 whitespace-nowrap">
                   Izarangira
                 </th>
-                <th className="text-center p-2 whitespace-nowrap">Itariki</th>
-                <th className="text-center p-2 whitespace-nowrap">Igiciro</th>
+                <th className="text-center p-2 whitespace-nowrap">Igiciro iguhagaze</th>
                 <th className="text-center p-2 whitespace-nowrap">Imimerere</th>
               </tr>
             </thead>
@@ -372,22 +371,19 @@ const SchoolMyExams = () => {
                           <button
                             title="Pay"
                             onClick={() => setSelectedAccount(account)}
-                            className="text-blue-500 underline py-1 px-3 flex md:tex-md font-bold hover:text-yellow-700 text-xs items-center gap-2"
+                            className="text-Total text-sm bg-blue-300 rounded-md py-0 px-3 flex hover:bg-green-300 items-center gap-2"
                           >
-                            Soza Kwishyura
+                            Soza kwishyura
                           </button>
                         ) : account.status === "complete" ? (
                           <button
                             onClick={() => handleDoAccount(account)}
-                            className="text-blue-500 underline py-1 px-3 flex md:tex-md font-bold hover:text-yellow-700 text-xs items-center gap-2"
+                            className="text-Total text-sm bg-green-300 rounded-md py-0 px-3 flex hover:bg-blue-300 items-center gap-2"
                           >
                             Koresha Konte
                           </button>
                         ) : (
-                          <button
-                            className="text-blue-500 underline py-1 px-3"
-                            disabled
-                          >
+                          <button className="bg-gray-400 text-Total rounded-md py-0 px-3 cursor-not-allowed">
                             Tegereza
                           </button>
                         )}
@@ -399,10 +395,10 @@ const SchoolMyExams = () => {
                         {account.itemId?.validIn} Days
                       </td>
                       <td className="text-start md:tex-md text-xs px-2 whitespace-nowrap">
-                        {getRemainingDays(account.endDate)}
+                        {getCurrentDate()}
                       </td>
                       <td className="text-start md:tex-md text-xs px-2 whitespace-nowrap">
-                        {getCurrentDate()}
+                        {getRemainingDays(account.endDate)}
                       </td>
                       <td className="text-start md:tex-md text-xs px-2 whitespace-nowrap">
                         {account.amount} Rwf
@@ -474,6 +470,7 @@ const SchoolMyExams = () => {
                 </span>
               </p>
               <p className="flex justify-center md:py-6 py-4 font-bold">
+                <img src={Mtn} alt="" className="w-10 h-6 pr-3" />
                 *182*8*1*
                 <span className="bg-green-400/20 border border-green-600">
                   072255

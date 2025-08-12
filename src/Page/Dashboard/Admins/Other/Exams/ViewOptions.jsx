@@ -6,6 +6,7 @@ import DeleteOptionPopup from "./DeleteOptionPopup";
 import axios from "axios";
 
 const ViewOptions = ({ question, onBack }) => {
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [optionToEdit, setOptionToEdit] = useState(false);
   const [editedOptionText, setEditedOptionText] = useState("");
@@ -20,9 +21,7 @@ const ViewOptions = ({ question, onBack }) => {
 
   const fetchOptions = async () => {
     try {
-      const res = await axios.get(
-        `https://congozi-backend.onrender.com/api/v1/options/${question._id}`
-      );
+      const res = await axios.get(`${ApiUrl}/options/${question._id}`);
       if (res.data && res.data.data) {
         setOptions(res.data.data);
       }
@@ -41,7 +40,7 @@ const ViewOptions = ({ question, onBack }) => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/options/${optionToEdit._id}`,
+        `${ApiUrl}/options/${optionToEdit._id}`,
         {
           text: editedOptionText,
           isCorrect: editedIsCorrect,
@@ -65,15 +64,12 @@ const ViewOptions = ({ question, onBack }) => {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/options/${optionToDelete._id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`${ApiUrl}/options/${optionToDelete._id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setOptionToDelete(null);
       fetchOptions();
     } catch (error) {

@@ -19,12 +19,13 @@ const SchoolDoExams = () => {
   const { accessCode } = queryString.parse(location.search);
   const [account, setAccount] = useState({ data: [] });
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   // Fetch paid accounts
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/purchases/complete",
+        `${ApiUrl}/purchases/complete`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

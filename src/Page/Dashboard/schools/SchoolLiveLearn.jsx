@@ -16,6 +16,7 @@ const SchoolLiveLearn = () => {
   const location = useLocation();
   const navkwigate = useNavigate();
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const id = params.get("id") || "";
@@ -26,10 +27,9 @@ const SchoolLiveLearn = () => {
     const fetchExamDetails = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(
-          `https://congozi-backend.onrender.com/api/v1/exams/${examId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const res = await axios.get(`${ApiUrl}/exams/${examId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         const examData = res.data.data;
         setExamToDo(examData);
         localStorage.setItem("live_exam_data", JSON.stringify(examData));

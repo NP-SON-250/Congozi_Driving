@@ -6,6 +6,7 @@ import EditAccountPopup from "../Accounts/EditAccountPopup";
 const EXAMS_PER_PAGE = 4;
 
 const Payments = () => {
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [accounts, setAccounts] = useState([]);
@@ -37,9 +38,7 @@ const Payments = () => {
 
   const fetchAccounts = async () => {
     try {
-      const response = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/accounts"
-      );
+      const response = await axios.get(`${ApiUrl}/accounts`);
       setAccounts(response.data.data || []);
     } catch (error) {
       console.error("Failed to fetch accounts:", error);
@@ -73,15 +72,12 @@ const Payments = () => {
         return;
       }
 
-      await axios.delete(
-        `https://congozi-backend.onrender.com/api/v1/accounts/${accountToDelete._id}`,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`${ApiUrl}/accounts/${accountToDelete._id}`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       fetchAccounts();
     } catch (error) {
       console.error("Failed to delete account:", error);
@@ -104,7 +100,7 @@ const Payments = () => {
       }
 
       await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/accounts/${accountToEdit._id}`,
+        `${ApiUrl}/accounts/${accountToEdit._id}`,
         {
           title: editedTitle,
           fees: editedFees,

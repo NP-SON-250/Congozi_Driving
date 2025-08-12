@@ -7,6 +7,7 @@ const AddQuestionPopup = ({
   selectedExam,
   refreshQuestions,
 }) => {
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const [selectedImage, setSelectedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -48,7 +49,7 @@ const AddQuestionPopup = ({
 
       const token = localStorage.getItem("token");
       await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/questions/${selectedExam._id}`,
+        `${ApiUrl}/${selectedExam._id}`,
         data,
         {
           headers: {

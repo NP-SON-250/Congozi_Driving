@@ -10,17 +10,15 @@ const AdminsPayments = () => {
   const [payerFilter, setPayerFilter] = useState("");
   const [paymentIdFilter, setPaymentIdFilter] = useState("");
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const fetchPayments = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.get(
-        "https://congozi-backend.onrender.com/api/v1/purchases/",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${ApiUrl}/purchases/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = res.data;
       const mapped = data.data.map((item) => {
         let payerName = "Unknown";
@@ -48,6 +46,8 @@ const AdminsPayments = () => {
               ? "Completed"
               : item.status === "waitingConfirmation"
               ? "Waiting"
+              : item.status === "expired"
+              ? "Consumed"
               : "Pending",
         };
       });
@@ -66,7 +66,7 @@ const AdminsPayments = () => {
     setLoadingId(id);
     try {
       await axios.put(
-        `https://congozi-backend.onrender.com/api/v1/purchases/${id}`,
+        `${ApiUrl}/purchases/${id}`,
         { status: "complete" },
         {
           headers: {
@@ -108,6 +108,22 @@ const AdminsPayments = () => {
     setCurrentPage(pageNumber);
   };
 
+  const handleDelete = async (id) => {
+    const token = localStorage.getItem("token");
+    setLoadingId(id);
+    try {
+      await axios.delete(`${ApiUrl}/purchases/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      await fetchPayments();
+    } catch (err) {
+      console.error("Failed to delete payment:", err);
+    } finally {
+      setLoadingId(null);
+    }
+  };
   return (
     <div className="md:px-6 py-6 px-1">
       <div className="flex justify-between items-center mb-6">
@@ -133,7 +149,7 @@ const AdminsPayments = () => {
       </div>
 
       <div className="overflow-auto scrollbar-hide rounded-lg shadow border border-blue-900">
-        <table className="w-full text-left table-auto">
+        <table className="min-w-full table-auto">
           <thead className="bg-gray-100 text-gray-700">
             <tr>
               <th className="px-6 py-1 whitespace-nowrap">Actions</th>
@@ -155,19 +171,25 @@ const AdminsPayments = () => {
                     <button
                       onClick={() => handleConfirm(payment.id)}
                       disabled={loadingId === payment.id}
-                      className={`text-blue-600 ${
-                        loadingId === payment.id
-                          ? "text-green-700"
-                          : "hover:text-yellow-700"
+                      className={`text-Total text-sm bg-blue-300 rounded-md py-0 px-3 flex hover:bg-green-300 items-center gap-2 ${
+                        loadingId === payment.id ? "opacity-50" : ""
                       }`}
                     >
                       {loadingId === payment.id ? "Confirming..." : "Confirm"}
                     </button>
-                  ) : (
-                    <span className="text-sm text-gray-400 cursor-not-allowed">
-                      No Action
-                    </span>
-                  )}
+                  ) : payment.status === "Expired" ? (
+                    <button
+                      onClick={() => handleDelete(payment.id)}
+                      disabled={loadingId === payment.id}
+                      className={`text-Total text-sm bg-red-300 rounded-md py-0 px-3 flex hover:bg-blue-300 items-center gap-2 ${
+                        loadingId === payment.id ? "opacity-50" : ""
+                      }`}
+                    >
+                      {loadingId === payment.id ? "Deleting..." : "Delete"}
+                    </button>
+                  ) : payment.status === "Completed" ?(
+                    <span className="text-Total text-sm bg-gray-300 rounded-md py-0 px-3 flex items-center gap-2 cursor-not-allowed">No action</span>
+                  ):(null)}
                 </td>
                 <td className="px-6 py-1 whitespace-nowrap">{payment.payer}</td>
                 <td className="px-6 py-1 whitespace-nowrap">

@@ -7,6 +7,7 @@ const AddOptionPopup = ({ question, onClose, onSave }) => {
   const [isCorrect, setIsCorrect] = useState("false");
   const [isLoading, setIsLoading] = useState(false);
 
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const handleSubmit = async () => {
     if (!optionText.trim()) {
       alert("Option text cannot be empty.");
@@ -23,7 +24,7 @@ const AddOptionPopup = ({ question, onClose, onSave }) => {
 
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        `https://congozi-backend.onrender.com/api/v1/options/${question._id}`,
+        `${ApiUrl}/options/${question._id}`,
         payload,
         {
           headers: {

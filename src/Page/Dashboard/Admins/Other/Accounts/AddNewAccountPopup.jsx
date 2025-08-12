@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import LoadingSpinner from "../../../../../Components/LoadingSpinner ";
 const AddNewAccountPopup = ({ setShowAddAccountPopup, onAccountAdded }) => {
+  const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const [accountTitle, setAccountTitle] = useState("");
   const [accountFees, setAccountFees] = useState("");
   const [accountValidIn, setAccountValidIn] = useState("");
@@ -11,7 +12,7 @@ const AddNewAccountPopup = ({ setShowAddAccountPopup, onAccountAdded }) => {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        "https://congozi-backend.onrender.com/api/v1/accounts",
+        `${ApiUrl}/accounts`,
         {
           title: accountTitle,
           fees: accountFees,
