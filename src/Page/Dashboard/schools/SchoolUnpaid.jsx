@@ -25,37 +25,27 @@ const SchoolUnpaid = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Validate phone number (MTN Rwanda)
   const validatePhone = (phone) => {
     const regex = /^(078|079)\d{7}$/;
     return regex.test(phone);
   };
 
-  // Validate name (allow first name only, but validate both if space included)
   const validateName = (name) => {
     const nameParts = name.trim().split(/\s+/);
-
-    // Allow single name (first name only)
     if (nameParts.length === 1) {
       return /^[a-zA-Z]{2,}$/.test(nameParts[0]);
     }
-
-    // If multiple names provided, validate all parts
     return (
       nameParts.length >= 2 &&
       nameParts.every((part) => /^[a-zA-Z]{2,}$/.test(part))
     );
   };
-
-  // Get user info from localStorage
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
       setUserName(user.companyName);
     }
   }, []);
-
-  // Fetch unpaid accounts
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -78,8 +68,6 @@ const SchoolUnpaid = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  // Adjust items per page on screen resize
   useEffect(() => {
     const updateAccountsPerPage = () => {
       setAccountsPerPage(window.innerWidth >= 768 ? 6 : 2);
@@ -208,8 +196,6 @@ const SchoolUnpaid = () => {
   return (
     <div className="flex flex-col justify-center items-center md:px-5 gap-1 bg-white md:p-2">
       <WelcomeDear />
-
-      {/* Filters */}
       <div className="grid md:grid-cols-3 grid-cols-2 justify-between items-center md:gap-32 gap-1 px-3 py-4">
         <input
           type="text"
@@ -245,8 +231,6 @@ const SchoolUnpaid = () => {
           className="border-2 border-blue-500 p-2 rounded-xl w-full"
         />
       </div>
-
-      {/* Message display */}
       {message.text && (
         <div
           className={`flex justify-center w-[100%] z-50 p-4 rounded-md shadow-lg ${
@@ -285,8 +269,6 @@ const SchoolUnpaid = () => {
           </div>
         </div>
       )}
-
-      {/* Account Cards */}
       {filteredAccounts.length === 0 ? (
         <p className="text-center py-4 text-red-500">
           Ntakonte itishyuye ufite
@@ -313,8 +295,6 @@ const SchoolUnpaid = () => {
           })}
         </div>
       )}
-
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-around md:gap-[700px] gap-[120px] md:pb-0 pt-3 px-10">
           <div>
@@ -347,8 +327,6 @@ const SchoolUnpaid = () => {
           </div>
         </div>
       )}
-
-      {/* Payment Popup */}
       {selectedAccount && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[999]">
           <div className="bg-white rounded-lg shadow-lg md:max-w-4xl w-full text-center relative">

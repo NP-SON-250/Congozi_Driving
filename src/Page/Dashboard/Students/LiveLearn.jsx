@@ -114,11 +114,7 @@ const LiveLearn = () => {
     setIsLoadingExam(true);
     try {
       if (!paidExam) return;
-
-      // Get the current exam type
       const currentType = examToDo?.type;
-
-      // Fetch exam with same number but different type
       const res = await axios.get(`${ApiUrl}/exams/kora/${paidExam.number}`, {
         headers: { Authorization: `Bearer ${token}` },
       });

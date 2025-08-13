@@ -2,7 +2,6 @@ import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import Topbar from "../Sidebar/Topbar";
-import { useState } from "react";
 
 const UsersLay = ({ role }) => {
   const location = useLocation();

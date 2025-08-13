@@ -22,16 +22,12 @@ const SchoolMyExams = () => {
   const [isLoading, setIsLoading] = useState(false);
   const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
-
-  // Get user info from localStorage
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
       setUserName(user.companyName);
     }
   }, []);
-
-  // Fetch accounts
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -55,25 +51,18 @@ const SchoolMyExams = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  // Update unique filters when account data changes
   useEffect(() => {
     if (account.data && account.data.length > 0) {
-      // Get unique valid days
       const valids = [
         ...new Set(account.data.map((item) => item.itemId?.validIn)),
       ].filter(Boolean);
       setUniqueValids(valids);
-
-      // Get unique fees
       const fees = [...new Set(account.data.map((item) => item.amount))].filter(
         Boolean
       );
       setUniqueFees(fees.sort((a, b) => a - b));
     }
   }, [account.data]);
-
-  // Adjust items per page on screen resize
   useEffect(() => {
     const updateAccountsPerPage = () => {
       setAccountsPerPage(window.innerWidth >= 768 ? 10 : 5);
@@ -82,30 +71,21 @@ const SchoolMyExams = () => {
     window.addEventListener("resize", updateAccountsPerPage);
     return () => window.removeEventListener("resize", updateAccountsPerPage);
   }, []);
-
-  // Validate phone number (MTN Rwanda)
   const validatePhone = (phone) => {
     const regex = /^(078|079)\d{7}$/;
     return regex.test(phone);
   };
 
-  // Validate name (allow first name only, but validate both if space included)
   const validateName = (name) => {
     const nameParts = name.trim().split(/\s+/);
-
-    // Allow single name (first name only)
     if (nameParts.length === 1) {
       return /^[a-zA-Z]{2,}$/.test(nameParts[0]);
     }
-
-    // If multiple names provided, validate all parts
     return (
       nameParts.length >= 2 &&
       nameParts.every((part) => /^[a-zA-Z]{2,}$/.test(part))
     );
   };
-
-  // Enhanced search functionality
   const filteredAccounts = account.data.filter(
     (item) =>
       (valid === "" || item.itemId.validIn?.toString().includes(valid)) &&
@@ -130,7 +110,6 @@ const SchoolMyExams = () => {
   };
 
   const handleNotify = async () => {
-    // Validate inputs
     if (!phoneUsed || !ownerName) {
       setMessage({
         text: "Uzuza nimero ya telephone n'amazina yo ibaruyeho",
@@ -253,8 +232,6 @@ const SchoolMyExams = () => {
       <div className="flex justify-center items-center gap-4 text-blue-900 font-bold py-2 border bg-gray-100 rounded-md">
         <h1>My Accounts</h1>
       </div>
-
-      {/* Message display */}
       {message.text && (
         <div
           className={`p-2 rounded-md ${
@@ -266,8 +243,6 @@ const SchoolMyExams = () => {
           {message.text}
         </div>
       )}
-
-      {/* Search and filter controls */}
       <div className="grid md:grid-cols-3 grid-cols-1 justify-between items-center md:gap-32 gap-1 px-3 py-4 text-gray-400 text-sx">
         <input
           type="text"
@@ -447,8 +422,6 @@ const SchoolMyExams = () => {
           </div>
         </div>
       )}
-
-      {/* Payment Popup */}
       {selectedAccount && (
         <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[999]">
           <div className="bg-white rounded-lg shadow-lg md:max-w-2xl w-full text-center relative p-4">

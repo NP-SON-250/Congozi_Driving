@@ -3,37 +3,29 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { useUserContext } from "./Components/useUserContext";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import FullPageLoader from "./Components/FullPageLoader";
-
-// Preload critical components
 const LandingLay = lazy(() =>
   import(
-    /* webpackPrefetch: true */
     "./Components/Layouts/LandingLay"
   )
 );
 
 const UserStudent = lazy(() =>
   import(
-    /* webpackPreload: true */
     "./Components/Users/Students/UserStudent"
   )
 );
 
 const UserAdmin = lazy(() =>
   import(
-    /* webpackPreload: true */
     "./Components/Users/Admins/UserAdmin"
   )
 );
 
 const UserSchool = lazy(() =>
   import(
-    /* webpackPreload: true */
     "./Components/Users/Schools/UserSchool"
   )
 );
-
-// Landing Pages
 const Home = lazy(() => import("./Page/Landing/Home"));
 const Services = lazy(() => import("./Page/Landing/Services"));
 const Register = lazy(() => import("./Page/Landing/Register"));
@@ -41,7 +33,6 @@ const ContactUs = lazy(() => import("./Page/Landing/ContactUs"));
 const Login = lazy(() => import("./Page/Landing/Login"));
 const RestPassword = lazy(() => import("./Page/Landing/RestPassword"));
 
-// Student Pages
 const StudentHome = lazy(() => import("./Page/Dashboard/Students/StudentHome"));
 const StudentMarket = lazy(() =>
   import("./Page/Dashboard/Students/StudentMarket")
@@ -68,7 +59,6 @@ const StudentResults = lazy(() =>
 );
 const SchoolDemo = lazy(() => import("./Page/Dashboard/Students/SchoolDemo"));
 
-// Admin Pages
 const AdminDashboard = lazy(() =>
   import("./Page/Dashboard/Admins/AdminDashboard")
 );
@@ -82,7 +72,6 @@ const AdminsPayments = lazy(() =>
   import("./Page/Dashboard/Admins/AdminsPayments")
 );
 
-// School Pages
 const SchoolsDashboard = lazy(() =>
   import("./Page/Dashboard/schools/SchoolsDashboard")
 );
@@ -126,7 +115,6 @@ const App = () => {
   const [initialLoad, setInitialLoad] = useState(true);
 
   useEffect(() => {
-    // Handle initial load
     const timer = setTimeout(() => {
       setInitialLoad(false);
     }, 100);
@@ -135,20 +123,17 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    // Handle route changes
     const handleRouteChange = () => {
       setRouteLoading(true);
       const timer = setTimeout(() => {
         setRouteLoading(false);
-      }, 800); // Minimum route transition time
+      }, 800);
 
       return () => clearTimeout(timer);
     };
 
     handleRouteChange();
   }, [location]);
-
-  // Determine when to show loader
   const showLoader = initialLoad || userLoading || routeLoading;
 
   if (showLoader) {
@@ -156,14 +141,12 @@ const App = () => {
   }
 
   return (
-    // onContextMenu={(e) => e.preventDefault()} select-none
     <div
-      className="overflow-x-hidden font-Poppins"
+      className="overflow-x-hidden font-Poppins select-none"
       onContextMenu={(e) => e.preventDefault()}
     >
       <Suspense fallback={<FullPageLoader />}>
         <Routes location={location} key={location.key}>
-          {/* Public Routes */}
           <Route element={<LandingLay />}>
             <Route index element={<Home />} />
             <Route path="/serivisi" element={<Services />} />
@@ -172,8 +155,6 @@ const App = () => {
             <Route path="/kwinjira" element={<Login />} />
             <Route path="/hindura" element={<RestPassword />} />
           </Route>
-
-          {/* Student Routes */}
           {userRole === "student" && (
             <Route element={<ProtectedRoute allowedRole="student" />}>
               <Route element={<UserStudent />}>
@@ -197,8 +178,6 @@ const App = () => {
               </Route>
             </Route>
           )}
-
-          {/* Admin Routes */}
           {(userRole === "admin" || userRole === "supperAdmin") && (
             <Route element={<ProtectedRoute allowedRole={userRole} />}>
               <Route element={<UserAdmin />}>
@@ -211,8 +190,6 @@ const App = () => {
               </Route>
             </Route>
           )}
-
-          {/* School Routes */}
           {userRole === "school" && (
             <Route element={<ProtectedRoute allowedRole="school" />}>
               <Route element={<UserSchool />}>

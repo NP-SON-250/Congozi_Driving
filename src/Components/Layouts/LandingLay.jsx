@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
-
-// Move static values outside component
 const currentYear = new Date().getFullYear();
 const COPYRIGHT_TEXT = `© ${currentYear} Congozi Expert Technical Unity Limited`;
 
@@ -18,12 +16,8 @@ const LandingLay = () => {
     const checkScreenSize = () => {
       setApplyHeight(window.matchMedia("(min-width: 768px)").matches);
     };
-
-    // Initial setup
     setVh();
     checkScreenSize();
-
-    // Event listeners with debouncing
     const debounce = (fn) => {
       let frame;
       return () => {

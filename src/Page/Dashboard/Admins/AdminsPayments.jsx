@@ -129,8 +129,6 @@ const AdminsPayments = () => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Manage All Payments</h2>
       </div>
-
-      {/* Filters */}
       <div className="flex flex-wrap gap-4 mb-4">
         <input
           type="text"
@@ -164,7 +162,6 @@ const AdminsPayments = () => {
           <tbody>
             {currentPayments.map((payment) => (
               <tr key={payment.id} className="border-t hover:bg-gray-50">
-                {/* Hidden ID for potential admin use */}
                 <td className="hidden">{payment.id}</td>
                 <td className="px-6 py-1 whitespace-nowrap">
                   {payment.status === "Waiting" ? (
@@ -177,7 +174,7 @@ const AdminsPayments = () => {
                     >
                       {loadingId === payment.id ? "Confirming..." : "Confirm"}
                     </button>
-                  ) : payment.status === "Expired" ? (
+                  ) : payment.status === "Consumed" ? (
                     <button
                       onClick={() => handleDelete(payment.id)}
                       disabled={loadingId === payment.id}
@@ -222,8 +219,6 @@ const AdminsPayments = () => {
           </tbody>
         </table>
       </div>
-
-      {/* Pagination */}
       <div className="flex justify-center items-center gap-4 mt-4">
         <button
           onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}

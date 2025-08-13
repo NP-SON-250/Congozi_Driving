@@ -10,9 +10,9 @@ const DeleteQuestionPopup = ({ onConfirm, onCancel }) => {
         <div className="flex justify-around space-x-4">
           <button
             onClick={onConfirm}
-            className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+            className="px-2 py-1 bg-red-400 text-white rounded hover:bg-red-500"
           >
-            Yes
+            Delete
           </button>
           <button
             onClick={onCancel}

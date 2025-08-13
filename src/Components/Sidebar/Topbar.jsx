@@ -105,8 +105,6 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
         </Link>
         <div className="text-xs font-bold text-white">{currentSection}</div>
       </div>
-
-      {/* Mobile menu */}
       <div
         className="flex justify-center items-center gap-2 cursor-pointer md:hidden"
         onClick={toggleMenu}
@@ -215,8 +213,6 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
           </ul>
         </div>
       )}
-
-      {/* Desktop Notifications */}
       <div className="md:flex hidden justify-end items-center gap-12 text-white relative">
         <div
           className="cursor-pointer flex relative"
@@ -277,8 +273,6 @@ const Topbar = ({ currentSection, role = "students", onSignOut }) => {
             )}
           </div>
         )}
-
-        {/* User Info */}
         <div className="flex flex-col justify-center items-center gap-0">
           {user?.profile ? (
             <img

@@ -1,17 +1,24 @@
 import React, { useState } from "react";
 import axios from "axios";
 import LoadingSpinner from "../../../../../Components/LoadingSpinner ";
+
 const AddNewExamPopup = ({ setShowAddExamPopup, onExamAdded }) => {
   const [examTitle, setExamTitle] = useState("");
   const [examFees, setExamFees] = useState("");
   const [examNumber, setExamNumber] = useState("");
   const [examType, setExamType] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const ApiUrl = import.meta.env.VITE_API_BASE_URL;
+
   const handleSave = async () => {
     try {
       setIsLoading(true);
+      setErrorMessage("");
+      setSuccessMessage("");
+      
       const newExam = {
         number: examNumber,
         title: examTitle,
@@ -30,13 +37,24 @@ const AddNewExamPopup = ({ setShowAddExamPopup, onExamAdded }) => {
           },
         }
       );
-
-      if (res.data) {
-        console.log("Exam Added Successfully:", res.data.data);
-        onExamAdded(res.data.data);
+      const successMsg = res.data?.message;
+      setSuccessMessage(successMsg);
+      setTimeout(() => {
+        setExamTitle("");
+        setExamFees("");
+        setExamNumber("");
+        setExamType("");
         setShowAddExamPopup(false);
-      }
+        onExamAdded(res.data.data);
+      }, 3000);
+      
     } catch (error) {
+      const errorMsg = error.response?.data?.message
+      setErrorMessage(errorMsg);
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 3000);
+      
       console.error("Error adding new exam:", error);
     } finally {
       setIsLoading(false);
@@ -49,6 +67,17 @@ const AddNewExamPopup = ({ setShowAddExamPopup, onExamAdded }) => {
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
           Add New Exam
         </h2>
+        {successMessage && (
+          <div className="mb-4 p-2 bg-green-100 text-green-700 rounded text-sm">
+            {successMessage}
+          </div>
+        )}
+        {errorMessage && (
+          <div className="mb-4 p-2 bg-red-100 text-red-700 rounded text-sm">
+            {errorMessage}
+          </div>
+        )}
+
         <div className="space-y-4">
           <div>
             <label htmlFor="examNumber" className="block text-sm text-gray-700">
@@ -103,18 +132,22 @@ const AddNewExamPopup = ({ setShowAddExamPopup, onExamAdded }) => {
         <div className="mt-6 flex justify-around">
           <button
             onClick={() => setShowAddExamPopup(false)}
-            className="px-2 py-1 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+            disabled={isLoading}
+            className={`px-2 py-1 ${
+              isLoading ? "bg-gray-200" : "bg-gray-300 hover:bg-gray-400"
+            } text-gray-800 rounded`}
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+            disabled={isLoading}
+            className={`px-2 py-1 ${
+              isLoading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
+            } text-white rounded flex items-center justify-center min-w-[100px]`}
           >
             {isLoading ? (
-              <>
-                <LoadingSpinner size={5} strokeWidth={2} />
-              </>
+              <LoadingSpinner size={5} strokeWidth={2} />
             ) : (
               "Save Exam"
             )}

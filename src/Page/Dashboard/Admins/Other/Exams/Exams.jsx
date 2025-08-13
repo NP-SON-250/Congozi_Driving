@@ -26,6 +26,9 @@ const AdminExams = () => {
   const [examToDelete, setExamToDelete] = useState(null);
   const [viewingExam, setViewingExam] = useState(null);
   const [selectedExam, setSelectedExam] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [editSuccessMessage, setEditSuccessMessage] = useState("");
+  const [editErrorMessage, setEditErrorMessage] = useState("");
 
   const isAdmin = currentUser?.role === "admin";
   const isSuperAdmin = currentUser?.role === "supperAdmin";
@@ -143,6 +146,10 @@ const AdminExams = () => {
     }
 
     try {
+      setIsSaving(true);
+      setEditErrorMessage("");
+      setEditSuccessMessage("");
+
       const res = await axios.put(
         `${ApiUrl}/exams/${editingExam._id}`,
         {
@@ -152,10 +159,14 @@ const AdminExams = () => {
         },
         {
           headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         }
       );
+
+      const successMsg = res.data?.message;
+      setEditSuccessMessage(successMsg);
       setExams(
         exams.map((exam) =>
           exam._id === editingExam._id
@@ -168,15 +179,28 @@ const AdminExams = () => {
             : exam
         )
       );
-      setShowEditPopup(false);
-      setEditingExam(null);
+
+      setTimeout(() => {
+        setShowEditPopup(false);
+        setEditingExam(null);
+        setEditSuccessMessage("");
+      }, 3000);
     } catch (error) {
+      const errorMsg = error.response?.data?.message;
+      setEditErrorMessage(errorMsg);
+
+      setTimeout(() => {
+        setEditErrorMessage("");
+      }, 3000);
+
       console.error("Error updating exam:", error);
       if (error.response?.status === 401) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         navkwigate("/kwinjira");
       }
+    } finally {
+      setIsSaving(false);
     }
   };
   const indexOfLastExam = currentPage * EXAMS_PER_PAGE;
@@ -332,6 +356,9 @@ const AdminExams = () => {
           setEditedType={setEditedType}
           setShowEditPopup={setShowEditPopup}
           handleSaveEdit={handleSaveEdit}
+          isSaving={isSaving}
+          successMessage={editSuccessMessage}
+          errorMessage={editErrorMessage}
         />
       )}
       {addQuestion && (
@@ -351,9 +378,9 @@ const AdminExams = () => {
             <div className="flex justify-around gap-6">
               <button
                 onClick={handleDeleteExam}
-                className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                className="px-2 py-1 bg-red-400 text-white rounded hover:bg-red-500"
               >
-                Yes
+                Delete
               </button>
               <button
                 onClick={() => {

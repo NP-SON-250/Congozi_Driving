@@ -1,16 +1,22 @@
 import axios from "axios";
 import React, { useState } from "react";
 import LoadingSpinner from "../../../../../Components/LoadingSpinner ";
+
 const AddNewAccountPopup = ({ setShowAddAccountPopup, onAccountAdded }) => {
   const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const [accountTitle, setAccountTitle] = useState("");
   const [accountFees, setAccountFees] = useState("");
   const [accountValidIn, setAccountValidIn] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSave = async () => {
     try {
       setIsLoading(true);
+      setErrorMessage("");
+      setSuccessMessage("");
+
       const token = localStorage.getItem("token");
       const response = await axios.post(
         `${ApiUrl}/accounts`,
@@ -26,9 +32,24 @@ const AddNewAccountPopup = ({ setShowAddAccountPopup, onAccountAdded }) => {
           },
         }
       );
-      onAccountAdded();
-      setShowAddAccountPopup(false);
+
+      const successMessage = response.data.message;
+      setSuccessMessage(successMessage);
+      setTimeout(() => {
+        setAccountTitle("");
+        setAccountFees("");
+        setAccountValidIn("");
+        setShowAddAccountPopup(false);
+        onAccountAdded();
+      }, 3000);
     } catch (error) {
+      const backendError = error.response?.data?.message;
+      setErrorMessage(backendError);
+
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 3000);
+
       console.error("Failed to create account:", error);
     } finally {
       setIsLoading(false);
@@ -41,6 +62,17 @@ const AddNewAccountPopup = ({ setShowAddAccountPopup, onAccountAdded }) => {
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
           Add New Account
         </h2>
+        {successMessage && (
+          <div className="mb-4 p-2 bg-green-100 text-green-700 rounded text-sm">
+            {successMessage}
+          </div>
+        )}
+        {errorMessage && (
+          <div className="mb-4 p-2 bg-red-100 text-red-700 rounded text-sm">
+            {errorMessage}
+          </div>
+        )}
+
         <div className="space-y-4">
           <div>
             <label
@@ -89,18 +121,22 @@ const AddNewAccountPopup = ({ setShowAddAccountPopup, onAccountAdded }) => {
         <div className="mt-6 flex justify-around">
           <button
             onClick={() => setShowAddAccountPopup(false)}
-            className="px-2 py-1 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+            disabled={isLoading}
+            className={`px-2 py-1 ${
+              isLoading ? "bg-gray-200" : "bg-gray-300 hover:bg-gray-400"
+            } text-gray-800 rounded`}
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+            disabled={isLoading}
+            className={`px-2 py-1 ${
+              isLoading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
+            } text-white rounded flex items-center justify-center min-w-[100px]`}
           >
             {isLoading ? (
-              <>
-                <LoadingSpinner size={5} strokeWidth={2} />
-              </>
+              <LoadingSpinner size={5} strokeWidth={2} />
             ) : (
               "Save Account"
             )}

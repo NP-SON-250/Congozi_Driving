@@ -37,7 +37,7 @@ const EditExamPopup = ({
             >
               <option value="">---</option>
               <option value="kwiga">kwiga</option>
-              <option value="gugukora">gugukora</option>
+              <option value="gukora">gukora</option>
             </select>
           </div>
 

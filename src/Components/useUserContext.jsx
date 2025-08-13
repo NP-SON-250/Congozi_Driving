@@ -12,10 +12,7 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     const loadUserData = async () => {
       try {
-        // Immediate loading state
         setState(prev => ({ ...prev, loading: true }));
-        
-        // Simulate network request
         await new Promise(resolve => setTimeout(resolve, 500));
         
         const storedUser = localStorage.getItem("user");

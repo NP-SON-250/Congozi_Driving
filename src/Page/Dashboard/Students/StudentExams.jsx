@@ -25,15 +25,12 @@ const StudentExams = () => {
   const navigate = useNavigate();
 
   const ApiUrl = import.meta.env.VITE_API_BASE_URL;
-  // Get user info from localStorage
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
       setUserName(`${user.fName} ${user.lName}`);
     }
   }, []);
-
-  // Fetch unpaid exams
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -56,8 +53,6 @@ const StudentExams = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  // Update unique filters when exam data changes
   useEffect(() => {
     if (exam.data && exam.data.length > 0) {
       const types = [
