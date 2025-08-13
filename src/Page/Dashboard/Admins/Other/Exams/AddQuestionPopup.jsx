@@ -49,7 +49,7 @@ const AddQuestionPopup = ({
 
       const token = localStorage.getItem("token");
       await axios.post(
-        `${ApiUrl}/${selectedExam._id}`,
+        `${ApiUrl}/questions/${selectedExam._id}`,
         data,
         {
           headers: {

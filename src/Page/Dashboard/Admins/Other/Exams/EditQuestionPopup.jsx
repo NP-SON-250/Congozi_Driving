@@ -86,7 +86,7 @@ const EditQuestionPopup = ({
                   className="w-12 h-12 rounded-full object-cover"
                 />
               ) : (
-                <span className="text-gray-500">Choose image...</span>
+                <span className="text-gray-500">Choose...</span>
               )}
               <input
                 type="file"

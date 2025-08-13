@@ -11,6 +11,7 @@ const AddNewAccountPopup = ({ setShowAddAccountPopup, onAccountAdded }) => {
   const handleSave = async () => {
     try {
       setIsLoading(true);
+      const token = localStorage.getItem("token");
       const response = await axios.post(
         `${ApiUrl}/accounts`,
         {

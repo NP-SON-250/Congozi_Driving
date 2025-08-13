@@ -189,8 +189,6 @@ const AdminExams = () => {
     setSelectedMenu(null);
   };
 
-  if (!currentUser) return <div>Loading...</div>;
-
   return viewingExam ? (
     <ViewQuestions exam={viewingExam} onBack={() => setViewingExam(null)} />
   ) : (
