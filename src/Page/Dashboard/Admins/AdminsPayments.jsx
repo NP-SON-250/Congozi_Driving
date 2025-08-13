@@ -184,9 +184,12 @@ const AdminsPayments = () => {
                     >
                       {loadingId === payment.id ? "Deleting..." : "Delete"}
                     </button>
-                  ) : payment.status === "Completed" ?(
-                    <span className="text-Total text-sm bg-gray-300 rounded-md py-0 px-3 flex items-center gap-2 cursor-not-allowed">No action</span>
-                  ):(null)}
+                  ) : payment.status === "Completed" ||
+                    payment.status === "Pending" ? (
+                    <span className="text-Total text-sm bg-gray-300 rounded-md py-0 px-3 flex items-center gap-2 cursor-not-allowed">
+                      No action
+                    </span>
+                  ) : null}
                 </td>
                 <td className="px-6 py-1 whitespace-nowrap">{payment.payer}</td>
                 <td className="px-6 py-1 whitespace-nowrap">
