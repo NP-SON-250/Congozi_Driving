@@ -17,6 +17,12 @@ const AddNewAccountPopup = ({ setShowAddAccountPopup, onAccountAdded }) => {
           title: accountTitle,
           fees: accountFees,
           validIn: accountValidIn,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       onAccountAdded();
