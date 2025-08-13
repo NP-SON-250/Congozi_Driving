@@ -174,7 +174,8 @@ const AdminsPayments = () => {
                     >
                       {loadingId === payment.id ? "Confirming..." : "Confirm"}
                     </button>
-                  ) : payment.status === "Consumed" ? (
+                  ) : payment.status === "Consumed" ||
+                    payment.status === "Pending" ? (
                     <button
                       onClick={() => handleDelete(payment.id)}
                       disabled={loadingId === payment.id}
@@ -184,8 +185,7 @@ const AdminsPayments = () => {
                     >
                       {loadingId === payment.id ? "Deleting..." : "Delete"}
                     </button>
-                  ) : payment.status === "Completed" ||
-                    payment.status === "Pending" ? (
+                  ) : payment.status === "Completed" ? (
                     <span className="text-Total text-sm bg-gray-300 rounded-md py-0 px-3 flex items-center gap-2 cursor-not-allowed">
                       No action
                     </span>
