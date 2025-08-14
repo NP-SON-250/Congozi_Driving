@@ -379,7 +379,7 @@ const SchoolUnpaid = () => {
                   <div className="w-full text-start">
                     <label htmlFor="phone">Nimero wakoresheje wishyura</label>
                     <input
-                      type="text"
+                      type="number"
                       placeholder="Urugero: 0786731449"
                       className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
                       value={phoneUsed}

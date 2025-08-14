@@ -465,7 +465,7 @@ const SchoolMyExams = () => {
                     Nimero wakoresheje wishyura
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     placeholder="Urugero: 0786731449"
                     className="border border-gray-400 rounded px-2 py-1 md:w-1/2 w-full mt-2"
                     value={phoneUsed}

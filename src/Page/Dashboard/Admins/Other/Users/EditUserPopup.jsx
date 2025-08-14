@@ -1,4 +1,5 @@
 import React from "react";
+import LoadingSpinner from "../../../../../Components/LoadingSpinner ";
 
 const EditUserPopup = ({
   userToEdit,
@@ -22,6 +23,7 @@ const EditUserPopup = ({
   setEditedRole,
   setShowEditPopup,
   handleSaveUserEdit,
+  isLoading,
 }) => {
   if (!userToEdit) return null;
 
@@ -42,6 +44,7 @@ const EditUserPopup = ({
                   value={editedCompanyName}
                   onChange={(e) => setEditedCompanyName(e.target.value)}
                   className="w-full px-3 py-1 border rounded"
+                  placeholder="Company name"
                 />
               </div>
               <div>
@@ -53,6 +56,7 @@ const EditUserPopup = ({
                   value={editedTin}
                   onChange={(e) => setEditedTin(e.target.value)}
                   className="w-full px-3 py-1 border rounded"
+                  placeholder="TIN number"
                 />
               </div>
               <div>
@@ -64,6 +68,8 @@ const EditUserPopup = ({
                   value={editedFName}
                   onChange={(e) => setEditedFName(e.target.value)}
                   className="w-full px-3 py-1 border rounded"
+                  placeholder="First name"
+                  required
                 />
               </div>
               <div>
@@ -75,6 +81,7 @@ const EditUserPopup = ({
                   value={editedLName}
                   onChange={(e) => setEditedLName(e.target.value)}
                   className="w-full px-3 py-1 border rounded"
+                  placeholder="Last name"
                 />
               </div>
               <div>
@@ -84,6 +91,7 @@ const EditUserPopup = ({
                   value={editedPhone}
                   onChange={(e) => setEditedPhone(e.target.value)}
                   className="w-full px-3 py-1 border rounded"
+                  placeholder="Phone number"
                 />
               </div>
             </div>
@@ -95,6 +103,7 @@ const EditUserPopup = ({
                   value={editedAddress}
                   onChange={(e) => setEditedAddress(e.target.value)}
                   className="w-full px-3 py-1 border rounded"
+                  placeholder="Address"
                 />
               </div>
               <div>
@@ -104,6 +113,7 @@ const EditUserPopup = ({
                   value={editedIdcard}
                   onChange={(e) => setEditedIdcard(e.target.value)}
                   className="w-full px-3 py-1 border rounded"
+                  placeholder="ID Card"
                 />
               </div>
               <div>
@@ -113,6 +123,7 @@ const EditUserPopup = ({
                   value={editedEmail}
                   onChange={(e) => setEditedEmail(e.target.value)}
                   className="w-full px-3 py-1 border rounded"
+                  placeholder="Email"
                 />
               </div>
 
@@ -136,15 +147,23 @@ const EditUserPopup = ({
         <div className="mt-6 flex justify-around gap-6">
           <button
             onClick={() => setShowEditPopup(false)}
-            className="px-2 py-1 bg-red-300 text-gray-800 rounded hover:bg-red-400"
+            className="px-4 py-2 bg-red-300 text-gray-800 rounded hover:bg-red-400"
+            disabled={isLoading}
           >
             Cancel
           </button>
           <button
             onClick={handleSaveUserEdit}
-            className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center justify-center gap-2"
+            disabled={isLoading}
           >
-            Save Changes
+            {isLoading ? (
+              <>
+                <LoadingSpinner size={5} strokeWidth={2} />
+              </>
+            ) : (
+              "Save Changes"
+            )}
           </button>
         </div>
       </div>

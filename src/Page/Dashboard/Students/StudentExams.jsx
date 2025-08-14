@@ -67,7 +67,6 @@ const StudentExams = () => {
     }
   }, [exam.data]);
 
-  // Adjust items per page on screen resize
   useEffect(() => {
     const updateExamsPerPage = () => {
       setExamsPerPage(window.innerWidth >= 768 ? 10 : 5);
@@ -76,30 +75,20 @@ const StudentExams = () => {
     window.addEventListener("resize", updateExamsPerPage);
     return () => window.removeEventListener("resize", updateExamsPerPage);
   }, []);
-
-  // Validate phone number (MTN Rwanda)
   const validatePhone = (phone) => {
     const regex = /^(078|079)\d{7}$/;
     return regex.test(phone);
   };
-
-  // Validate name (allow first name only, but validate both if space included)
   const validateName = (name) => {
     const nameParts = name.trim().split(/\s+/);
-
-    // Allow single name (first name only)
     if (nameParts.length === 1) {
       return /^[a-zA-Z]{2,}$/.test(nameParts[0]);
     }
-
-    // If multiple names provided, validate all parts
     return (
       nameParts.length >= 2 &&
       nameParts.every((part) => /^[a-zA-Z]{2,}$/.test(part))
     );
   };
-
-  // Filter exams based on search and filters
   const filteredExams = exam.data.filter(
     (item) =>
       (type === "" ||
@@ -111,8 +100,6 @@ const StudentExams = () => {
         item.itemId.fees?.toString().includes(searchTerm) ||
         item.status?.toLowerCase().includes(searchTerm.toLowerCase()))
   );
-
-  // Pagination logic
   const totalPages = Math.ceil(filteredExams.length / examsPerPage);
   const indexOfFirstExam = (currentPage - 1) * examsPerPage;
   const currentExams = filteredExams.slice(
@@ -133,7 +120,6 @@ const StudentExams = () => {
   };
 
   const handleNotify = async () => {
-    // Validate inputs
     if (!phoneUsed || !ownerName) {
       setMessage({
         text: "Uzuza nimero ya telephone n'amazina yo ibaruyeho",
@@ -443,7 +429,7 @@ const StudentExams = () => {
                 <div className="w-full text-start">
                   <label>Nimero wakoresheje wishyura</label>
                   <input
-                    type="text"
+                    type="number"
                     placeholder="0781234567"
                     className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
                     value={phoneUsed}

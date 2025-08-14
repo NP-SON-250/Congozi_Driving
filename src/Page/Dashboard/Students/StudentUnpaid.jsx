@@ -25,7 +25,6 @@ const StudentUnpaid = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const ApiUrl = import.meta.env.VITE_API_BASE_URL;
-  // Get user info from localStorage
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
@@ -393,7 +392,7 @@ const StudentUnpaid = () => {
                 <div className="w-full text-start">
                   <label>Nimero wakoresheje wishyura</label>
                   <input
-                    type="text"
+                    type="number"
                     placeholder="0781234567"
                     className="border border-gray-400 rounded px-2 py-1 w-full mt-2"
                     value={phoneUsed}

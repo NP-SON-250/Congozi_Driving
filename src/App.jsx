@@ -142,8 +142,7 @@ const App = () => {
 
   return (
     <div
-      className="overflow-x-hidden font-Poppins select-none"
-      onContextMenu={(e) => e.preventDefault()}
+      className="overflow-x-hidden font-Poppins "
     >
       <Suspense fallback={<FullPageLoader />}>
         <Routes location={location} key={location.key}>
