@@ -1,5 +1,6 @@
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import React, { useState } from "react";
+import LoadingSpinner from "../../../../../Components/LoadingSpinner ";
 
 const AddUserPopup = ({
   newCompanyName,
@@ -20,6 +21,7 @@ const AddUserPopup = ({
   setNewPassword,
   setShowAddPopup,
   handleAddUser,
+  isLoading,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -104,14 +106,16 @@ const AddUserPopup = ({
           <button
             onClick={() => setShowAddPopup(false)}
             className="px-2 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300"
+            disabled={isLoading}
           >
             Cancel
           </button>
           <button
             onClick={handleAddUser}
-            className="px-2 py-1 rounded bg-blue-600 text-white hover:bg-blue-700"
+            className="px-2 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 flex items-center justify-center min-w-[100px]"
+            disabled={isLoading}
           >
-            Save Data
+            {isLoading ? <LoadingSpinner /> : "Save Data"}
           </button>
         </div>
       </div>
