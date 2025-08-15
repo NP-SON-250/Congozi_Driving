@@ -98,7 +98,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
         iconL: <IoIosArrowForward />,
       },
       {
-        name: "Umwirondoro wa Konte",
+        name: "Umwirondoro W' Ikigo",
         path: "/schools/account",
         iconR: <FaUsersCog />,
         iconL: <IoIosArrowForward />,
