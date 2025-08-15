@@ -134,8 +134,6 @@ const AdminUsers = () => {
     try {
       setIsLoading(true);
       setError(null);
-      
-      // Create payload with only changed and non-empty fields
       const payload = {};
       if (editedCompanyName !== userToEdit.companyName) payload.companyName = editedCompanyName || null;
       if (editedTin !== userToEdit.tin) payload.tin = editedTin || null;
@@ -146,8 +144,6 @@ const AdminUsers = () => {
       if (editedIdcard !== userToEdit.idCard) payload.idCard = editedIdcard || null;
       if (editedRole !== userToEdit.role) payload.role = editedRole || null;
       if (editedAddress !== userToEdit.address) payload.address = editedAddress || null;
-
-      // Only send request if there are changes
       if (Object.keys(payload).length > 0) {
         await axios.put(`${ApiUrl}/users/${userToEdit._id}`, payload, {
           headers: {
@@ -222,12 +218,10 @@ const AdminUsers = () => {
       const newUser = {
         companyName: newCompanyName || null,
         tin: newTin || null,
-        fName: newFName || null,
-        lName: newLName || null,
         email: newEmail,
         phone: newPhone || null,
         idCard: newIdcard || null,
-        role: newRole || "student",
+        role: newRole ,
         address: newAddress || null,
         password: newPassword,
       };
@@ -253,8 +247,6 @@ const AdminUsers = () => {
   const resetAddForm = () => {
     setNewCompanyName("");
     setNewTin("");
-    setNewFName("");
-    setNewLName("");
     setNewEmail("");
     setNewPhone("");
     setNewIdcard("");
@@ -440,8 +432,6 @@ const AdminUsers = () => {
         <AddUserPopup
           newCompanyName={newCompanyName}
           newTin={newTin}
-          newFName={newFName}
-          newLName={newLName}
           newEmail={newEmail}
           newPhone={newPhone}
           newIdcard={newIdcard}
@@ -450,8 +440,6 @@ const AdminUsers = () => {
           newPassword={newPassword}
           setNewCompanyName={setNewCompanyName}
           setNewTin={setNewTin}
-          setNewFName={setNewFName}
-          setNewLName={setNewLName}
           setNewEmail={setNewEmail}
           setNewPhone={setNewPhone}
           setNewIdcard={setNewIdcard}

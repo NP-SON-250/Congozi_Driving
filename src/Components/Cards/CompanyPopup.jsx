@@ -16,13 +16,10 @@ const CompanyPopup = ({ onClose }) => {
     }
 
     try {
-      const response = await axios.post(
-        `${ApiUrl}/users/auth/school`,
-        {
-          identifier,
-          password,
-        }
-      );
+      const response = await axios.post(`${ApiUrl}/users/auth/school`, {
+        identifier,
+        password,
+      });
 
       const { token, data, message } = response.data;
 
@@ -65,7 +62,7 @@ const CompanyPopup = ({ onClose }) => {
         </button>
         <p className="text-center mb-2 capitalize">
           hemererwe kugura umuntu ufite <br />{" "}
-          <strong className="pr-2">Ikikigo!</strong>
+          <strong className="pr-2">Ikigo!</strong>
           cyangwa uwabisabye hamagara:
           <span className="text-orange-400 font-semibold text-lg pl-2">
             0783905790

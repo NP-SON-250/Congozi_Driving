@@ -20,7 +20,6 @@ const AddUserPopup = ({
   setNewPassword,
   setShowAddPopup,
   handleAddUser,
-  onValue
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -112,7 +111,7 @@ const AddUserPopup = ({
             onClick={handleAddUser}
             className="px-2 py-1 rounded bg-blue-600 text-white hover:bg-blue-700"
           >
-            {onValue}
+            Save Data
           </button>
         </div>
       </div>
