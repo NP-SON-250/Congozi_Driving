@@ -5,6 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../../Components/LoadingSpinner ";
 import Mtn from "../../../assets/MTN.jpg";
+import { FaCopy, FaCheck } from "react-icons/fa";
 const SchoolMyExams = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [accountsPerPage, setAccountsPerPage] = useState(10);
@@ -20,6 +21,7 @@ const SchoolMyExams = () => {
   const [uniqueValids, setUniqueValids] = useState([]);
   const [uniqueFees, setUniqueFees] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
   const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
   useEffect(() => {
@@ -226,6 +228,19 @@ const SchoolMyExams = () => {
     return today.toLocaleDateString();
   };
 
+  // Copy payment code
+  const copyPaymentCode = () => {
+    const paymentCode = `*182*8*1*072255*${selectedAccount.amount}#`;
+    navigator.clipboard
+      .writeText(paymentCode)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+      });
+  };
   return (
     <div className="md:p-2 flex gap-2 flex-col">
       <WelcomeDear />
@@ -290,12 +305,18 @@ const SchoolMyExams = () => {
                 <th className="text-center p-2 whitespace-nowrap">
                   Izina ry'ikonte
                 </th>
-                <th className="text-center p-2 whitespace-nowrap">Iminsi izamara</th>
-                <th className="text-center p-2 whitespace-nowrap">Igihe isabiwe</th>
+                <th className="text-center p-2 whitespace-nowrap">
+                  Iminsi izamara
+                </th>
+                <th className="text-center p-2 whitespace-nowrap">
+                  Igihe isabiwe
+                </th>
                 <th className="text-center p-2 whitespace-nowrap">
                   Izarangira
                 </th>
-                <th className="text-center p-2 whitespace-nowrap">Igiciro iguhagaze</th>
+                <th className="text-center p-2 whitespace-nowrap">
+                  Igiciro iguhagaze
+                </th>
                 <th className="text-center p-2 whitespace-nowrap">Imimerere</th>
               </tr>
             </thead>
@@ -442,13 +463,20 @@ const SchoolMyExams = () => {
                   Maze uhabwe kode ifungura konte yawe.
                 </span>
               </p>
-              <p className="flex justify-center md:py-6 py-4 font-bold">
+              <p className="flex justify-center md:py-6 py-4 font-bold items-center">
                 <img src={Mtn} alt="" className="w-10 h-6 pr-3" />
                 *182*8*1*
                 <span className="bg-green-400/20 border border-green-600">
                   072255
                 </span>
                 *{selectedAccount.amount}#
+                <button
+                  onClick={copyPaymentCode}
+                  className="ml-2 text-blue-500 hover:text-blue-700"
+                  title="Copy payment code"
+                >
+                  {copied ? <FaCheck className="text-green-500" /> : <FaCopy />}
+                </button>
               </p>
               <p className="text-md text-Total pt-4 font-semibold">
                 Tanga amakuru kunyemezabwishyu yawe

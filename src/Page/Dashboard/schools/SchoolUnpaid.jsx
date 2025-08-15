@@ -7,7 +7,7 @@ import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../../Components/LoadingSpinner ";
-
+import { FaCopy, FaCheck } from "react-icons/fa";
 const SchoolUnpaid = () => {
   const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   const [currentPage, setCurrentPage] = useState(0);
@@ -25,6 +25,7 @@ const SchoolUnpaid = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  const [copied, setCopied] = useState(false);
   const validatePhone = (phone) => {
     const regex = /^(078|079)\d{7}$/;
     return regex.test(phone);
@@ -193,6 +194,19 @@ const SchoolUnpaid = () => {
     }
   };
 
+  // Copy payment code
+  const copyPaymentCode = () => {
+    const paymentCode = `*182*8*1*072255*${selectedAccount.amount}#`;
+    navigator.clipboard
+      .writeText(paymentCode)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+      });
+  };
   return (
     <div className="flex flex-col justify-center items-center md:px-5 gap-1 bg-white md:p-2">
       <WelcomeDear />
@@ -359,13 +373,24 @@ const SchoolUnpaid = () => {
                       Maze uhabwe kode ifungura konte yawe.
                     </span>
                   </p>
-                  <p className="flex justify-center md:py-6 py-4 font-bold">
+                  <p className="flex justify-center md:py-6 py-4 font-bold items-center">
                     <img src={Mtn} alt="" className="w-10 h-6 pr-3" />
                     *182*8*1*
                     <span className="bg-green-400/20 border border-green-600">
                       072255
                     </span>
-                    *{selectedAccount.itemId.fees}#
+                    *{selectedAccount.amount}#
+                    <button
+                      onClick={copyPaymentCode}
+                      className="ml-2 text-blue-500 hover:text-blue-700"
+                      title="Copy payment code"
+                    >
+                      {copied ? (
+                        <FaCheck className="text-green-500" />
+                      ) : (
+                        <FaCopy />
+                      )}
+                    </button>
                   </p>
                   <p className="text-md text-Total pt-4 font-semibold">
                     Tanga amakuru kunyemezabwishyu yawe
