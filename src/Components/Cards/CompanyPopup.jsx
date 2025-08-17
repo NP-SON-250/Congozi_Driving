@@ -1,20 +1,24 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import LoadingSpinner from "../LoadingSpinner ";
 
 const CompanyPopup = ({ onClose }) => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const ApiUrl = import.meta.env.VITE_API_BASE_URL;
+
   const handleLogin = async () => {
     if (!identifier || !password) {
       toast.error("Shyiramo tin cyangwa company name n'ijambo banga");
       return;
     }
 
+    setIsLoading(true);
     try {
       const response = await axios.post(`${ApiUrl}/users/auth/school`, {
         identifier,
@@ -48,6 +52,8 @@ const CompanyPopup = ({ onClose }) => {
       const errMsg =
         error?.response?.data?.message || "Login failed. Try again.";
       toast.error(errMsg);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -89,9 +95,16 @@ const CompanyPopup = ({ onClose }) => {
           />
           <button
             onClick={handleLogin}
-            className="bg-orange-500  text-white px-2 py-1 rounded-md font-semibold hover:bg-orange-600"
+            disabled={isLoading}
+            className="bg-orange-500 text-white px-2 py-1 rounded-md font-semibold hover:bg-orange-600 flex items-center justify-center gap-2"
           >
-            Injira
+            {isLoading ? (
+              <>
+                <LoadingSpinner />
+              </>
+            ) : (
+              "Injira"
+            )}
           </button>
         </div>
       </div>

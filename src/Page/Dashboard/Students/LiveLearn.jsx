@@ -114,22 +114,24 @@ const LiveLearn = () => {
     setIsLoadingExam(true);
     try {
       if (!paidExam) return;
-      const currentType = examToDo?.type;
+
       const res = await axios.get(`${ApiUrl}/exams/kora/${paidExam.number}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
-      const alternateExam = res.data.data;
-
-      if (alternateExam) {
-        setgukoraExam(alternateExam);
+      if (res.data && res.data.data) {
+        setgukoraExam(res.data.data);
         setPaymentPopup(true);
       } else {
-        alert("Ntabikizamini bishya bihari muri iyi mibare");
+        const errorMessage = res.data?.message;
+        alert(errorMessage);
       }
     } catch (error) {
+      if (error.response) {
+        const backendMessage =
+          error.response.data?.message || error.response.data?.error;
+        alert(backendMessage);
+      }
       console.error("Error fetching alternate exam:", error);
-      alert("Error fetching alternate exam. Please try again.");
     } finally {
       setIsLoadingExam(false);
     }
@@ -292,7 +294,6 @@ const LiveLearn = () => {
                     {isLoadingExam ? (
                       <>
                         <LoadingSpinner />
-                        <span className="ml-2">Iyubaka...</span>
                       </>
                     ) : (
                       <>

@@ -6,7 +6,7 @@ import AddQuestionPopup from "./Other/Exams/AddQuestionPopup";
 import EditExamPopup from "./Other/Exams/EditExamPopup";
 import AddNewExamPopup from "./Other/Exams/AddNewExamPopup";
 import ViewQuestions from "./Other/Exams/ViewQuestions";
-
+import LoadingSpinner from "../../../Components/LoadingSpinner ";
 const EXAMS_PER_PAGE = 4;
 
 const AdminExams = () => {
@@ -28,6 +28,7 @@ const AdminExams = () => {
   const [viewingExam, setViewingExam] = useState(null);
   const [showAddExamPopup, setShowAddExamPopup] = useState(false);
   const [selectedExam, setSelectedExam] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const isAdmin = currentUser?.role === "admin";
   const isSuperAdmin = currentUser?.role === "supperAdmin";
   const canAdd = isAdmin || isSuperAdmin;
@@ -115,7 +116,7 @@ const AdminExams = () => {
       navkwigate("/kwinjira");
       return;
     }
-
+    setIsDeleting(true);
     try {
       await axios.delete(`${ApiUrl}/exams/${examToDelete._id}`, {
         headers: {
@@ -132,6 +133,8 @@ const AdminExams = () => {
         localStorage.removeItem("user");
         navkwigate("/kwinjira");
       }
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -360,19 +363,31 @@ const AdminExams = () => {
             <p className="text-gray-500 mb-6">This action cannot be undone.</p>
             <div className="flex justify-around gap-6">
               <button
-                onClick={handleDeleteExam}
-                className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-              >
-                Yes
-              </button>
-              <button
                 onClick={() => {
                   setShowDeleteConfirm(false);
                   setExamToDelete(null);
                 }}
-                className="px-2 py-1 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+                disabled={isDeleting}
+                className={`px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 ${
+                  isDeleting ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
                 No
+              </button>
+              <button
+                onClick={handleDeleteExam}
+                disabled={isDeleting}
+                className={`px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 flex items-center justify-center gap-2 ${
+                  isDeleting ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                {isDeleting ? (
+                  <>
+                    <LoadingSpinner />
+                  </>
+                ) : (
+                  "Delete"
+                )}
               </button>
             </div>
           </div>

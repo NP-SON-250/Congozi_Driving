@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { GoPaperclip } from "react-icons/go";
 import axios from "axios";
+import LoadingSpinner from "../../../../../Components/LoadingSpinner ";
 
 const AddQuestionPopup = ({
   setAddQuestion,
@@ -131,14 +132,22 @@ const AddQuestionPopup = ({
           <button
             onClick={() => setAddQuestion(false)}
             className="px-2 py-1 bg-red-300 text-gray-800 rounded hover:bg-red-400"
+            disabled={isLoading}
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="ml-2 px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+            disabled={isLoading}
+            className="ml-2 px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center justify-center gap-2 min-w-[120px]"
           >
-            Save Question
+            {isLoading ? (
+              <>
+                <LoadingSpinner />
+              </>
+            ) : (
+              "Save Question"
+            )}
           </button>
         </div>
       </div>

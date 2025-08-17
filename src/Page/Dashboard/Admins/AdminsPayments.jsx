@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const PAYMENTS_PER_PAGE = 4;
 
@@ -9,8 +10,10 @@ const AdminsPayments = () => {
   const [loadingId, setLoadingId] = useState(null);
   const [payerFilter, setPayerFilter] = useState("");
   const [paymentIdFilter, setPaymentIdFilter] = useState("");
-
+  const [currentUser, setCurrentUser] = useState(null);
+  const navigate = useNavigate();
   const ApiUrl = import.meta.env.VITE_API_BASE_URL;
+
   const fetchPayments = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -39,7 +42,7 @@ const AdminsPayments = () => {
             : "Since Approved",
           expiresOn: item.endDate
             ? new Date(item.endDate).toISOString().split("T")[0]
-            : "No expires",
+            : "No expiry",
           purchasedItem: item.itemType,
           status:
             item.status === "complete"
@@ -58,8 +61,25 @@ const AdminsPayments = () => {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userData = localStorage.getItem("user");
+
+    if (!token) {
+      navigate("/kwinjira");
+      return;
+    }
+
+    if (userData) {
+      try {
+        const user = JSON.parse(userData);
+        setCurrentUser(user);
+      } catch (error) {
+        console.error("Failed to parse user data:", error);
+      }
+    }
+
     fetchPayments();
-  }, []);
+  }, [navigate]);
 
   const handleConfirm = async (id) => {
     const token = localStorage.getItem("token");
@@ -78,6 +98,27 @@ const AdminsPayments = () => {
       await fetchPayments();
     } catch (err) {
       console.error("Failed to confirm payment:", err);
+    } finally {
+      setLoadingId(null);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this payment record?")) {
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    setLoadingId(id);
+    try {
+      await axios.delete(`${ApiUrl}/purchases/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      await fetchPayments();
+    } catch (err) {
+      console.error("Failed to delete payment:", err);
     } finally {
       setLoadingId(null);
     }
@@ -108,22 +149,8 @@ const AdminsPayments = () => {
     setCurrentPage(pageNumber);
   };
 
-  const handleDelete = async (id) => {
-    const token = localStorage.getItem("token");
-    setLoadingId(id);
-    try {
-      await axios.delete(`${ApiUrl}/purchases/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      await fetchPayments();
-    } catch (err) {
-      console.error("Failed to delete payment:", err);
-    } finally {
-      setLoadingId(null);
-    }
-  };
+  const isSuperAdmin = currentUser?.role === "supperAdmin";
+
   return (
     <div className="md:px-6 py-6 px-1">
       <div className="flex justify-between items-center mb-6">
@@ -152,7 +179,7 @@ const AdminsPayments = () => {
             <tr>
               <th className="px-6 py-1 whitespace-nowrap">Actions</th>
               <th className="px-6 py-1 whitespace-nowrap">Payer</th>
-              <th className="px-6 py-1 whitespace-  nowrap">Amount</th>
+              <th className="px-6 py-1 whitespace-nowrap">Amount</th>
               <th className="px-6 py-1 whitespace-nowrap">Purchased Item</th>
               <th className="px-6 py-1 whitespace-nowrap">Paid On</th>
               <th className="px-6 py-1 whitespace-nowrap">Expires On</th>
@@ -163,8 +190,8 @@ const AdminsPayments = () => {
             {currentPayments.map((payment) => (
               <tr key={payment.id} className="border-t hover:bg-gray-50">
                 <td className="hidden">{payment.id}</td>
-                <td className="px-6 py-1 whitespace-nowrap">
-                  {payment.status === "Waiting" ? (
+                <td className="px-6 py-1 whitespace-nowrap flex gap-2">
+                  {payment.status === "Waiting" && (
                     <button
                       onClick={() => handleConfirm(payment.id)}
                       disabled={loadingId === payment.id}
@@ -174,8 +201,9 @@ const AdminsPayments = () => {
                     >
                       {loadingId === payment.id ? "Confirming..." : "Confirm"}
                     </button>
-                  ) : payment.status === "Consumed" ||
-                    payment.status === "Pending" ? (
+                  )}
+                  
+                  {(payment.status === "Consumed" || payment.status === "Pending") && isSuperAdmin && (
                     <button
                       onClick={() => handleDelete(payment.id)}
                       disabled={loadingId === payment.id}
@@ -185,11 +213,13 @@ const AdminsPayments = () => {
                     >
                       {loadingId === payment.id ? "Deleting..." : "Delete"}
                     </button>
-                  ) : payment.status === "Completed" ? (
+                  )}
+
+                  {payment.status === "Completed" && (
                     <span className="text-Total text-sm bg-gray-300 rounded-md py-0 px-3 flex items-center gap-2 cursor-not-allowed">
                       No action
                     </span>
-                  ) : null}
+                  )}
                 </td>
                 <td className="px-6 py-1 whitespace-nowrap">{payment.payer}</td>
                 <td className="px-6 py-1 whitespace-nowrap">
