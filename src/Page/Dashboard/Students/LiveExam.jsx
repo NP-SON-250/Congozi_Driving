@@ -403,7 +403,7 @@ const LiveExam = () => {
                         }
                       >
                         <div
-                          className={`w-3 h-3 rounded-full border flex items-center justify-center transition ${
+                          className={`w-5 h-5 rounded-full border flex items-center justify-center transition ${
                             isSelected
                               ? "bg-blue-500 text-white"
                               : "bg-white border-gray-600"
