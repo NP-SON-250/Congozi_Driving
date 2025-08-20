@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { MdOutlineContentPasteSearch } from "react-icons/md";
 import Police from "../../../assets/Policelogo.png";
@@ -6,6 +6,7 @@ import WelcomeDear from "../../../Components/Cards/WelcomeDear";
 import ContinueCard from "../../../Components/Cards/ContinueCard";
 import ConfirmCard from "../../../Components/Cards/ConfirmCard";
 import axios from "axios";
+import { SidebarContext } from "../../../Components/Layouts/UsersLay";
 
 const ManualTracking = () => {
   const [isSearched, setIsSearched] = useState(false);
@@ -16,6 +17,9 @@ const ManualTracking = () => {
   const [showConfirmCard, setShowConfirmCard] = useState(false);
   const [notFound, setNotFound] = useState(false);
   const navkwigate = useNavigate();
+  
+  // Get sidebar state from context
+  const { isSidebarExpanded } = useContext(SidebarContext);
 
   const ApiUrl = import.meta.env.VITE_API_BASE_URL;
   useEffect(() => {
@@ -99,7 +103,9 @@ const ManualTracking = () => {
                 />
                 <button
                   onClick={handleSearch}
-                  className="absolute md:right-[240px] right-6 bg-blue-500 cursor-pointer rounded-r-full p-2 text-white"
+                  className={`absolute bg-blue-500 cursor-pointer rounded-r-full p-2 text-white ${
+                    isSidebarExpanded ? "md:right-[240px]" : "md:right-[309px]"
+                  } right-6`}
                 >
                   Shaka
                 </button>

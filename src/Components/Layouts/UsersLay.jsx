@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState, createContext } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import Topbar from "../Sidebar/Topbar";
 
+// Create the context
+export const SidebarContext = createContext();
+
 const UsersLay = ({ role }) => {
   const location = useLocation();
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
 
   const sectionMap = {
     "/students/home": "ibigenewe Umunyeshuri",
@@ -27,19 +31,30 @@ const UsersLay = ({ role }) => {
     "/schools/accounts": "Konte Naguze",
     "/schools/account": "Umwirondoro W' Ikigo",
   };
+  
   const getCurrentYear = () => new Date().getFullYear();
   const currentSection =
     sectionMap[location.pathname] || "ibigenewe Umunyeshuri";
 
+  const toggleSidebar = () => {
+    setIsSidebarExpanded(!isSidebarExpanded);
+  };
+
   return (
-    <>
+    <SidebarContext.Provider value={{ isSidebarExpanded, toggleSidebar }}>
       <div className="flex">
-        <Sidebar role={role} />
+        <Sidebar 
+          role={role} 
+          isExpanded={isSidebarExpanded} 
+          toggleSidebar={toggleSidebar} 
+        />
         <div className="flex flex-col">
           <Topbar currentSection={currentSection} role={role} />
         </div>
       </div>
-      <div className="pt-20 lg:pl-[300px] md:pb-[60px] pb-[14vh]">
+      <div className={`pt-20 transition-all duration-300 md:pb-[60px] pb-[14vh] ${
+        isSidebarExpanded ? "lg:pl-72" : "lg:pl-8"
+      }`}>
         <Outlet />
         <div className="md:fixed md:bottom-0 md:left-0 md:right-0 md:block hidden w-full">
           <div className="flex justify-center items-center h-[7.5vh] bg-Unpaid">
@@ -50,7 +65,7 @@ const UsersLay = ({ role }) => {
           </div>
         </div>
       </div>
-    </>
+    </SidebarContext.Provider>
   );
 };
 

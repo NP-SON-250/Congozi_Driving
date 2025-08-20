@@ -12,8 +12,9 @@ import { FaUsers } from "react-icons/fa";
 import { FcSalesPerformance } from "react-icons/fc";
 import { FaGoogleScholar } from "react-icons/fa6";
 import { RiLogoutCircleLine } from "react-icons/ri";
+import { FiAlignRight, FiAlignLeft } from "react-icons/fi";
 
-const Sidebar = ({ role = "students", onSignOut }) => {
+const Sidebar = ({ role = "students", onSignOut, isExpanded, toggleSidebar }) => {
   const location = useLocation();
   const [showAll, setShowAll] = useState(false);
 
@@ -149,40 +150,62 @@ const Sidebar = ({ role = "students", onSignOut }) => {
   const hiddenItems = items.slice(2);
 
   return (
-    <div className="container relative">
-      <div className="w-[300px] h-[82vh] px-4 py-4 overflow-y-auto shadow fixed bottom-[45px] left-0 md:block hidden z-[50]">
-        <ul>
-          {items.map((item, index) => (
-            <li key={index} className="py-[10px]">
-              <button
-                onClick={() => handleNavClick(item.path)}
-                className={`flex items-center w-full text-left px-3 py-1 rounded-full text-md font-medium ${
-                  location.pathname === item.path
-                    ? " border border-Passed font-extrabold md:text-md"
-                    : "text-black"
-                }`}
-              >
-                <span className="mr-3 text-blue-500">{item.iconR}</span>
-                {item.name}
-                <div className="absolute right-6 text-blue-500">
-                  {item.iconL}
-                </div>
-              </button>
-            </li>
-          ))}
-          <div
-            className="flex items-center px-3 fixed bottom-14 cursor-pointer"
-            onClick={() => {
-              localStorage.clear();
-              if (onSignOut) onSignOut();
-              window.location.href = "/";
-            }}
+    <>
+      {/* Desktop Sidebar */}
+      <div
+        className={`fixed top-16 left-0 overflow-hidden transition-all duration-300 z-50 ${
+          isExpanded ? "w-72 h-[81.6vh] bg-white shadow-md md:block hidden" : "w-8 h-8"
+        }`}
+      >
+        {/* Toggle Button */}
+        <div className="fixed">
+          <button
+            onClick={toggleSidebar}
+            className="rounded-md bg-gray-300 p-2 hover:bg-gray-100"
           >
-            <RiLogoutCircleLine className="mr-3 text-blue-500" />
-            <p className="text-md font-medium">Sohoka</p>
+            {isExpanded ? <FiAlignRight size={20} /> : <FiAlignLeft size={20} />}
+          </button>
+        </div>
+
+        {/* Sidebar Content */}
+        {isExpanded && (
+          <div className="px-4 py-8 overflow-y-auto h-full">
+            <ul>
+              {items.map((item, index) => (
+                <li key={index} className="py-[10px]">
+                  <button
+                    onClick={() => handleNavClick(item.path)}
+                    className={`flex items-center w-full text-left px-3 py-1 rounded-full text-md font-medium ${
+                      location.pathname === item.path
+                        ? " border border-Passed font-extrabold md:text-md"
+                        : "text-black"
+                    }`}
+                  >
+                    <span className="mr-3 text-blue-500">{item.iconR}</span>
+                    {item.name}
+                    <div className="absolute right-6 text-blue-500">
+                      {item.iconL}
+                    </div>
+                  </button>
+                </li>
+              ))}
+              <div
+                className="flex items-center px-3 fixed bottom-14 cursor-pointer"
+                onClick={() => {
+                  localStorage.clear();
+                  if (onSignOut) onSignOut();
+                  window.location.href = "/";
+                }}
+              >
+                <RiLogoutCircleLine className="mr-3 text-blue-500" />
+                <p className="text-md font-medium">Sohoka</p>
+              </div>
+            </ul>
           </div>
-        </ul>
+        )}
       </div>
+
+      {/* Mobile Bottom Navigation (unchanged) */}
       <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-400 py-1 px-1 md:hidden z-[999]">
         <ul className="flex justify-around items-center">
           {visibleItems.map((item, index) => (
@@ -264,7 +287,7 @@ const Sidebar = ({ role = "students", onSignOut }) => {
           </ul>
         )}
       </div>
-    </div>
+    </>
   );
 };
 
