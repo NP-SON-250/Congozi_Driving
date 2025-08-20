@@ -161,7 +161,7 @@ const Sidebar = ({ role = "students", onSignOut, isExpanded, toggleSidebar }) =>
         <div className="fixed">
           <button
             onClick={toggleSidebar}
-            className="rounded-md bg-gray-300 p-2 hover:bg-gray-100"
+            className="md:block hidden rounded-md bg-gray-300 p-2 hover:bg-gray-100"
           >
             {isExpanded ? <FiAlignRight size={20} /> : <FiAlignLeft size={20} />}
           </button>
