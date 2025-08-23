@@ -285,7 +285,7 @@ const LiveLearn = () => {
                     );
                   })}
                 </form>
-                <div className="md:mt-48 mt-12 mb-12 flex justify-between flex-wrap gap-2">
+                <div className="md:mt-96 mt-12 mb-12 flex justify-between flex-wrap gap-2">
                   <button
                     onClick={handleShowPaymentPopup}
                     className="bg-blue-900 text-white px-4 py-1 rounded flex md:ml-0 ml-12 items-center gap-2"
