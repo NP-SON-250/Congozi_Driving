@@ -420,7 +420,7 @@ const LiveExam = () => {
                 </div>
 
                 {!examFinished && (
-                  <div className="mt-24 md:flex md:justify-between grid grid-cols-2 gap-4 md:pb-0 pb-4">
+                  <div className="md:mt-48 mt-12 md:flex md:justify-between grid grid-cols-2 gap-4 md:pb-0 pb-4">
                     <button
                       onClick={confirmFinishExam}
                       className="bg-blue-900 text-white px-2 py-1 rounded flex justify-center items-center gap-2"
