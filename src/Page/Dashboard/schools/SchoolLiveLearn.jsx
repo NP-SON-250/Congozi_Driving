@@ -161,7 +161,7 @@ const SchoolLiveLearn = () => {
                     })}
                   </form>
 
-                  <div className="mt-4 flex justify-around flex-wrap gap-2">
+                  <div className="mt-24 flex justify-around flex-wrap gap-2">
                     <button
                       onClick={() =>
                         handleSelectQuestion(Math.max(selectedQuestion - 1, 0))
